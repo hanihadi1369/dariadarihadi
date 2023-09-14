@@ -81,41 +81,138 @@ class GetBalanceModel extends GetBalanceEntity {
 
 }
 
-
-
 class Value {
   Value({
-    this.balance,});
+    this.store,
+    this.depositID,
+    this.title,
+    this.accountNumberID,
+    this.accountKind,
+    this.depositInauguration_ID,
+    this.accountNumberBranchID,
+    this.branchID,
+    this.tmpDate,
+    this.tenantID,
+    this.cardNumber,
+
+
+
+
+  });
 
   Value.fromJson(dynamic json) {
-    balance = json['balance'];
+    store = json['store'];
+    depositID = json['depositID'];
+    title = json['title'];
+    accountNumberID = json['accountNumberID'];
+    accountKind = json['accountKind'];
+    depositInauguration_ID = json['depositInauguration_ID'];
+    accountNumberBranchID = json['accountNumberBranchID'];
+    branchID = json['branchID'];
+    tmpDate = json['tmpDate'];
+    tenantID = json['tenantID'];
+    cardNumber = json['cardNumber'];
   }
-  num? balance;
+  num? store;
+  num? depositID;
+  String? title;
+  num? accountNumberID;
+  num? accountKind;
+  num? depositInauguration_ID;
+  num? accountNumberBranchID;
+  num? branchID;
+  String? tmpDate;
+  num? tenantID;
+  num? cardNumber;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['balance'] = balance;
-    return map;
-  }
+
+
+
 
 }
 
 class ValueOrDefault {
   ValueOrDefault({
-    this.balance,});
+    this.store,
+    this.depositID,
+    this.title,
+    this.accountNumberID,
+    this.accountKind,
+    this.depositInauguration_ID,
+    this.accountNumberBranchID,
+    this.branchID,
+    this.tmpDate,
+    this.tenantID,
+    this.cardNumber,
+
+
+
+
+  });
 
   ValueOrDefault.fromJson(dynamic json) {
-    balance = json['balance'];
+    store = json['store'];
+    depositID = json['depositID'];
+    title = json['title'];
+    accountNumberID = json['accountNumberID'];
+    accountKind = json['accountKind'];
+    depositInauguration_ID = json['depositInauguration_ID'];
+    accountNumberBranchID = json['accountNumberBranchID'];
+    branchID = json['branchID'];
+    tmpDate = json['tmpDate'];
+    tenantID = json['tenantID'];
+    cardNumber = json['cardNumber'];
   }
-  num? balance;
+  num? store;
+  num? depositID;
+  String? title;
+  num? accountNumberID;
+  num? accountKind;
+  num? depositInauguration_ID;
+  num? accountNumberBranchID;
+  num? branchID;
+  String? tmpDate;
+  num? tenantID;
+  num? cardNumber;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['balance'] = balance;
-    return map;
-  }
+
+
 
 }
+
+// class Value {
+//   Value({
+//     this.balance,});
+//
+//   Value.fromJson(dynamic json) {
+//     balance = json['balance'];
+//   }
+//   num? balance;
+//
+//   Map<String, dynamic> toJson() {
+//     final map = <String, dynamic>{};
+//     map['balance'] = balance;
+//     return map;
+//   }
+//
+// }
+//
+// class ValueOrDefault {
+//   ValueOrDefault({
+//     this.balance,});
+//
+//   ValueOrDefault.fromJson(dynamic json) {
+//     balance = json['balance'];
+//   }
+//   num? balance;
+//
+//   Map<String, dynamic> toJson() {
+//     final map = <String, dynamic>{};
+//     map['balance'] = balance;
+//     return map;
+//   }
+//
+// }
 
 /// message : "string"
 /// metadata : {"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}

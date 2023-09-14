@@ -4,6 +4,7 @@ class TokenKeeper {
   static String accesstoken = "";
   static String refreshToken = "";
   static String refreshTokenExpirationDate = "";
+  static String phoneNumber = "";
 
   //****************************************************************************
   static Future deleteAccessToken() async {
@@ -55,4 +56,22 @@ class TokenKeeper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('refreshTokenExpirationDate', refreshTokenExpirationDate);
   }
+  //****************************************************************************
+  static Future deletePhoneNumber() async {
+    TokenKeeper.phoneNumber = "";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('phoneNumber', "");
+  }
+
+  static Future<String> getPhoneNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('phoneNumber') ?? "";
+  }
+
+  static Future savePhoneNumber(String phoneNumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('phoneNumber', phoneNumber);
+  }
+
+//****************************************************************************
 }

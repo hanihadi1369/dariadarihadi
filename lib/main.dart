@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:receive_intent/receive_intent.dart';
 
 import 'config/themes/app_theme.dart';
 import 'core/utils/strings.dart';
@@ -32,4 +33,20 @@ class MyApp extends StatelessWidget {
       home: SplashScreenView()
     );
   }
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+

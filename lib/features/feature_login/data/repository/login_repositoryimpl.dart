@@ -41,6 +41,15 @@ class LoginRepositoryImpl extends LoginRepository {
           if(dioError.response!.statusCode == 500){
             return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
           }
+          if (dioError.response!.statusCode == 405) {
+            return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
+          }
+          // if(dioError.response!.statusCode == 400){
+          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
+          // }
+          if(dioError.response!.statusCode == 404){
+            return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
+          }
 
 
 
@@ -88,6 +97,16 @@ class LoginRepositoryImpl extends LoginRepository {
 
           if(dioError.response!.statusCode == 500){
             return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          }
+
+          if (dioError.response!.statusCode == 405) {
+            return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
+          }
+          // if(dioError.response!.statusCode == 400){
+          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
+          // }
+          if(dioError.response!.statusCode == 404){
+            return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
           }
 
 

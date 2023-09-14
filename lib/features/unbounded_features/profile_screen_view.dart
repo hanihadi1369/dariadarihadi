@@ -1,5 +1,6 @@
 
-import 'package:atba_application/features/wallet_screen_view.dart';
+import 'package:atba_application/features/feature_wallet/presentation/block/wallet_bloc.dart';
+import 'package:atba_application/features/feature_wallet/presentation/screens/wallet_screen_view.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +13,12 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 
 
-import '../core/utils/colors.dart';
-import '../core/utils/slide_right_transition.dart';
+import '../../core/utils/colors.dart';
+import '../../core/utils/slide_right_transition.dart';
+import '../../locator.dart';
+
 import 'kbk_screen_view.dart';
+
 
 class ProfileScreenView extends StatefulWidget {
   @override
@@ -451,13 +455,26 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                     child: InkWell(
                       onTap: () async {
 
-                        await Navigator.push(
+                        Navigator.push(
                           context,
-                          SlideRightRoute(
-                            page: WalletScreenView(),
+                          MaterialPageRoute(
+                            builder: (context) {
+
+
+                              return BlocProvider.value(
+                                value: locator<WalletBloc>(),
+                                child: WalletScreenView(),
+                              );
+
+
+
+                              // return BlocProvider(
+                              //     create: (_)=> locator<WalletBloc>(),
+                              //     child: WalletScreenView(),
+                              //   );
+                            },
                           ),
                         );
-
 
                       },
                       child: Container(

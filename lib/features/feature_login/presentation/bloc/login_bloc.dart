@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:atba_application/features/feature_login/presentation/bloc/page_index_status.dart';
+import 'package:atba_application/features/feature_login/presentation/bloc/login_page_index_status.dart';
 import 'package:atba_application/features/feature_login/presentation/bloc/send_otp_status.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';

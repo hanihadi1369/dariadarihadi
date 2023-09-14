@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../features/profile_screen_view.dart';
+import '../../features/unbounded_features/profile_screen_view.dart';
 import '../utils/colors.dart';
 import '../utils/slide_right_transition.dart';
 import '../utils/token_keeper.dart';

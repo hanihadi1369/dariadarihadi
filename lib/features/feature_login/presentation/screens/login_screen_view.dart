@@ -1,5 +1,5 @@
 import 'package:atba_application/core/resources/data_state.dart';
-import 'package:atba_application/features/feature_login/presentation/bloc/page_index_status.dart';
+import 'package:atba_application/features/feature_login/presentation/bloc/login_page_index_status.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/main_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -135,17 +135,23 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                           TokenKeeper.refreshTokenExpirationDate =
                               verifyOtpCompleted.verifyOtpCodeEntity.value!
                                   .tokens!.refreshTokenExpirationDate!,
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return BlocProvider(
-                                  create: (_) => locator<MainBloc>(),
-                                  child: MainScreenView(),
-                                );
-                              },
-                            ),
-                          )
+                          TokenKeeper.savePhoneNumber(
+                                  _phoneController.text.trim())
+                              .then((value) => {
+                                    TokenKeeper.phoneNumber =
+                                        _phoneController.text.trim(),
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BlocProvider(
+                                            create: (_) => locator<MainBloc>(),
+                                            child: MainScreenView(),
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  }),
                         },
                       )
                     },

@@ -1,24 +1,32 @@
-import 'package:atba_application/features/profile_screen_view.dart';
-import 'package:atba_application/features/sim_charge_screen_view.dart';
-import 'package:atba_application/features/ticket_screen_view.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:atba_application/core/utils/colors.dart';
+import 'package:atba_application/core/utils/slide_right_transition.dart';
+import 'package:atba_application/core/widgets/drawer.dart';
+import 'package:atba_application/core/widgets/loading.dart';
+import 'package:atba_application/features/feature_bill/presentation/block/bill_bloc.dart' as billbloc;
+import 'package:atba_application/features/feature_bill/presentation/screens/bills_screen_view.dart';
+import 'package:atba_application/features/feature_charge_sim/presentation/screens/sim_charge_screen_view.dart';
+import 'package:atba_application/features/feature_main/presentation/bloc/balance_status.dart';
+import 'package:atba_application/features/feature_main/presentation/bloc/main_bloc.dart';
+import 'package:atba_application/features/feature_main/presentation/bloc/profile_status.dart';
+import 'package:atba_application/features/feature_wallet/presentation/block/wallet_bloc.dart'
+    as wallett;
+import 'package:atba_application/features/feature_wallet/presentation/screens/wallet_screen_view.dart';
+import 'package:atba_application/features/feature_charge_internet/presentation/screens/internet_charge_screen_view.dart';
+import 'package:atba_application/features/unbounded_features/kbk_screen_view.dart';
+import 'package:atba_application/features/unbounded_features/profile_screen_view.dart';
+import 'package:atba_application/features/unbounded_features/ticket_screen_view.dart';
+import 'package:atba_application/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 
-import '../../../../core/utils/colors.dart';
-import '../../../../core/utils/slide_right_transition.dart';
-import '../../../../core/widgets/drawer.dart';
-import '../../../../core/widgets/loading.dart';
-import '../../../bills_screen_view.dart';
-import '../../../internet_charge_screen_view.dart';
-import '../../../kbk_screen_view.dart';
-import '../../../wallet_screen_view.dart';
-import '../bloc/balance_status.dart';
-import '../bloc/main_bloc.dart';
+import '../../../../core/utils/my_utils.dart';
+import '../../../../core/utils/token_keeper.dart';
+import '../../../feature_charge_internet/presentation/block/charge_internet_bloc.dart'as cinternet;
+import '../../../feature_charge_sim/presentation/block/charge_sim_bloc.dart' as csim;
 
 class MainScreenView extends StatefulWidget {
   @override
@@ -29,12 +37,17 @@ class _MainScreenViewState extends State<MainScreenView> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   String balance = "***";
+  String firstName = "***";
+  String lastName = "***";
+  String phoneNumber = "***";
+  Uint8List? avatarProfile = null;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<MainBloc>(context)
-        .add(GetBalanceEvent());
+    _getPhoneNumber();
+    BlocProvider.of<MainBloc>(context).add(GetBalanceEvent());
+    BlocProvider.of<MainBloc>(context).add(GetProfileEvent());
   }
 
   @override
@@ -54,23 +67,44 @@ class _MainScreenViewState extends State<MainScreenView> {
             if (state.balanceStatus is BalanceError) {
               BalanceError error = state.balanceStatus as BalanceError;
               _showSnackBar(error.message);
+              state.balanceStatus = BalanceInit();
             }
-
-
+            if (state.profileStatus is ProfileError) {
+              ProfileError error = state.profileStatus as ProfileError;
+              _showSnackBar(error.message);
+              state.profileStatus = ProfileInit();
+            }
           },
           builder: (context, state) {
-
-            if (state.balanceStatus is BalanceLoading ) {
+            if (state.balanceStatus is BalanceLoading ||
+                state.profileStatus is ProfileLoading) {
               return LoadingPage();
             }
             if (state.balanceStatus is BalanceCompleted) {
               BalanceCompleted balanceCompleted =
-              state.balanceStatus as BalanceCompleted;
+                  state.balanceStatus as BalanceCompleted;
               if (balanceCompleted.getBalanceEntity.isFailed == false) {
-                balance = balanceCompleted.getBalanceEntity.value![0].balance!.toString();
+                balance = balanceCompleted.getBalanceEntity.value![0].store!
+                    .toString();
               }
             }
 
+            if (state.profileStatus is ProfileCompleted) {
+              ProfileCompleted profileCompleted =
+                  state.profileStatus as ProfileCompleted;
+              if (profileCompleted.getProfileEntity.isFailed == false) {
+                firstName = profileCompleted.getProfileEntity.value!.firstName
+                    .toString();
+
+                lastName = profileCompleted.getProfileEntity.value!.lastName
+                    .toString();
+
+                if (profileCompleted.getProfileEntity.value!.image != null) {
+                  avatarProfile = base64Decode(
+                      profileCompleted.getProfileEntity.value!.image!);
+                }
+              }
+            }
 
             return Container(
               width: double.infinity,
@@ -144,10 +178,12 @@ class _MainScreenViewState extends State<MainScreenView> {
                                     color: Colors.transparent,
                                     child: Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
-                                          "09128222554".toPersianDigit(),
+                                          (phoneNumber == "***")
+                                              ? "نامشخض"
+                                              : phoneNumber.toPersianDigit(),
                                           textDirection: TextDirection.rtl,
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
@@ -155,7 +191,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                           ),
                                         ),
                                         Text(
-                                          (balance == "***" )?"نامشخص":"${balance} ریال".toPersianDigit(),
+                                          (balance == "***")
+                                              ? "نامشخص"
+                                              : "${balance} ریال"
+                                                  .toPersianDigit(),
                                           textDirection: TextDirection.rtl,
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
@@ -177,12 +216,12 @@ class _MainScreenViewState extends State<MainScreenView> {
                                     color: Colors.transparent,
                                     child: Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .end,
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "هادی قدیری",
+                                          prepareFirstLastTitle(),
                                           textDirection: TextDirection.rtl,
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
@@ -204,10 +243,13 @@ class _MainScreenViewState extends State<MainScreenView> {
                                   flex: 1,
                                   child: Container(
                                     color: Colors.transparent,
-                                    child: Image.asset(
-                                      'assets/image_icon/dummy_profile.png',
-                                      fit: BoxFit.scaleDown,
-                                    ),
+                                    child: (avatarProfile != null)
+                                        ? Image.memory(avatarProfile!)
+                                        : Icon(
+                                            Icons.account_circle_sharp,
+                                            color: MyColors.icon_1,
+                                            size: 42,
+                                          ),
                                   ))
                             ],
                           ),
@@ -221,8 +263,8 @@ class _MainScreenViewState extends State<MainScreenView> {
                         child: Container(
                           height: double.infinity,
                           width: double.infinity,
-                          padding: EdgeInsets.only(
-                              top: 30, left: 15, right: 15),
+                          padding:
+                              EdgeInsets.only(top: 30, left: 15, right: 15),
                           decoration: new BoxDecoration(
                               color: Colors.white,
                               borderRadius: new BorderRadius.only(
@@ -235,12 +277,29 @@ class _MainScreenViewState extends State<MainScreenView> {
                             children: <Widget>[
                               InkWell(
                                 onTap: () async {
-                                  await Navigator.push(
+
+
+                                  Navigator.push(
                                     context,
-                                    SlideRightRoute(
-                                      page: InternetChargeScreenView(),
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BlocProvider.value(
+                                          value: locator<cinternet.ChargeInternetBloc>(),
+                                          child: InternetChargeScreenView(),
+                                        );
+                                      },
                                     ),
                                   );
+
+
+
+
+                                  // await Navigator.push(
+                                  //   context,
+                                  //   SlideRightRoute(
+                                  //     page: InternetChargeScreenView(),
+                                  //   ),
+                                  // );
                                 },
                                 child: Container(
                                   child: Column(
@@ -266,12 +325,29 @@ class _MainScreenViewState extends State<MainScreenView> {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  await Navigator.push(
+
+
+
+                                  Navigator.push(
                                     context,
-                                    SlideRightRoute(
-                                      page: SimChargeScreenView(),
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BlocProvider.value(
+                                          value: locator<csim.ChargeSimBloc>(),
+                                          child: SimChargeScreenView(),
+                                        );
+                                      },
                                     ),
                                   );
+
+
+
+                                  // await Navigator.push(
+                                  //   context,
+                                  //   SlideRightRoute(
+                                  //     page: SimChargeScreenView(),
+                                  //   ),
+                                  // );
                                 },
                                 child: Container(
                                   child: Column(
@@ -328,10 +404,15 @@ class _MainScreenViewState extends State<MainScreenView> {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  await Navigator.push(
+                                  Navigator.push(
                                     context,
-                                    SlideRightRoute(
-                                      page: BillsScreenView(),
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BlocProvider.value(
+                                          value: locator<billbloc.BillBloc>(),
+                                          child: BillsScreenView(),
+                                        );
+                                      },
                                     ),
                                   );
                                 },
@@ -359,10 +440,21 @@ class _MainScreenViewState extends State<MainScreenView> {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  await Navigator.push(
+                                  Navigator.push(
                                     context,
-                                    SlideRightRoute(
-                                      page: WalletScreenView(),
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BlocProvider.value(
+                                          value: locator<wallett.WalletBloc>(),
+                                          child: WalletScreenView(),
+                                        );
+
+                                        // return BlocProvider(
+                                        //   create: (_) =>
+                                        //       locator<wallett.WalletBloc>(),
+                                        //   child: WalletScreenView(),
+                                        // );
+                                      },
                                     ),
                                   );
                                 },
@@ -575,10 +667,21 @@ class _MainScreenViewState extends State<MainScreenView> {
                             Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  await Navigator.push(
+                                  Navigator.push(
                                     context,
-                                    SlideRightRoute(
-                                      page: WalletScreenView(),
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BlocProvider.value(
+                                          value: locator<wallett.WalletBloc>(),
+                                          child: WalletScreenView(),
+                                        );
+
+                                        // return BlocProvider(
+                                        //   create: (_) =>
+                                        //       locator<wallett.WalletBloc>(),
+                                        //   child: WalletScreenView(),
+                                        // );
+                                      },
                                     ),
                                   );
                                 },
@@ -666,6 +769,34 @@ class _MainScreenViewState extends State<MainScreenView> {
     );
   }
 
+  prepareFirstLastTitle() {
+    if (firstName == "***" || lastName == "***") {
+      return "نامشخص";
+    }
+    if (firstName == "null" || lastName == "null") {
+      return "نامشخص";
+    }
+    if (firstName != null && lastName != null) {
+      return "${firstName}  ${lastName}";
+    } else {
+      return "نامشخص";
+    }
+  }
+
+  _getPhoneNumber() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      TokenKeeper.getPhoneNumber().then((value) {
+        setState(() {
+          if (value == "") {
+            phoneNumber = "نامشخص";
+          } else {
+            phoneNumber = value;
+          }
+        });
+      });
+    });
+  }
+
   _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: Duration(seconds: 4),
@@ -673,6 +804,8 @@ class _MainScreenViewState extends State<MainScreenView> {
             alignment: Alignment.centerRight,
             child: Text(
               message,
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.right,
               style: TextStyle(fontFamily: "shabnam_bold"),
             ))));
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
