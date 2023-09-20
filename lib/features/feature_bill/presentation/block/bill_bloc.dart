@@ -22,6 +22,7 @@ import 'package:atba_application/features/feature_bill/presentation/block/status
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/rightel_bill_inquiry_status.dart';
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/water_bill_inquiry_status.dart';
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/params/create_bill_param.dart';

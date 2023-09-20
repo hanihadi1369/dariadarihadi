@@ -1,6 +1,6 @@
 part of 'bill_bloc.dart';
 
-class BillState {
+class BillState extends Equatable {
   BillsStatus billsStatus;
   PageBillIndexStatus pageBillIndexStatus;
   CreateBillStatus createBillStatus;
@@ -39,6 +39,27 @@ class BillState {
     required this.paymentFromWalletStatus,
     required this.balanceStatus
   });
+
+
+  @override
+  List<Object?> get props => [
+   billsStatus,
+   pageBillIndexStatus,
+   createBillStatus,
+   updateBillStatus,
+   deleteBillStatus,
+   barghBillInquiryStatus,
+   waterBillInquiryStatus,
+   gasBillInquiryStatus,
+   fixLineBillInquiryStatus,
+
+   mciBillInquiryStatus,
+   mtnBillInquiryStatus,
+   rightelBillInquiryStatus,
+
+   paymentFromWalletStatus,
+   balanceStatus,
+  ];
 
   BillState copyWith({
     BillsStatus? newBillsStatus,

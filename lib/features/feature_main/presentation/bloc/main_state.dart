@@ -2,11 +2,12 @@ part of 'main_bloc.dart';
 
 
 
-class MainState{
+class MainState extends Equatable{
   BalanceStatus balanceStatus;
   ProfileStatus profileStatus;
 
-
+  @override
+  List<Object?> get props => [balanceStatus,profileStatus];
 
   MainState({required this.balanceStatus , required this.profileStatus});
 

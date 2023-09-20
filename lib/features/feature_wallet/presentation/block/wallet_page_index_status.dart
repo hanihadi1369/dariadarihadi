@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 
@@ -10,17 +11,38 @@ import 'package:flutter/material.dart';
 
 
 @immutable
-abstract class PageWalletIndexStatus{}
+abstract class PageWalletIndexStatus extends Equatable{}
 
 
-class PageWalletIndexStatus1 extends PageWalletIndexStatus{}
+class PageWalletIndexStatus1 extends PageWalletIndexStatus{
+  @override
+  List<Object?> get props => [];
+}
 
-class PageWalletIndexStatus2 extends PageWalletIndexStatus{}
-class PageWalletIndexStatus21 extends PageWalletIndexStatus{}
-class PageWalletIndexStatus22 extends PageWalletIndexStatus{}
+class PageWalletIndexStatus2 extends PageWalletIndexStatus{
+  @override
+  List<Object?> get props => [];
+}
+class PageWalletIndexStatus21 extends PageWalletIndexStatus{
+  @override
+  List<Object?> get props => [];
+}
+class PageWalletIndexStatus22 extends PageWalletIndexStatus{
+  @override
+  List<Object?> get props => [];
+}
 
-class PageWalletIndexStatus3 extends PageWalletIndexStatus{}
+class PageWalletIndexStatus3 extends PageWalletIndexStatus{
+  @override
+  List<Object?> get props => [];
+}
 
-class PageWalletIndexStatus4 extends PageWalletIndexStatus{}
-class PageWalletIndexStatus41 extends PageWalletIndexStatus{}
+class PageWalletIndexStatus4 extends PageWalletIndexStatus{
+  @override
+  List<Object?> get props => [];
+}
+class PageWalletIndexStatus41 extends PageWalletIndexStatus{
+  @override
+  List<Object?> get props => [];
+}
 

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:atba_application/features/feature_wallet/domain/use_cases/get_balance_usecase.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/balance_status_wallet.dart';
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/params/transfer_kifbkif_param.dart';
