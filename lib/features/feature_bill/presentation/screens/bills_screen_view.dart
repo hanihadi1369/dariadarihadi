@@ -116,7 +116,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
   bool _isButtonNextDisabled_edit = true;
 
   bool _addToMyBillsList = false;
-  bool midTermSelected = true;
+  bool midTermSelected = false;
 
   //***************************************************************************
 
@@ -641,7 +641,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -1105,7 +1105,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -1571,7 +1571,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -2037,7 +2037,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -2503,7 +2503,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -2969,7 +2969,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -3435,7 +3435,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -3901,7 +3901,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   Expanded(
                     flex: 3,
                     child: Scrollbar(
-                      thickness: 10,
+                      thickness: 3,
                       scrollbarOrientation: ScrollbarOrientation.bottom,
                       isAlwaysShown: true,
                       child: ListView(
@@ -5621,7 +5621,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           Bills bill = Bills();
                           bill.billID = waterInquiryResult.billID;
                           // bill.paymentID = waterInquiryResult.paymentID;
-                          bill.phoneNumber = phoneNumber;
+                          // bill.phoneNumber = phoneNumber;
                           bill.operationCode = 300;
                           // bill.gatewayID ="";
                           List<Bills> bills = [];
@@ -6959,7 +6959,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           Bills bill = Bills();
                           bill.billID = barghInquiryResult.billID;
                           // bill.paymentID = barghInquiryResult.paymentID;
-                          bill.phoneNumber = phoneNumber;
+                          // bill.phoneNumber = phoneNumber;
                           bill.operationCode = 301;
                           // bill.gatewayID ="";
                           List<Bills> bills = [];
@@ -8292,7 +8292,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           Bills bill = Bills();
                           bill.billID = gasInquiryResult.billID;
                           // bill.paymentID = gasInquiryResult.paymentID;
-                          bill.phoneNumber = phoneNumber;
+                          // bill.phoneNumber = phoneNumber;
                           bill.operationCode = 306;
                           // bill.gatewayID ="";
                           List<Bills> bills = [];
@@ -9136,54 +9136,57 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     SizedBox(
                       height: 30,
                     ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          midTermSelected = true;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            top: 10, bottom: 10, left: 5, right: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: (midTermSelected)
-                                ? Colors.blueAccent
-                                : Colors.grey,
-                            width: 2.0,
+                    Visibility(
+                      visible: false,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            midTermSelected = true;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              top: 10, bottom: 10, left: 5, right: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: (midTermSelected)
+                                  ? Colors.blueAccent
+                                  : Colors.grey,
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 8,
+                                  child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        fixLineInquiryResult.midTerm!.amount!
+                                                .toString()
+                                                .seRagham() +
+                                            " ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                          color: (midTermSelected)
+                                              ? Colors.green
+                                              : Colors.grey,
+                                        ),
+                                      ))),
+                              Expanded(
+                                flex: 4,
                                 child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      fixLineInquiryResult.midTerm!.amount!
-                                              .toString()
-                                              .seRagham() +
-                                          " ریال",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                        color: (midTermSelected)
-                                            ? Colors.green
-                                            : Colors.grey,
-                                      ),
-                                    ))),
-                            Expanded(
-                              flex: 4,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  "میان دوره",
-                                  style: TextStyle(color: Colors.grey),
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "میان دوره",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -9317,7 +9320,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? (fixLineInquiryResult.midTerm!.paymentID!
+                            ? ( fixLineInquiryResult.midTerm!.paymentID==null    ||      fixLineInquiryResult.midTerm!.paymentID!
                                         .trim() ==
                                     "")
                                 ? null
@@ -9343,9 +9346,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3444;
                                     });
                                   }
-                            : (fixLineInquiryResult.finalTerm!.paymentID!
-                                        .trim() ==
-                                    "")
+                            : ( fixLineInquiryResult.finalTerm!.paymentID==null    ||  fixLineInquiryResult.finalTerm!.paymentID!.trim() == "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -9714,10 +9715,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       onPressed: () {
                         if (payTypeSelected == 1) {
                           Bills bill = Bills();
-                          bill.billID = (midTermSelected)
-                              ? fixLineInquiryResult.midTerm!.billID
-                              : fixLineInquiryResult.finalTerm!.billID;
-                          bill.phoneNumber = phoneNumber;
+                          // bill.billID = (midTermSelected)
+                          //     ? fixLineInquiryResult.midTerm!.billID
+                          //     : fixLineInquiryResult.finalTerm!.billID;
+                          bill.phoneNumber =_phoneBillController1.text.trim();
                           bill.operationCode = 302;
 
                           List<Bills> bills = [];
@@ -10586,54 +10587,57 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     SizedBox(
                       height: 30,
                     ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          midTermSelected = true;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            top: 10, bottom: 10, left: 5, right: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: (midTermSelected)
-                                ? Colors.blueAccent
-                                : Colors.grey,
-                            width: 2.0,
+                    Visibility(
+                      visible: false,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            midTermSelected = true;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              top: 10, bottom: 10, left: 5, right: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: (midTermSelected)
+                                  ? Colors.blueAccent
+                                  : Colors.grey,
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 8,
+                                  child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        mciInquiryResult.midTerm!.amount!
+                                                .toString()
+                                                .seRagham() +
+                                            " ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                          color: (midTermSelected)
+                                              ? Colors.green
+                                              : Colors.grey,
+                                        ),
+                                      ))),
+                              Expanded(
+                                flex: 4,
                                 child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      mciInquiryResult.midTerm!.amount!
-                                              .toString()
-                                              .seRagham() +
-                                          " ریال",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                        color: (midTermSelected)
-                                            ? Colors.green
-                                            : Colors.grey,
-                                      ),
-                                    ))),
-                            Expanded(
-                              flex: 4,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  "میان دوره",
-                                  style: TextStyle(color: Colors.grey),
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "میان دوره",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -10766,7 +10770,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? (mciInquiryResult.midTerm!.paymentID!.trim() ==
+                            ? ( mciInquiryResult.midTerm!.paymentID==null    ||   mciInquiryResult.midTerm!.paymentID!.trim() ==
                                     "")
                                 ? null
                                 : () {
@@ -10790,7 +10794,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3555;
                                     });
                                   }
-                            : (mciInquiryResult.finalTerm!.paymentID!.trim() ==
+                            : (mciInquiryResult.finalTerm!.paymentID==null    ||mciInquiryResult.finalTerm!.paymentID!.trim() ==
                                     "")
                                 ? null
                                 : () {
@@ -11156,10 +11160,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       onPressed: () {
                         if (payTypeSelected == 1) {
                           Bills bill = Bills();
-                          bill.billID = (midTermSelected)
-                              ? mciInquiryResult.midTerm!.billID
-                              : mciInquiryResult.finalTerm!.billID;
-                          bill.phoneNumber = phoneNumber;
+                          // bill.billID = (midTermSelected)
+                          //     ? mciInquiryResult.midTerm!.billID
+                          //     : mciInquiryResult.finalTerm!.billID;
+
+                          bill.phoneNumber =_mciBillController1.text.trim();
                           bill.operationCode = 310;
 
                           List<Bills> bills = [];
@@ -12025,54 +12030,57 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     SizedBox(
                       height: 30,
                     ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          midTermSelected = true;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            top: 10, bottom: 10, left: 5, right: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: (midTermSelected)
-                                ? Colors.blueAccent
-                                : Colors.grey,
-                            width: 2.0,
+                    Visibility(
+                      visible: false,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            midTermSelected = true;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              top: 10, bottom: 10, left: 5, right: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: (midTermSelected)
+                                  ? Colors.blueAccent
+                                  : Colors.grey,
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 8,
+                                  child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        mtnInquiryResult.midTerm!.amount!
+                                                .toString()
+                                                .seRagham() +
+                                            " ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                          color: (midTermSelected)
+                                              ? Colors.green
+                                              : Colors.grey,
+                                        ),
+                                      ))),
+                              Expanded(
+                                flex: 4,
                                 child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      mtnInquiryResult.midTerm!.amount!
-                                              .toString()
-                                              .seRagham() +
-                                          " ریال",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                        color: (midTermSelected)
-                                            ? Colors.green
-                                            : Colors.grey,
-                                      ),
-                                    ))),
-                            Expanded(
-                              flex: 4,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  "میان دوره",
-                                  style: TextStyle(color: Colors.grey),
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "میان دوره",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -12205,7 +12213,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? (mtnInquiryResult.midTerm!.paymentID!.trim() ==
+                            ? (mtnInquiryResult.midTerm!.paymentID==null    ||mtnInquiryResult.midTerm!.paymentID!.trim() ==
                                     "")
                                 ? null
                                 : () {
@@ -12229,7 +12237,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3666;
                                     });
                                   }
-                            : (mtnInquiryResult.finalTerm!.paymentID!.trim() ==
+                            : (mtnInquiryResult.finalTerm!.paymentID==null    ||mtnInquiryResult.finalTerm!.paymentID!.trim() ==
                                     "")
                                 ? null
                                 : () {
@@ -12595,10 +12603,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       onPressed: () {
                         if (payTypeSelected == 1) {
                           Bills bill = Bills();
-                          bill.billID = (midTermSelected)
-                              ? mtnInquiryResult.midTerm!.billID
-                              : mtnInquiryResult.finalTerm!.billID;
-                          bill.phoneNumber = phoneNumber;
+                          // bill.billID = (midTermSelected)
+                          //     ? mtnInquiryResult.midTerm!.billID
+                          //     : mtnInquiryResult.finalTerm!.billID;
+                          bill.phoneNumber =_mtnBillController1.text.trim();
                           bill.operationCode = 311;
 
                           List<Bills> bills = [];
@@ -13464,54 +13472,57 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     SizedBox(
                       height: 30,
                     ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          midTermSelected = true;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            top: 10, bottom: 10, left: 5, right: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: (midTermSelected)
-                                ? Colors.blueAccent
-                                : Colors.grey,
-                            width: 2.0,
+                    Visibility(
+                      visible: false,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            midTermSelected = true;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              top: 10, bottom: 10, left: 5, right: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: (midTermSelected)
+                                  ? Colors.blueAccent
+                                  : Colors.grey,
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 8,
+                                  child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        rightelInquiryResult.midTerm!.amount!
+                                                .toString()
+                                                .seRagham() +
+                                            " ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                          color: (midTermSelected)
+                                              ? Colors.green
+                                              : Colors.grey,
+                                        ),
+                                      ))),
+                              Expanded(
+                                flex: 4,
                                 child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      rightelInquiryResult.midTerm!.amount!
-                                              .toString()
-                                              .seRagham() +
-                                          " ریال",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                        color: (midTermSelected)
-                                            ? Colors.green
-                                            : Colors.grey,
-                                      ),
-                                    ))),
-                            Expanded(
-                              flex: 4,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  "میان دوره",
-                                  style: TextStyle(color: Colors.grey),
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "میان دوره",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -13646,7 +13657,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? (rightelInquiryResult.midTerm!.paymentID!
+                            ? (rightelInquiryResult.midTerm!.paymentID==null    ||rightelInquiryResult.midTerm!.paymentID!
                                         .trim() ==
                                     "")
                                 ? null
@@ -13672,7 +13683,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3777;
                                     });
                                   }
-                            : (rightelInquiryResult.finalTerm!.paymentID!
+                            : (rightelInquiryResult.finalTerm!.paymentID==null    ||rightelInquiryResult.finalTerm!.paymentID!
                                         .trim() ==
                                     "")
                                 ? null
@@ -14043,10 +14054,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       onPressed: () {
                         if (payTypeSelected == 1) {
                           Bills bill = Bills();
-                          bill.billID = (midTermSelected)
-                              ? rightelInquiryResult.midTerm!.billID
-                              : rightelInquiryResult.finalTerm!.billID;
-                          bill.phoneNumber = phoneNumber;
+                          // bill.billID = (midTermSelected)
+                          //     ? rightelInquiryResult.midTerm!.billID
+                          //     : rightelInquiryResult.finalTerm!.billID;
+                          bill.phoneNumber =_rightelBillController1.text.trim();
                           bill.operationCode = 312;
 
                           List<Bills> bills = [];
@@ -14660,11 +14671,9 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 UpdateBillParam updateBillParam =
                                     UpdateBillParam(
                                         billId: selectedBillForUpdate.id!,
-                                        billType:
-                                            selectedBillForUpdate.type!.toInt(),
+                                        billType:selectedBillForUpdate.type!.toInt(),
                                         billCode: selectedBillForUpdate.code!,
-                                        billTitle: _editBillController.text
-                                            .toString());
+                                        billTitle: _editBillController.text.toString());
 
                                 BlocProvider.of<BillBloc>(context)
                                     .add(UpdateBillEvent(updateBillParam));

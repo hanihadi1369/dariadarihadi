@@ -39,7 +39,7 @@ class ApiProviderBill {
 
   Future<dynamic> callCreateBill(billType, billCode, billTitle) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
+        "Bearer ${TokenKeeper.accesstoken}";
     var params = {"type": billType, "code": billCode, "title": billTitle};
     var body = json.encode(params);
     var response = await _dio?.post(
@@ -51,7 +51,7 @@ class ApiProviderBill {
 
   Future<dynamic> callUpdateBill(billId, billType, billCode, billTitle) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
+        "Bearer ${TokenKeeper.accesstoken}";
     var params = {
       "id": billId,
       "type": billType,
@@ -66,24 +66,27 @@ class ApiProviderBill {
     return response;
   }
 
-
-
   Future<dynamic> callDeleteBill(billId) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
+        "Bearer ${TokenKeeper.accesstoken}";
+
+    var params = {
+      "id": billId,
+    };
+    var body = json.encode(params);
     var response = await _dio?.delete(
-      Constants.baseUrl + "/walletbill/DeleteBill",
-      queryParameters:{
-        "Id": billId,
-      }
-    );
+        Constants.baseUrl + "/walletbill/DeleteBill",data: body
+        );
     return response;
   }
 
-  Future<dynamic> callBarghBillInquiry(electricityBillID,traceNumber) async {
+  Future<dynamic> callBarghBillInquiry(electricityBillID, traceNumber) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"electricityBillID": electricityBillID, "traceNumber": traceNumber};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      "electricityBillID": electricityBillID,
+      // "traceNumber": traceNumber
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/v1/ElectricityBillInquiry",
@@ -92,10 +95,15 @@ class ApiProviderBill {
     return response;
   }
 
-  Future<dynamic> callGasBillInquiry(participateCode,gasBillID,traceNumber) async {
+  Future<dynamic> callGasBillInquiry(
+      participateCode, gasBillID, traceNumber) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"participateCode": participateCode, "gasBillID": gasBillID,"traceNumber":traceNumber};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      // "participateCode": participateCode,
+      "gasBillID": gasBillID,
+      // "traceNumber": traceNumber
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/v1/GasBillInquiry",
@@ -104,10 +112,13 @@ class ApiProviderBill {
     return response;
   }
 
-  Future<dynamic> callWaterBillInquiry(waterBillID,traceNumber) async {
+  Future<dynamic> callWaterBillInquiry(waterBillID, traceNumber) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"waterBillID": waterBillID,"traceNumber":traceNumber};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      "waterBillID": waterBillID,
+      // "traceNumber": traceNumber
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/v1/WaterBillInquiry",
@@ -116,10 +127,13 @@ class ApiProviderBill {
     return response;
   }
 
-  Future<dynamic> callFixLineBillInquiry(fixedLineNumber,traceNumber) async {
+  Future<dynamic> callFixLineBillInquiry(fixedLineNumber, traceNumber) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"fixedLineNumber": fixedLineNumber,"traceNumber":traceNumber};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      "fixedLineNumber": fixedLineNumber,
+      // "traceNumber": traceNumber
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/vi/FixedLineBillInquiry",
@@ -128,13 +142,14 @@ class ApiProviderBill {
     return response;
   }
 
-
-
-
-  Future<dynamic> callMCIMobileBillInquiry(mobileNumber,traceNumber) async {
+  Future<dynamic> callMCIMobileBillInquiry(mobileNumber, traceNumber) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"mobileNumber": mobileNumber,"traceNumber":traceNumber};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      "mobileNumber": mobileNumber,
+      // "traceNumber": traceNumber
+
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/v1/MCIMobileBillInquiry",
@@ -143,11 +158,13 @@ class ApiProviderBill {
     return response;
   }
 
-
-  Future<dynamic> callMtnMobileBillInquiry(mobileNumber,traceNumber) async {
+  Future<dynamic> callMtnMobileBillInquiry(mobileNumber, traceNumber) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"mobileNumber": mobileNumber,"traceNumber":traceNumber};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      "mobileNumber": mobileNumber,
+      // "traceNumber": traceNumber
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/v1/MtnMobileBillInquiry",
@@ -156,10 +173,14 @@ class ApiProviderBill {
     return response;
   }
 
-  Future<dynamic> callRightelMobileBillInquiry(mobileNumber,traceNumber) async {
+  Future<dynamic> callRightelMobileBillInquiry(
+      mobileNumber, traceNumber) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"mobileNumber": mobileNumber,"traceNumber":traceNumber};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      "mobileNumber": mobileNumber,
+      // "traceNumber": traceNumber
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/v1/RightelMobileBillInquiry",
@@ -168,11 +189,9 @@ class ApiProviderBill {
     return response;
   }
 
-
-
   Future<dynamic> callBillPaymentFromWallet(myRequestBody) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
+        "Bearer ${TokenKeeper.accesstoken}";
     var response = await _dio?.post(
       Constants.baseUrl + "/walletbill/api/v1/BillPaymentFromWallet",
       data: myRequestBody,
@@ -180,13 +199,11 @@ class ApiProviderBill {
     return response;
   }
 
-
   Future<dynamic> callGetBalance() async {
-    _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
-    var response = await _dio
-        ?.get(Constants.baseUrl + "/apiapp/Wallet/GetBalances");
+    _dio?.options.headers['Authorization'] =
+        "Bearer ${TokenKeeper.accesstoken}";
+    var response =
+        await _dio?.get(Constants.baseUrl + "/apiapp/Wallet/GetBalances");
     return response;
   }
-
-
 }

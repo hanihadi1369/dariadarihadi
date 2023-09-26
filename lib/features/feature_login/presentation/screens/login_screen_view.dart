@@ -10,8 +10,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
+
 
 import '../../../../core/params/verify_otp_param.dart';
 import '../../../../core/utils/colors.dart';
@@ -44,15 +44,13 @@ class _LoginScreenViewState extends State<LoginScreenView> {
   bool _isButtonOTPDisabled = true;
   TextEditingController _phoneController = TextEditingController();
   OtpFieldController otpController = OtpFieldController();
-  CountdownController otpTimerController = CountdownController(autoStart: true);
   late String otpPinValue;
+  bool shouldShowOnCompletedMessage = false;
 
-  //*****************************************************************************
-  // SendOtpCodeUseCase sendOtpCodeUseCase = SendOtpCodeUseCase(LoginRepositoryImpl(ApiProviderLogin()));
-  // late SendOtpCodeEntity sendOtpCodeEntity;
-  // late VerifyOtpCodeEntity verifyOtpCodeEntity;
-  // VerifyOtpCodeUseCase verifyOtpCodeUseCase = VerifyOtpCodeUseCase(LoginRepositoryImpl(ApiProviderLogin()));
-  // bool showLoading = false;
+  int seccondsForOtpTimer = 120;
+
+
+
 
   @override
   void initState() {
@@ -70,31 +68,14 @@ class _LoginScreenViewState extends State<LoginScreenView> {
         body: SafeArea(
       child: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
-          if (state.sendOtpStatus is SendOtpError) {
-            SendOtpError error = state.sendOtpStatus as SendOtpError;
-            _showSnackBar(error.message);
-          }
-          if (state.verifyOtpStatus is VerifyOtpError) {
-            VerifyOtpError error = state.verifyOtpStatus as VerifyOtpError;
-            _showSnackBar(error.message);
-          }
-
-          if (state.sendOtpStatus is SendOtpCompleted) {
-            SendOtpCompleted sendOtpCompleted =
-                state.sendOtpStatus as SendOtpCompleted;
-            if (sendOtpCompleted.sendOtpCodeEntity.isFailed == true) {
-              _showSnackBar(sendOtpCompleted
-                  .sendOtpCodeEntity.errors![0].message
-                  .toString());
-            }
-          }
-
           if (state.sendOtpStatus is SendOtpCompleted &&
               state.pageLoginIndexStatus is PageLoginIndexStatus2) {
             SendOtpCompleted sendOtpCompleted =
                 state.sendOtpStatus as SendOtpCompleted;
             if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
-              otpTimerController.restart();
+             shouldShowOnCompletedMessage= false;
+             seccondsForOtpTimer = 120;
+             state.sendOtpStatus  =  SendOtpInit();
             }
           }
 
@@ -103,7 +84,8 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             SendOtpCompleted sendOtpCompleted =
                 state.sendOtpStatus as SendOtpCompleted;
             if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
-              otpTimerController.restart();
+              shouldShowOnCompletedMessage= false;
+              seccondsForOtpTimer = 120;
             }
           }
 
@@ -160,15 +142,35 @@ class _LoginScreenViewState extends State<LoginScreenView> {
               );
             }
           }
-        },
-        builder: (context, state) {
-          if (state.sendOtpStatus is SendOtpLoading ||
-              state.verifyOtpStatus is VerifyOtpLoading) {
-            return LoadingPage();
+
+          if (state.sendOtpStatus is SendOtpError) {
+            SendOtpError error = state.sendOtpStatus as SendOtpError;
+            _showSnackBar(error.message);
+            state.sendOtpStatus = SendOtpInit();
           }
 
-          if (state.sendOtpStatus is SendOtpCompleted &&
-              state.pageLoginIndexStatus is PageLoginIndexStatus1) {
+          if (state.sendOtpStatus is SendOtpCompleted) {
+            SendOtpCompleted sendOtpCompleted =
+                state.sendOtpStatus as SendOtpCompleted;
+            if (sendOtpCompleted.sendOtpCodeEntity.isFailed == true) {
+              _showSnackBar(sendOtpCompleted
+                  .sendOtpCodeEntity.errors![0].message
+                  .toString());
+              state.sendOtpStatus = SendOtpInit();
+            }
+          }
+
+          if (state.verifyOtpStatus is VerifyOtpError) {
+            VerifyOtpError error = state.verifyOtpStatus as VerifyOtpError;
+            _showSnackBar(error.message);
+            state.verifyOtpStatus = VerifyOtpInit();
+          }
+        },
+        builder: (context, state) {
+          if (state.sendOtpStatus is SendOtpLoading || state.verifyOtpStatus is VerifyOtpLoading) {
+            return LoadingPage();
+          }
+          if (state.sendOtpStatus is SendOtpCompleted && state.pageLoginIndexStatus is PageLoginIndexStatus1) {
             SendOtpCompleted sendOtpCompleted =
                 state.sendOtpStatus as SendOtpCompleted;
             if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
@@ -176,7 +178,6 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                   .add(LoginChangePageIndexEvent(2));
             }
           }
-
           if (state.pageLoginIndexStatus is PageLoginIndexStatus1) {
             state.sendOtpStatus = SendOtpInit();
             pageIndex = 1;
@@ -202,7 +203,8 @@ class _LoginScreenViewState extends State<LoginScreenView> {
         content: Align(
             alignment: Alignment.centerRight,
             child: Text(
-              message,
+              message.trim(),
+              textDirection: TextDirection.rtl,
               style: TextStyle(fontFamily: "shabnam_bold"),
             ))));
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -217,14 +219,35 @@ class _LoginScreenViewState extends State<LoginScreenView> {
     // });
   }
 
-  _startTimer() {
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      setState(() {
-        otpTimerController.isCompleted = false;
-      });
-      otpTimerController.start();
-    });
-  }
+  // _showSnackBar(String message) {
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       duration: Duration(seconds: 4),
+  //       content: Align(
+  //           alignment: Alignment.centerRight,
+  //           child: Text(
+  //             message,
+  //             style: TextStyle(fontFamily: "shabnam_bold"),
+  //           ))));
+  //   // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //   //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //   //       duration: Duration(seconds: 4),
+  //   //       content: Align(
+  //   //           alignment: Alignment.centerRight,
+  //   //           child: Text(
+  //   //             message,
+  //   //             style: TextStyle(fontFamily: "shabnam_bold"),
+  //   //           ))));
+  //   // });
+  // }
+
+  // _startTimer() {
+  //   Future.delayed(const Duration(milliseconds: 1000), () {
+  //     setState(() {
+  //       otpTimerController.isCompleted = false;
+  //     });
+  //     otpTimerController.start();
+  //   });
+  // }
 
   preparePageIndex() {
     // index 1 > get phone number
@@ -278,6 +301,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                                     textDirection: TextDirection.rtl,
                                     child: TextFormField(
                                       controller: _phoneController,
+                                      maxLength: 11,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'مقدار وارد شده خالی است';
@@ -402,6 +426,17 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
+                                  Align(
+                                    alignment: AlignmentDirectional.centerEnd,
+                                    child: Text(
+                                      "شماره همراه : ${_phoneController.text.toString().trim()}",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                   SizedBox(
                                     height: 20,
                                   ),
@@ -475,7 +510,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                                       Align(
                                         alignment:
                                             AlignmentDirectional.centerEnd,
-                                        child: (shouldShowOnCompletedMessage())
+                                        child: (shouldShowOnCompletedMessage)
                                             ? InkWell(
                                                 onTap: () {
                                                   BlocProvider.of<LoginBloc>(
@@ -490,23 +525,19 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                                                       color: Colors.blueAccent),
                                                 ))
                                             : Countdown(
-                                                controller: otpTimerController,
-                                                seconds: 120,
-                                                build: (BuildContext context,
-                                                    double time) {
-                                                  return Text(formatMMSS(
-                                                      (time.toInt())));
-                                                },
-                                                interval: Duration(seconds: 1),
-                                                onFinished: () async {
-                                                  Future.delayed(
-                                                      const Duration(
-                                                          milliseconds: 500),
-                                                      () {
-                                                    setState(() {});
-                                                  });
-                                                },
-                                              ),
+                                          seconds: seccondsForOtpTimer,
+                                          build: (BuildContext context, double time) {
+                                            seccondsForOtpTimer = time.toInt();
+                                            return Text(formatMMSS(time.toInt()));
+                                          } ,
+                                          interval: Duration(seconds: 1),
+                                          onFinished: () {
+                                            setState(() {
+                                              seccondsForOtpTimer = 120;
+                                              shouldShowOnCompletedMessage = true;
+                                            });
+                                          },
+                                        )
                                       ),
                                     ],
                                   )
@@ -557,6 +588,10 @@ class _LoginScreenViewState extends State<LoginScreenView> {
     }
   }
 
+
+
+
+
   String formatMMSS(int seconds) {
     if (seconds != null && seconds != 0) {
       seconds = (seconds % 3600).truncate();
@@ -570,16 +605,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
       return "";
     }
   }
-
-  shouldShowOnCompletedMessage() {
-    if ((otpTimerController.isCompleted != null)) {
-      if ((otpTimerController.isCompleted!)) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
 }
+
+
+

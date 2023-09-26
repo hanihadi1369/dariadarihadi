@@ -51,6 +51,7 @@ import 'features/feature_wallet/domain/use_cases/get_balance_usecase.dart' as wa
 import 'features/feature_bill/domain/use_cases/get_balance_usecase.dart' as bill;
 import 'features/feature_charge_internet/domain/use_cases/get_balance_usecase.dart' as ceeee;
 import 'features/feature_charge_sim/domain/use_cases/get_balance_usecase.dart' as cssss;
+import 'features/feature_wallet/domain/use_cases/transaction_history_usecase.dart';
 import 'features/feature_wallet/domain/use_cases/transfer_kifbkif_usecase.dart';
 
 
@@ -78,8 +79,9 @@ setup(){
   locator.registerSingleton<WalletRepository>(WalletRepositoryImpl(locator()));
   locator.registerSingleton<ChargeWalletUseCase>(ChargeWalletUseCase(locator()));
   locator.registerSingleton<TransferKifBKifUseCase>(TransferKifBKifUseCase(locator()));
+  locator.registerSingleton<TransactionHistoryUseCase>(TransactionHistoryUseCase(locator()));
   locator.registerSingleton<wallett.GetBalanceUseCase>(wallett.GetBalanceUseCase(locator()));
-  locator.registerSingleton<WalletBloc>(WalletBloc(locator(),locator(),locator()));
+  locator.registerSingleton<WalletBloc>(WalletBloc(locator(),locator(),locator(),locator()));
 
 
 

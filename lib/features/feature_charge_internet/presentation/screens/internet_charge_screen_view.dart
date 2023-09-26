@@ -420,7 +420,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                         Align(
                             alignment: Alignment.topRight,
                             child: Text(
-                              "شماره سیم کارت اعتباری خود را وارد کنید",
+                              "شماره سیم کارت خود را وارد کنید",
                               style: TextStyle(color: MyColors.otp_underline),
                             )),
                         SizedBox(

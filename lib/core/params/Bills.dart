@@ -21,7 +21,9 @@ class Bills {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
+    if(billID!=null)
     map['billID'] = billID;
+    if(phoneNumber!=null)
     map['phoneNumber'] = phoneNumber;
     // map['gatewayID'] = gatewayID;
     // map['paymentID'] = paymentID;

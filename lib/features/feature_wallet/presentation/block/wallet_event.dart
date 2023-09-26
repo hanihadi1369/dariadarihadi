@@ -15,6 +15,11 @@ class TransferKifBKifEvent extends WalletEvent{
   TransferKifBKifEvent(this.transferKifBKifParam);
 }
 
+class TransactionsHistoryEvent extends WalletEvent{
+  final TransactionHistoryParam transactionsHistoryParam;
+  TransactionsHistoryEvent(this.transactionsHistoryParam);
+}
+
 
 class WalletChangePageIndexEvent extends WalletEvent{
   final int pageIndex;

@@ -5,7 +5,8 @@ import 'package:atba_application/core/utils/colors.dart';
 import 'package:atba_application/core/utils/slide_right_transition.dart';
 import 'package:atba_application/core/widgets/drawer.dart';
 import 'package:atba_application/core/widgets/loading.dart';
-import 'package:atba_application/features/feature_bill/presentation/block/bill_bloc.dart' as billbloc;
+import 'package:atba_application/features/feature_bill/presentation/block/bill_bloc.dart'
+    as billbloc;
 import 'package:atba_application/features/feature_bill/presentation/screens/bills_screen_view.dart';
 import 'package:atba_application/features/feature_charge_sim/presentation/screens/sim_charge_screen_view.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/balance_status.dart';
@@ -25,21 +26,23 @@ import 'package:persian_number_utility/persian_number_utility.dart';
 
 import '../../../../core/utils/my_utils.dart';
 import '../../../../core/utils/token_keeper.dart';
-import '../../../feature_charge_internet/presentation/block/charge_internet_bloc.dart'as cinternet;
-import '../../../feature_charge_sim/presentation/block/charge_sim_bloc.dart' as csim;
+import '../../../feature_charge_internet/presentation/block/charge_internet_bloc.dart'
+    as cinternet;
+import '../../../feature_charge_sim/presentation/block/charge_sim_bloc.dart'
+    as csim;
 
 class MainScreenView extends StatefulWidget {
   @override
-  _MainScreenViewState createState() => _MainScreenViewState();
+  MainScreenViewState createState() => MainScreenViewState();
 }
 
-class _MainScreenViewState extends State<MainScreenView> {
+class MainScreenViewState extends State<MainScreenView> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
-  String balance = "***";
-  String firstName = "***";
-  String lastName = "***";
-  String phoneNumber = "***";
+  static String balance = "***";
+  static String firstName = "***";
+  static String lastName = "***";
+  static String phoneNumber = "***";
   Uint8List? avatarProfile = null;
 
   @override
@@ -193,7 +196,7 @@ class _MainScreenViewState extends State<MainScreenView> {
                                         Text(
                                           (balance == "***")
                                               ? "نامشخص"
-                                              : "${balance} ریال"
+                                              : "${balance.seRagham()} ریال"
                                                   .toPersianDigit(),
                                           textDirection: TextDirection.rtl,
                                           textAlign: TextAlign.right,
@@ -243,13 +246,18 @@ class _MainScreenViewState extends State<MainScreenView> {
                                   flex: 1,
                                   child: Container(
                                     color: Colors.transparent,
-                                    child: (avatarProfile != null)
-                                        ? Image.memory(avatarProfile!)
-                                        : Icon(
-                                            Icons.account_circle_sharp,
-                                            color: MyColors.icon_1,
-                                            size: 42,
-                                          ),
+                                    child: Image.asset(
+                                      'assets/image_icon/fake_avatar.png',
+                                      fit: BoxFit.scaleDown,
+                                    ),
+
+                                    // (avatarProfile != null)
+                                    //     ? Image.memory(avatarProfile!)
+                                    //     : Icon(
+                                    //         Icons.account_circle_sharp,
+                                    //         color: MyColors.icon_1,
+                                    //         size: 42,
+                                    //       ),
                                   ))
                             ],
                           ),
@@ -277,22 +285,21 @@ class _MainScreenViewState extends State<MainScreenView> {
                             children: <Widget>[
                               InkWell(
                                 onTap: () async {
-
-
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
                                         return BlocProvider.value(
-                                          value: locator<cinternet.ChargeInternetBloc>(),
+                                          value: locator<
+                                              cinternet.ChargeInternetBloc>(),
                                           child: InternetChargeScreenView(),
                                         );
                                       },
                                     ),
-                                  );
-
-
-
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
 
                                   // await Navigator.push(
                                   //   context,
@@ -312,7 +319,7 @@ class _MainScreenViewState extends State<MainScreenView> {
                                         height: 20,
                                       ),
                                       Text(
-                                        "شارژ اینترنت",
+                                        "بسته اینترنت",
                                         textDirection: TextDirection.rtl,
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
@@ -325,9 +332,6 @@ class _MainScreenViewState extends State<MainScreenView> {
                               ),
                               InkWell(
                                 onTap: () async {
-
-
-
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -338,9 +342,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                         );
                                       },
                                     ),
-                                  );
-
-
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
 
                                   // await Navigator.push(
                                   //   context,
@@ -378,7 +383,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                     SlideRightRoute(
                                       page: KbkScreenView(),
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
                                 },
                                 child: Container(
                                   child: Column(
@@ -414,7 +422,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                         );
                                       },
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
                                 },
                                 child: Container(
                                   child: Column(
@@ -456,7 +467,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                         // );
                                       },
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
                                 },
                                 child: Container(
                                   child: Column(
@@ -511,7 +525,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                     SlideRightRoute(
                                       page: TicketScreenView(),
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
                                 },
                                 child: Container(
                                   child: Column(
@@ -597,7 +614,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                     SlideRightRoute(
                                       page: KbkScreenView(),
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.only(top: 10),
@@ -683,7 +703,10 @@ class _MainScreenViewState extends State<MainScreenView> {
                                         // );
                                       },
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.only(top: 10),
@@ -722,9 +745,16 @@ class _MainScreenViewState extends State<MainScreenView> {
                                   await Navigator.push(
                                     context,
                                     SlideRightRoute(
-                                      page: ProfileScreenView(),
+                                      page: ProfileScreenView(
+                                          int.parse(balance),
+                                          firstName,
+                                          lastName,
+                                          phoneNumber),
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetBalanceEvent())
+                                      });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.only(top: 10),

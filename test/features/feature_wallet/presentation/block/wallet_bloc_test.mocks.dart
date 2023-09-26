@@ -5,6 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
 
+import 'package:atba_application/core/params/transaction_history_param.dart'
+    as _i14;
 import 'package:atba_application/core/params/transfer_kifbkif_param.dart'
     as _i9;
 import 'package:atba_application/core/resources/data_state.dart' as _i3;
@@ -12,6 +14,8 @@ import 'package:atba_application/features/feature_wallet/domain/entities/charge_
     as _i6;
 import 'package:atba_application/features/feature_wallet/domain/entities/get_balance_entity_wallet.dart'
     as _i11;
+import 'package:atba_application/features/feature_wallet/domain/entities/transactions_history_entity.dart'
+    as _i13;
 import 'package:atba_application/features/feature_wallet/domain/entities/transfer_kifbkif_entity.dart'
     as _i8;
 import 'package:atba_application/features/feature_wallet/domain/repository/wallet_repository.dart'
@@ -20,6 +24,8 @@ import 'package:atba_application/features/feature_wallet/domain/use_cases/charge
     as _i4;
 import 'package:atba_application/features/feature_wallet/domain/use_cases/get_balance_usecase.dart'
     as _i10;
+import 'package:atba_application/features/feature_wallet/domain/use_cases/transaction_history_usecase.dart'
+    as _i12;
 import 'package:atba_application/features/feature_wallet/domain/use_cases/transfer_kifbkif_usecase.dart'
     as _i7;
 import 'package:mockito/mockito.dart' as _i1;
@@ -159,4 +165,41 @@ class MockGetBalanceUseCase extends _i1.Mock implements _i10.GetBalanceUseCase {
           ),
         )),
       ) as _i5.Future<_i3.DataState<_i11.GetBalanceEntity>>);
+}
+
+/// A class which mocks [TransactionHistoryUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTransactionHistoryUseCase extends _i1.Mock
+    implements _i12.TransactionHistoryUseCase {
+  MockTransactionHistoryUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.WalletRepository get walletRepository => (super.noSuchMethod(
+        Invocation.getter(#walletRepository),
+        returnValue: _FakeWalletRepository_0(
+          this,
+          Invocation.getter(#walletRepository),
+        ),
+      ) as _i2.WalletRepository);
+  @override
+  _i5.Future<_i3.DataState<_i13.TransactionsHistoryEntity>> call(
+          _i14.TransactionHistoryParam? transactionHistoryParam) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [transactionHistoryParam],
+        ),
+        returnValue:
+            _i5.Future<_i3.DataState<_i13.TransactionsHistoryEntity>>.value(
+                _FakeDataState_1<_i13.TransactionsHistoryEntity>(
+          this,
+          Invocation.method(
+            #call,
+            [transactionHistoryParam],
+          ),
+        )),
+      ) as _i5.Future<_i3.DataState<_i13.TransactionsHistoryEntity>>);
 }

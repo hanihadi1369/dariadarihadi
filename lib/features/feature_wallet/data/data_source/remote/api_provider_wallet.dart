@@ -39,7 +39,8 @@ class ApiProviderWallet {
 
   Future<dynamic> callChargeWallet(amount, redirectAppUrl) async {
     _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"amount": amount, "redirectAppUrl": redirectAppUrl};
+    // var params = {"amount": amount, "redirectAppUrl": redirectAppUrl};
+    var params = {"amount": amount};
     var body = json.encode(params);
     var response = await _dio?.post(
       Constants.baseUrl + "/apiapp/Transaction/Charge",
@@ -66,6 +67,25 @@ class ApiProviderWallet {
 
        data: body,
      );
+     return response;
+   }
+
+
+
+
+   Future<dynamic> callWalletTransactionsHistory(String dateFrom,String dateTo) async {
+     _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
+
+     final queryParameters = {
+       'pageIndex': 1,
+       'itemCount': 100,
+       'IsExcel': false,
+       'dateA': '${dateFrom}',
+       'dateB': '${dateTo}',
+     };
+
+     var response = await _dio
+         ?.get(Constants.baseUrl + "/apiapp/Transaction/Search",queryParameters: queryParameters);
      return response;
    }
 

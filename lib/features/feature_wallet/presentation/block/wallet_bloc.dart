@@ -2,8 +2,10 @@ import 'dart:async';
 
 
 
+import 'package:atba_application/core/params/transaction_history_param.dart';
 import 'package:atba_application/features/feature_wallet/domain/use_cases/get_balance_usecase.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/balance_status_wallet.dart';
+import 'package:atba_application/features/feature_wallet/presentation/block/transaction_history_status.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import '../../../../core/params/transfer_kifbkif_param.dart';
 import '../../../../core/resources/data_state.dart';
 
 import '../../domain/use_cases/charge_wallet_usecase.dart';
+import '../../domain/use_cases/transaction_history_usecase.dart';
 import '../../domain/use_cases/transfer_kifbkif_usecase.dart';
 import 'charge_wallet_status.dart';
 import 'transfer_kifbkif_status.dart';
@@ -24,9 +27,21 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
   final ChargeWalletUseCase chargeWalletUseCase;
   final TransferKifBKifUseCase transferKifBKifUseCase;
   final GetBalanceUseCase getBalanceUseCase;
+  final TransactionHistoryUseCase transactionHistoryUseCase;
 
 
-  WalletBloc(this.chargeWalletUseCase,this.transferKifBKifUseCase,this.getBalanceUseCase) : super(WalletState(chargeWalletStatus: ChargeWalletInit(),transferKifBKifStatus: TransferKifBKifInit(), pageWalletIndexStatus:PageWalletIndexStatus1(),balanceStatus: BalanceInit())) {
+  WalletBloc(
+      this.chargeWalletUseCase,
+      this.transferKifBKifUseCase,
+      this.getBalanceUseCase,
+      this.transactionHistoryUseCase
+      ) : super(WalletState(
+      chargeWalletStatus: ChargeWalletInit(),
+      transferKifBKifStatus: TransferKifBKifInit(),
+      pageWalletIndexStatus:PageWalletIndexStatus1(),
+      balanceStatus: BalanceInit(),
+      transactionsHistoryStatus: TransactionsHistoryInit()
+  )) {
 
     on<ChargeWalletEvent>((event, emit) async {
 
@@ -58,6 +73,58 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         emit(state.copyWith(newTransferKifBKifStatus: TransferKifBKifError(dataState.error!)));
       }
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    on<TransactionsHistoryEvent>((event, emit) async {
+
+      emit(state.copyWith(newTransactionsHistoryStatus: TransactionsHistoryLoading()));
+
+      DataState dataState = await transactionHistoryUseCase(event.transactionsHistoryParam);
+
+      if(dataState is DataSuccess){
+        emit(state.copyWith(newTransactionsHistoryStatus: TransactionsHistoryCompleted(dataState.data)));
+      }
+
+      if(dataState is DataFailed){
+        emit(state.copyWith(newTransactionsHistoryStatus: TransactionsHistoryError(dataState.error!)));
+      }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

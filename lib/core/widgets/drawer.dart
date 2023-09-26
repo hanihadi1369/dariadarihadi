@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:atba_application/features/feature_main/presentation/screens/main_screen_view.dart';
+import 'package:atba_application/features/unbounded_features/about_contructor_screen_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../features/unbounded_features/aboutus_screen_view.dart';
 import '../../features/unbounded_features/profile_screen_view.dart';
 import '../utils/colors.dart';
 import '../utils/slide_right_transition.dart';
@@ -12,6 +15,10 @@ import '../utils/token_keeper.dart';
 
 
 class AppDrawer extends StatelessWidget {
+
+
+
+
 
 
 
@@ -58,7 +65,7 @@ class AppDrawer extends StatelessWidget {
                               await Navigator.push(
                                 context,
                                 SlideRightRoute(
-                                  page: ProfileScreenView(),
+                                  page: ProfileScreenView(int.parse(MainScreenViewState.balance!),MainScreenViewState.firstName!,MainScreenViewState.lastName!,MainScreenViewState.phoneNumber!),
                                 ),
                               );
                             },
@@ -159,8 +166,14 @@ class AppDrawer extends StatelessWidget {
                         ),
                         SizedBox(height: 10,),
                         InkWell(
-                          onTap: (){
-
+                          onTap: () async{
+                            Navigator.of(context).pop();
+                            await Navigator.push(
+                              context,
+                              SlideRightRoute(
+                                page: AboutConstructorScreenView()
+                              ),
+                            );
                           },
                           child: Container(
                             child: Row(children: [
@@ -184,8 +197,14 @@ class AppDrawer extends StatelessWidget {
                         ),
                         SizedBox(height: 10,),
                         InkWell(
-                          onTap: (){
-
+                          onTap: () async{
+                            Navigator.of(context).pop();
+                            await Navigator.push(
+                              context,
+                              SlideRightRoute(
+                                  page: AboutUsScreenView()
+                              ),
+                            );
                           },
                           child: Container(
                             child: Row(children: [

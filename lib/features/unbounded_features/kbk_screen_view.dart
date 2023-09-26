@@ -396,7 +396,7 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              _amountController.text.trim() + " ریال",
+                              _amountController.text.trim().seRagham() + " ریال",
                               textDirection: TextDirection.rtl,
                               style:
                                   TextStyle(color: Colors.black, fontSize: 12),

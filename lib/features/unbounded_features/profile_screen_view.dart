@@ -1,4 +1,3 @@
-
 import 'package:atba_application/features/feature_wallet/presentation/block/wallet_bloc.dart';
 import 'package:atba_application/features/feature_wallet/presentation/screens/wallet_screen_view.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -12,20 +11,45 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 
-
 import '../../core/utils/colors.dart';
 import '../../core/utils/slide_right_transition.dart';
 import '../../locator.dart';
 
 import 'kbk_screen_view.dart';
 
-
 class ProfileScreenView extends StatefulWidget {
+   int? balanceAmount;
+  String? firstName;
+  String? lastName;
+  String? mobileNumber;
+
+  ProfileScreenView(int balanceAmount, String firstName, String lastName,
+      String mobileNumber) {
+    this.balanceAmount = balanceAmount;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.mobileNumber = mobileNumber;
+  }
+
   @override
-  _ProfileScreenViewState createState() => _ProfileScreenViewState();
+  _ProfileScreenViewState createState() => _ProfileScreenViewState(
+      balanceAmount!, firstName!, lastName!, mobileNumber!);
 }
 
 class _ProfileScreenViewState extends State<ProfileScreenView> {
+  int? balanceAmount;
+  String? firstName;
+  String? lastName;
+  String? mobileNumber;
+
+  _ProfileScreenViewState(int balanceAmount, String firstName, String lastName,
+      String mobileNumber) {
+    this.balanceAmount = balanceAmount;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.mobileNumber = mobileNumber;
+  }
+
   int pageIndex = 1;
 
   final _formKey_firstname = GlobalKey<FormState>();
@@ -33,21 +57,24 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
   final _formKey_phonenumber = GlobalKey<FormState>();
 
   TextEditingController _firstnameController = TextEditingController();
+
   TextEditingController _lastnameController = TextEditingController();
   TextEditingController _phonenumberController = TextEditingController();
-
-
-
 
   bool _isButtonNextDisabled_page2_condition1 = true; //first name
   bool _isButtonNextDisabled_page2_condition2 = true; //last name
   bool _isButtonNextDisabled_page2_condition3 = true; //phone number
 
-
-
-
   @override
   void initState() {
+    if(firstName == null || lastName == null || firstName =="null" ||
+        lastName =="null"||firstName=="***"||lastName=="***"){
+
+    }else{
+      _firstnameController.text = firstName!;
+      _lastnameController.text = lastName!;
+    }
+
     super.initState();
   }
 
@@ -74,7 +101,6 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
   preparePageIndex() {
     // index 1 > main profile page
     // index 2 > edit profile page
-
 
     if (pageIndex == 1) {
       return Column(
@@ -132,13 +158,12 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Container()
-                      ),
+                      Expanded(child: Container()),
                       Expanded(
                         flex: 2,
                         child: Image.asset(
-                          'assets/image_icon/add_user_image.png',
+                          // 'assets/image_icon/add_user_image.png',
+                          'assets/image_icon/fake_avatar.png',
                           fit: BoxFit.scaleDown,
                         ),
                       ),
@@ -146,9 +171,8 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            "09128222554",
-                            style: TextStyle(
-                                fontSize: 13),
+                            mobileNumber!,
+                            style: TextStyle(fontSize: 13),
                           ),
                         ),
                       ),
@@ -156,7 +180,10 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            "هادی قدیری",
+                            (firstName == null || lastName == null || firstName =="null" ||
+                            lastName =="null"||firstName=="***"||lastName=="***"
+
+                            )?"نامشخص":  "${firstName}  ${lastName}",
                             textDirection: TextDirection.rtl,
                             style: TextStyle(fontSize: 13),
                           ),
@@ -164,24 +191,24 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 16,right: 16),
-                          child: Row(children: [
-                            Text(
-                              "2,000,000 ریال".toPersianDigit(),
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            ),
-
-                            Spacer(),
-
-                            Text(
-                              "موجودی کیف پول",
-                              textDirection: TextDirection.rtl,
-                              style: TextStyle(fontSize: 13),
-                            ),
-                          ],),
+                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          child: Row(
+                            children: [
+                              Text(
+                                "${balanceAmount!.toString().seRagham()} ریال".toPersianDigit(),
+                                textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(),
+                              Text(
+                                "موجودی کیف پول",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     ],
@@ -195,10 +222,10 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(flex:1,child: Container()),
+                    Expanded(flex: 1, child: Container()),
                     Expanded(
                       child: InkWell(
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             pageIndex = 2;
                           });
@@ -239,7 +266,8 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
                                                   "ویرایش حساب",
-                                                  style: TextStyle(fontSize: 13),
+                                                  style:
+                                                      TextStyle(fontSize: 13),
                                                 ))),
                                       )),
                                   Expanded(
@@ -261,9 +289,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                     ),
                     Expanded(
                       child: InkWell(
-                        onTap: (){
-
-                        },
+                        onTap: () {},
                         child: Padding(
                           padding: EdgeInsets.only(left: 32, right: 32),
                           child: Container(
@@ -300,7 +326,8 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
                                                   "شارژ کیف پول",
-                                                  style: TextStyle(fontSize: 13),
+                                                  style:
+                                                      TextStyle(fontSize: 13),
                                                 ))),
                                       )),
                                   Expanded(
@@ -317,7 +344,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                         ),
                       ),
                     ),
-                    Expanded(flex:6,child: Container())
+                    Expanded(flex: 6, child: Container())
                   ],
                 ),
               )),
@@ -415,10 +442,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-
-
                         Navigator.pop(context);
-
                       },
                       child: Container(
                         padding: EdgeInsets.only(top: 10),
@@ -454,19 +478,14 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   Expanded(
                     child: InkWell(
                       onTap: () async {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-
-
                               return BlocProvider.value(
                                 value: locator<WalletBloc>(),
                                 child: WalletScreenView(),
                               );
-
-
 
                               // return BlocProvider(
                               //     create: (_)=> locator<WalletBloc>(),
@@ -475,7 +494,6 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                             },
                           ),
                         );
-
                       },
                       child: Container(
                         padding: EdgeInsets.only(top: 10),
@@ -510,13 +528,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   ),
                   Expanded(
                     child: InkWell(
-                      onTap: () async {
-
-
-
-
-
-                      },
+                      onTap: () async {},
                       child: Container(
                         padding: EdgeInsets.only(top: 10),
                         child: Column(
@@ -635,8 +647,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                           textDirection: TextDirection.rtl,
                                           child: TextFormField(
                                             maxLength: 20,
-                                            controller:
-                                                _firstnameController,
+                                            controller: _firstnameController,
                                             validator: (value) {
                                               if (value == null ||
                                                   value.isEmpty) {
@@ -651,8 +662,6 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                                     !_formKey_firstname
                                                         .currentState!
                                                         .validate();
-
-
                                               });
                                             },
                                             keyboardType: TextInputType.text,
@@ -667,7 +676,6 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                                 borderSide: BorderSide(
                                                     color: Colors.grey),
                                               ),
-
                                               filled: true,
                                               hintText: "نام",
                                               hintStyle: TextStyle(
@@ -690,14 +698,13 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                     key: _formKey_lastname,
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         Directionality(
                                           textDirection: TextDirection.rtl,
                                           child: TextFormField(
                                             maxLength: 20,
-                                            controller:
-                                            _lastnameController,
+                                            controller: _lastnameController,
                                             validator: (value) {
                                               if (value == null ||
                                                   value.isEmpty) {
@@ -709,26 +716,23 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                             onChanged: (value) {
                                               setState(() {
                                                 _isButtonNextDisabled_page2_condition2 =
-                                                !_formKey_lastname
-                                                    .currentState!
-                                                    .validate();
-
-
+                                                    !_formKey_lastname
+                                                        .currentState!
+                                                        .validate();
                                               });
                                             },
                                             keyboardType: TextInputType.text,
                                             decoration: InputDecoration(
                                               enabledBorder:
-                                              UnderlineInputBorder(
+                                                  UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: Colors.grey),
                                               ),
                                               focusedBorder:
-                                              UnderlineInputBorder(
+                                                  UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: Colors.grey),
                                               ),
-
                                               filled: true,
                                               hintText: "نام خانوادگی",
                                               hintStyle: TextStyle(
@@ -736,7 +740,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                               ),
                                               fillColor: Color(0x32E1E3E0),
                                               floatingLabelBehavior:
-                                              FloatingLabelBehavior.auto,
+                                                  FloatingLabelBehavior.auto,
                                             ),
                                           ),
                                         ),
@@ -744,72 +748,68 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                     ),
                                   ),
                                 )),
-                            Expanded(
-                                flex: 3,
-                                child: Container(
-                                  child: Form(
-                                    key: _formKey_phonenumber,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                      children: [
-                                        Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: TextFormField(
-                                            maxLength: 11,
-                                            controller:
-                                            _phonenumberController,
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'مقدار وارد شده خالی است';
-                                              }
-
-                                              if(value.length != 11){
-                                                return 'شماره تلفن همراه معتبر نیست';
-                                              }
-
-                                              return null;
-                                            },
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _isButtonNextDisabled_page2_condition3 =
-                                                !_formKey_phonenumber
-                                                    .currentState!
-                                                    .validate();
-
-
-                                              });
-                                            },
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                              enabledBorder:
-                                              UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-                                              focusedBorder:
-                                              UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-
-                                              filled: true,
-                                              hintText: "شماره تلفن همراه",
-                                              hintStyle: TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                              fillColor: Color(0x32E1E3E0),
-                                              floatingLabelBehavior:
-                                              FloatingLabelBehavior.auto,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                            Expanded(flex:2,child: Container()),
+                            // Expanded(
+                            //     flex: 3,
+                            //     child: Container(
+                            //       child: Form(
+                            //         key: _formKey_phonenumber,
+                            //         child: Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.stretch,
+                            //           children: [
+                            //             Directionality(
+                            //               textDirection: TextDirection.rtl,
+                            //               child: TextFormField(
+                            //                 maxLength: 11,
+                            //                 controller: _phonenumberController,
+                            //                 validator: (value) {
+                            //                   if (value == null ||
+                            //                       value.isEmpty) {
+                            //                     return 'مقدار وارد شده خالی است';
+                            //                   }
+                            //
+                            //                   if (value.length != 11) {
+                            //                     return 'شماره تلفن همراه معتبر نیست';
+                            //                   }
+                            //
+                            //                   return null;
+                            //                 },
+                            //                 onChanged: (value) {
+                            //                   setState(() {
+                            //                     _isButtonNextDisabled_page2_condition3 =
+                            //                         !_formKey_phonenumber
+                            //                             .currentState!
+                            //                             .validate();
+                            //                   });
+                            //                 },
+                            //                 keyboardType: TextInputType.number,
+                            //                 decoration: InputDecoration(
+                            //                   enabledBorder:
+                            //                       UnderlineInputBorder(
+                            //                     borderSide: BorderSide(
+                            //                         color: Colors.grey),
+                            //                   ),
+                            //                   focusedBorder:
+                            //                       UnderlineInputBorder(
+                            //                     borderSide: BorderSide(
+                            //                         color: Colors.grey),
+                            //                   ),
+                            //                   filled: true,
+                            //                   hintText: "شماره تلفن همراه",
+                            //                   hintStyle: TextStyle(
+                            //                     fontSize: 12,
+                            //                   ),
+                            //                   fillColor: Color(0x32E1E3E0),
+                            //                   floatingLabelBehavior:
+                            //                       FloatingLabelBehavior.auto,
+                            //                 ),
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     )),
+                            Expanded(flex: 2, child: Container()),
                           ],
                         )),
                       ),
@@ -829,20 +829,12 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(
-                      onPressed:
-                          (_isButtonNextDisabled_page2_condition1 == true
-                          ||
-                              _isButtonNextDisabled_page2_condition2 ==true
-                              ||
-                              _isButtonNextDisabled_page2_condition3==true
-
-
-
-                          )
-                              ? null
-                              : () {
-
-                                },
+                      onPressed: (_isButtonNextDisabled_page2_condition1 ==
+                                  true ||
+                              _isButtonNextDisabled_page2_condition2 == true ||
+                              _isButtonNextDisabled_page2_condition3 == true)
+                          ? null
+                          : () {},
                       child: Text('تایید'),
                     ),
                   )
@@ -853,7 +845,5 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
         ],
       );
     }
-
-
   }
 }

@@ -7,9 +7,16 @@ class WalletState extends Equatable{
   TransferKifBKifStatus transferKifBKifStatus;
   PageWalletIndexStatus pageWalletIndexStatus;
   BalanceStatus balanceStatus;
+  TransactionsHistoryStatus transactionsHistoryStatus;
 
 
-  WalletState({required this.chargeWalletStatus,required this.transferKifBKifStatus,required this.balanceStatus,required this.pageWalletIndexStatus});
+  WalletState({
+    required this.chargeWalletStatus,
+    required this.transferKifBKifStatus,
+    required this.balanceStatus,
+    required this.pageWalletIndexStatus,
+    required this.transactionsHistoryStatus
+  });
 
 
 
@@ -18,12 +25,21 @@ class WalletState extends Equatable{
    chargeWalletStatus,
    transferKifBKifStatus,
    pageWalletIndexStatus,
-   balanceStatus
+   balanceStatus,
+   transactionsHistoryStatus
   ];
 
 
 
-  WalletState copyWith({ChargeWalletStatus? newChargeWalletStatus,TransferKifBKifStatus? newTransferKifBKifStatus,BalanceStatus? newBalanceStatus,PageWalletIndexStatus? newPageWalletIndexStatus }){
+  WalletState copyWith({
+    ChargeWalletStatus? newChargeWalletStatus,
+    TransferKifBKifStatus? newTransferKifBKifStatus,
+    BalanceStatus? newBalanceStatus,
+    PageWalletIndexStatus? newPageWalletIndexStatus,
+    TransactionsHistoryStatus? newTransactionsHistoryStatus
+
+
+  }){
 
 
 
@@ -33,7 +49,8 @@ class WalletState extends Equatable{
         chargeWalletStatus: newChargeWalletStatus ?? this.chargeWalletStatus,
         transferKifBKifStatus: newTransferKifBKifStatus ?? this.transferKifBKifStatus,
         balanceStatus: newBalanceStatus ?? this.balanceStatus,
-        pageWalletIndexStatus: newPageWalletIndexStatus?? this.pageWalletIndexStatus
+        pageWalletIndexStatus: newPageWalletIndexStatus?? this.pageWalletIndexStatus,
+        transactionsHistoryStatus: newTransactionsHistoryStatus ?? this.transactionsHistoryStatus
     );
   }
 

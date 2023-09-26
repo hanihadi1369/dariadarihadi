@@ -13,7 +13,8 @@ class ChargeWalletUseCase extends UseCase<DataState<ChargeWalletEntity>,int> {
   @override
   Future<DataState<ChargeWalletEntity>> call(int amount) {
     return walletRepository.doChargeWalletOperation(amount,"com.sepas.atba");
-    // return walletRepository.doChargeWalletOperation(amount,"com.sepas.atba");
+
+
   }
 
 }
