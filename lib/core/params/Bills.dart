@@ -4,7 +4,9 @@ class Bills {
       // this.gatewayID,
       // this.paymentID,
       this.phoneNumber,
-      this.operationCode,});
+      this.operationCode,
+      this.isMidTerm
+  });
 
   Bills.fromJson(dynamic json) {
     billID = json['billID'];
@@ -17,7 +19,8 @@ class Bills {
   // String? gatewayID;
   String? phoneNumber;
   // String? paymentID;
-  int? operationCode;
+  String? operationCode;
+  bool? isMidTerm;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -28,6 +31,8 @@ class Bills {
     // map['gatewayID'] = gatewayID;
     // map['paymentID'] = paymentID;
     map['operationCode'] = operationCode;
+    if(isMidTerm!=null)
+      map['isMidTerm'] = isMidTerm;
     return map;
   }
 

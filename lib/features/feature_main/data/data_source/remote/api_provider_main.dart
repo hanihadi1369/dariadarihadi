@@ -51,5 +51,17 @@ class ApiProviderMain {
    }
 
 
+   Future<dynamic> callRefreshToken(refreshToken) async {
+
+     var params = {"refreshToken": refreshToken};
+     var body = json.encode(params);
+     var response = await _dio?.post(
+       Constants.baseUrl + "/usermanagement/Auth/Refresh",
+       data: body,
+     );
+     return response;
+   }
+
+
 
 }

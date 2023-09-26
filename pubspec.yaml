@@ -51,6 +51,7 @@ dependencies:
   bloc_test: ^9.1.4
   jiffy: ^5.0.0
   timer_count_down: ^2.2.2
+  pie_chart: ^5.3.2
 #  screenshot: ^2.0.0
 #  share_plus: ^7.1.0
 #  path_provider: ^2.1.1

@@ -12,7 +12,6 @@ import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
-
 import '../../../../core/params/verify_otp_param.dart';
 import '../../../../core/utils/colors.dart';
 import '../../../../core/utils/fade_transition.dart';
@@ -49,9 +48,6 @@ class _LoginScreenViewState extends State<LoginScreenView> {
 
   int seccondsForOtpTimer = 120;
 
-
-
-
   @override
   void initState() {
     super.initState();
@@ -73,9 +69,9 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             SendOtpCompleted sendOtpCompleted =
                 state.sendOtpStatus as SendOtpCompleted;
             if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
-             shouldShowOnCompletedMessage= false;
-             seccondsForOtpTimer = 120;
-             state.sendOtpStatus  =  SendOtpInit();
+              shouldShowOnCompletedMessage = false;
+              seccondsForOtpTimer = 120;
+              state.sendOtpStatus = SendOtpInit();
             }
           }
 
@@ -84,7 +80,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             SendOtpCompleted sendOtpCompleted =
                 state.sendOtpStatus as SendOtpCompleted;
             if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
-              shouldShowOnCompletedMessage= false;
+              shouldShowOnCompletedMessage = false;
               seccondsForOtpTimer = 120;
             }
           }
@@ -164,13 +160,16 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             VerifyOtpError error = state.verifyOtpStatus as VerifyOtpError;
             _showSnackBar(error.message);
             state.verifyOtpStatus = VerifyOtpInit();
+            _isButtonOTPDisabled = true;
           }
         },
         builder: (context, state) {
-          if (state.sendOtpStatus is SendOtpLoading || state.verifyOtpStatus is VerifyOtpLoading) {
+          if (state.sendOtpStatus is SendOtpLoading ||
+              state.verifyOtpStatus is VerifyOtpLoading) {
             return LoadingPage();
           }
-          if (state.sendOtpStatus is SendOtpCompleted && state.pageLoginIndexStatus is PageLoginIndexStatus1) {
+          if (state.sendOtpStatus is SendOtpCompleted &&
+              state.pageLoginIndexStatus is PageLoginIndexStatus1) {
             SendOtpCompleted sendOtpCompleted =
                 state.sendOtpStatus as SendOtpCompleted;
             if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
@@ -508,37 +507,43 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                                       ),
                                       Spacer(),
                                       Align(
-                                        alignment:
-                                            AlignmentDirectional.centerEnd,
-                                        child: (shouldShowOnCompletedMessage)
-                                            ? InkWell(
-                                                onTap: () {
-                                                  BlocProvider.of<LoginBloc>(
-                                                          context)
-                                                      .add(SendOtpEvent(
-                                                          _phoneController.text
-                                                              .trim()));
-                                                },
-                                                child: Text(
-                                                  "ارسال مجدد کد تایید",
-                                                  style: TextStyle(
-                                                      color: Colors.blueAccent),
-                                                ))
-                                            : Countdown(
-                                          seconds: seccondsForOtpTimer,
-                                          build: (BuildContext context, double time) {
-                                            seccondsForOtpTimer = time.toInt();
-                                            return Text(formatMMSS(time.toInt()));
-                                          } ,
-                                          interval: Duration(seconds: 1),
-                                          onFinished: () {
-                                            setState(() {
-                                              seccondsForOtpTimer = 120;
-                                              shouldShowOnCompletedMessage = true;
-                                            });
-                                          },
-                                        )
-                                      ),
+                                          alignment:
+                                              AlignmentDirectional.centerEnd,
+                                          child: (shouldShowOnCompletedMessage)
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    BlocProvider.of<LoginBloc>(
+                                                            context)
+                                                        .add(SendOtpEvent(
+                                                            _phoneController
+                                                                .text
+                                                                .trim()));
+                                                  },
+                                                  child: Text(
+                                                    "ارسال مجدد کد تایید",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.blueAccent),
+                                                  ))
+                                              : Countdown(
+                                                  seconds: seccondsForOtpTimer,
+                                                  build: (BuildContext context,
+                                                      double time) {
+                                                    seccondsForOtpTimer =
+                                                        time.toInt();
+                                                    return Text(formatMMSS(
+                                                        time.toInt()));
+                                                  },
+                                                  interval:
+                                                      Duration(seconds: 1),
+                                                  onFinished: () {
+                                                    setState(() {
+                                                      seccondsForOtpTimer = 120;
+                                                      shouldShowOnCompletedMessage =
+                                                          true;
+                                                    });
+                                                  },
+                                                )),
                                     ],
                                   )
                                 ],
@@ -588,10 +593,6 @@ class _LoginScreenViewState extends State<LoginScreenView> {
     }
   }
 
-
-
-
-
   String formatMMSS(int seconds) {
     if (seconds != null && seconds != 0) {
       seconds = (seconds % 3600).truncate();
@@ -606,6 +607,3 @@ class _LoginScreenViewState extends State<LoginScreenView> {
     }
   }
 }
-
-
-

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:atba_application/core/utils/colors.dart';
@@ -9,6 +10,7 @@ import 'package:atba_application/features/feature_bill/presentation/block/bill_b
     as billbloc;
 import 'package:atba_application/features/feature_bill/presentation/screens/bills_screen_view.dart';
 import 'package:atba_application/features/feature_charge_sim/presentation/screens/sim_charge_screen_view.dart';
+import 'package:atba_application/features/feature_login/presentation/screens/login_screen_view.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/balance_status.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/main_bloc.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/profile_status.dart';
@@ -30,6 +32,8 @@ import '../../../feature_charge_internet/presentation/block/charge_internet_bloc
     as cinternet;
 import '../../../feature_charge_sim/presentation/block/charge_sim_bloc.dart'
     as csim;
+import '../../../feature_login/presentation/bloc/login_bloc.dart';
+import '../bloc/refresh_token_status.dart';
 
 class MainScreenView extends StatefulWidget {
   @override
@@ -69,18 +73,147 @@ class MainScreenViewState extends State<MainScreenView> {
           listener: (context, state) {
             if (state.balanceStatus is BalanceError) {
               BalanceError error = state.balanceStatus as BalanceError;
-              _showSnackBar(error.message);
-              state.balanceStatus = BalanceInit();
+               if (error.message == "عدم پاسخگویی سرور : شناسه نامعتبر"){
+
+
+
+                 TokenKeeper.getRefreshToken().then((value) {
+                   BlocProvider.of<MainBloc>(context)
+                       .add(RefreshTokenEvent(value));
+                   state.balanceStatus = BalanceInit();
+                 });
+
+
+
+
+
+
+
+
+
+
+               }else{
+                 _showSnackBar(error.message);
+                 state.balanceStatus = BalanceInit();
+               }
+
+
+
+
+
+
             }
             if (state.profileStatus is ProfileError) {
               ProfileError error = state.profileStatus as ProfileError;
-              _showSnackBar(error.message);
-              state.profileStatus = ProfileInit();
+              if (error.message == "عدم پاسخگویی سرور : شناسه نامعتبر"){
+                state.profileStatus = ProfileInit();
+              }else{
+                _showSnackBar(error.message);
+                state.profileStatus = ProfileInit();
+              }
+
+
+
+
+
+
             }
+            if(state.refreshTokenStatus is RefreshTokenError){
+              TokenKeeper.deleteAccessToken().then((value) {
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return BlocProvider.value(
+                        value: locator<LoginBloc>(),
+                        child: LoginScreenView(),
+                      );
+                    },
+                  ),
+                );
+
+
+              });
+            }
+
+            if (state.refreshTokenStatus is RefreshTokenCompleted) {
+              RefreshTokenCompleted refreshTokenCompleted =
+              state.refreshTokenStatus as RefreshTokenCompleted;
+              if (refreshTokenCompleted.refreshTokenEntity.isFailed == true) {
+
+                TokenKeeper.deleteAccessToken().then((value) {
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return BlocProvider.value(
+                          value: locator<LoginBloc>(),
+                          child: LoginScreenView(),
+                        );
+                      },
+                    ),
+                  );
+
+
+                });
+
+
+
+
+              } else {
+                TokenKeeper.saveAccessToken(refreshTokenCompleted
+                    .refreshTokenEntity.value!.tokens!.accesstoken!)
+                    .then(
+                      (value) => {
+                    TokenKeeper.accesstoken = refreshTokenCompleted
+                        .refreshTokenEntity.value!.tokens!.accesstoken!,
+                    TokenKeeper.saveRefreshToken(refreshTokenCompleted
+                        .refreshTokenEntity.value!.tokens!.refreshToken!)
+                        .then(
+                          (value) => {
+                        TokenKeeper.refreshToken = refreshTokenCompleted
+                            .refreshTokenEntity.value!.tokens!.refreshToken!,
+                        TokenKeeper.saveRefreshTokenExpirationDate(
+                            refreshTokenCompleted.refreshTokenEntity.value!
+                                .tokens!.refreshTokenExpirationDate!)
+                            .then(
+                              (value) => {
+                            TokenKeeper.refreshTokenExpirationDate =
+                            refreshTokenCompleted.refreshTokenEntity.value!
+                                .tokens!.refreshTokenExpirationDate!,
+
+
+                              state.refreshTokenStatus = RefreshTokenInit(),
+                              state.balanceStatus = BalanceInit(),
+                          state.profileStatus = ProfileInit(),
+
+
+
+                      _getPhoneNumber(),
+                      BlocProvider.of<MainBloc>(context).add(GetBalanceEvent()),
+                      BlocProvider.of<MainBloc>(context).add(GetProfileEvent()),
+
+
+
+                          },
+                        )
+                      },
+                    )
+                  },
+                );
+              }
+            }
+
+
+
           },
           builder: (context, state) {
             if (state.balanceStatus is BalanceLoading ||
-                state.profileStatus is ProfileLoading) {
+                state.profileStatus is ProfileLoading  ||
+                state.refreshTokenStatus is RefreshTokenLoading
+            ) {
               return LoadingPage();
             }
             if (state.balanceStatus is BalanceCompleted) {

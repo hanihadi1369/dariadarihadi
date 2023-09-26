@@ -306,7 +306,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                         Align(
                             alignment: Alignment.topRight,
                             child: Text(
-                              "شماره سیم کارت اعتباری خود را وارد کنید",
+                              "شماره سیم کارت خود را وارد کنید",
                               style: TextStyle(color: MyColors.otp_underline),
                             )),
                         SizedBox(
@@ -385,144 +385,144 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                       onPressed: _isButtonNextDisabled_page1
                           ? null
                           : () {
-                              //should show bottom sheet dialog
-                              // showMaterialModalBottomSheet(
-                              //   context: context,
-                              //   shape: RoundedRectangleBorder(
-                              //       borderRadius: BorderRadius.only(
-                              //           topLeft: Radius.circular(15),
-                              //           topRight: Radius.circular(15))),
-                              //   builder: (context) => Container(
-                              //     height: MediaQuery.of(context).size.height /
-                              //         (2.5),
-                              //     child: Column(
-                              //       crossAxisAlignment:
-                              //           CrossAxisAlignment.stretch,
-                              //       children: [
-                              //         SizedBox(
-                              //           height: 10,
-                              //         ),
-                              //         Center(
-                              //             child: Text(
-                              //           "نوع سیم کارت",
-                              //           style: TextStyle(
-                              //               color: MyColors.otp_underline,
-                              //               fontSize: 16),
-                              //         )),
-                              //         SizedBox(
-                              //           height: 5,
-                              //         ),
-                              //         Center(
-                              //             child: Text(
-                              //           _phoneController.text,
-                              //           style: TextStyle(color: Colors.grey),
-                              //         )),
-                              //         Divider(
-                              //           thickness: 1,
-                              //           color: Colors.black,
-                              //         ),
-                              //         InkWell(
-                              //           onTap: () {
-                              //             setState(() {
-                              //               simCardType = 1;
-                              //               pageIndex = 2;
-                              //               Navigator.pop(context);
-                              //             });
-                              //           },
-                              //           child: Container(
-                              //             padding: EdgeInsets.only(
-                              //                 right: 16, top: 5, bottom: 5),
-                              //             width: double.infinity,
-                              //             child: Align(
-                              //                 alignment: Alignment.centerRight,
-                              //                 child: Text(
-                              //                   "اعتباری",
-                              //                   style: TextStyle(
-                              //                       color: Colors.black),
-                              //                 )),
-                              //           ),
-                              //         ),
-                              //         Divider(
-                              //           thickness: 0.5,
-                              //           color: Colors.grey,
-                              //         ),
-                              //         InkWell(
-                              //           onTap: () {
-                              //             setState(() {
-                              //               simCardType = 2;
-                              //               pageIndex = 2;
-                              //               Navigator.pop(context);
-                              //             });
-                              //           },
-                              //           child: Container(
-                              //             padding: EdgeInsets.only(
-                              //                 right: 16, top: 5, bottom: 5),
-                              //             width: double.infinity,
-                              //             child: Align(
-                              //                 alignment: Alignment.centerRight,
-                              //                 child: Text(
-                              //                   "دائمی",
-                              //                   style: TextStyle(
-                              //                       color: Colors.black),
-                              //                 )),
-                              //           ),
-                              //         ),
-                              //         Divider(
-                              //           thickness: 0.5,
-                              //           color: Colors.grey,
-                              //         ),
-                              //         Spacer(),
-                              //         Padding(
-                              //           padding: EdgeInsets.only(
-                              //               left: 32, right: 32),
-                              //           child: ElevatedButton(
-                              //               style: ButtonStyle(
-                              //                 backgroundColor:
-                              //                     MaterialStateProperty
-                              //                         .resolveWith<Color>(
-                              //                   (Set<MaterialState> states) {
-                              //                     return Colors.white;
-                              //                   },
-                              //                 ),
-                              //                 padding: MaterialStateProperty
-                              //                     .all<EdgeInsetsGeometry>(
-                              //                   EdgeInsets.symmetric(
-                              //                       horizontal: 16,
-                              //                       vertical: 8),
-                              //                 ),
-                              //                 shape: MaterialStateProperty.all<
-                              //                     RoundedRectangleBorder>(
-                              //                   RoundedRectangleBorder(
-                              //                     borderRadius:
-                              //                         BorderRadius.circular(
-                              //                             10.0),
-                              //                     side: BorderSide(
-                              //                         color: MyColors
-                              //                             .otp_underline),
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //               onPressed: () {
-                              //                 Navigator.pop(context);
-                              //               },
-                              //               child: Text(
-                              //                 "انصراف",
-                              //                 style: TextStyle(
-                              //                     color:
-                              //                         MyColors.otp_underline),
-                              //               )),
-                              //         ),
-                              //         SizedBox(
-                              //           height: 20,
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // );
-                              setState(() {
-                                simCardType = 1;
-                                pageIndex = 2;
-                              });
+                              // should show bottom sheet dialog
+                              showMaterialModalBottomSheet(
+                                context: context,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15))),
+                                builder: (context) => Container(
+                                  height: MediaQuery.of(context).size.height /
+                                      (2.5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Center(
+                                          child: Text(
+                                        "نوع سیم کارت",
+                                        style: TextStyle(
+                                            color: MyColors.otp_underline,
+                                            fontSize: 16),
+                                      )),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Center(
+                                          child: Text(
+                                        _phoneController.text,
+                                        style: TextStyle(color: Colors.grey),
+                                      )),
+                                      Divider(
+                                        thickness: 1,
+                                        color: Colors.black,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            simCardType = 1;
+                                            pageIndex = 2;
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              right: 16, top: 5, bottom: 5),
+                                          width: double.infinity,
+                                          child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "اعتباری",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              )),
+                                        ),
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.grey,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            simCardType = 2;
+                                            pageIndex = 2;
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              right: 16, top: 5, bottom: 5),
+                                          width: double.infinity,
+                                          child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "دائمی",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              )),
+                                        ),
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.grey,
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 32, right: 32),
+                                        child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                                  return Colors.white;
+                                                },
+                                              ),
+                                              padding: MaterialStateProperty
+                                                  .all<EdgeInsetsGeometry>(
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 8),
+                                              ),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  side: BorderSide(
+                                                      color: MyColors
+                                                          .otp_underline),
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              "انصراف",
+                                              style: TextStyle(
+                                                  color:
+                                                      MyColors.otp_underline),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                              // setState(() {
+                              //   simCardType = 1;
+                              //   pageIndex = 2;
+                              // });
                             },
                       child: Text('ادامه'),
                     ),

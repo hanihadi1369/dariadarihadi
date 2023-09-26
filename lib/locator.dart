@@ -47,6 +47,7 @@ import 'features/feature_charge_sim/domain/repository/charge_sim_repository.dart
 import 'features/feature_charge_sim/domain/use_cases/charge_sim_usecase.dart';
 import 'features/feature_charge_sim/presentation/block/charge_sim_bloc.dart';
 import 'features/feature_main/domain/use_cases/get_profile_usecase.dart';
+import 'features/feature_main/domain/use_cases/refresh_token_usecase.dart';
 import 'features/feature_wallet/domain/use_cases/get_balance_usecase.dart' as wallett;
 import 'features/feature_bill/domain/use_cases/get_balance_usecase.dart' as bill;
 import 'features/feature_charge_internet/domain/use_cases/get_balance_usecase.dart' as ceeee;
@@ -70,7 +71,8 @@ setup(){
   locator.registerSingleton<MainRepository>(MainRepositoryImpl(locator()));
   locator.registerSingleton<GetBalanceUseCase>(GetBalanceUseCase(locator()));
   locator.registerSingleton<GetProfileUseCase>(GetProfileUseCase(locator()));
-  locator.registerSingleton<MainBloc>(MainBloc(locator(),locator()));
+  locator.registerSingleton<RefreshTokenUseCase>(RefreshTokenUseCase(locator()));
+  locator.registerSingleton<MainBloc>(MainBloc(locator(),locator(),locator()));
 
 
 

@@ -18,6 +18,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 // import 'package:path_provider/path_provider.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:receive_intent/receive_intent.dart';
 
 // import 'package:screenshot/screenshot.dart';
@@ -89,8 +90,23 @@ class _WalletScreenViewState extends State<WalletScreenView> {
   List<TransactionsByMonth> totalTransactionsByMonthList = [];
   Statement selectedTransactionDetail = Statement();
 
+
+
+
+  late Map<String, double> dataMap ;
+
   double totalVariz = 0;
   double totalBardasht = 0;
+
+  double totalKifKifVariz = 0;
+  double totalChargeFromWeb = 0;
+
+  double totalKifKifBardasht = 0;
+  double totalInternetPackageBuy = 0;
+  double totalChargeSimBuy = 0;
+  double totalBillsPay = 0;
+
+  bool inComeSelectedForChart = false;
 
   @override
   void initState() {
@@ -218,87 +234,206 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                 if (transactionsHistoryCompleted
                         .transactionsHistoryEntity.isFailed ==
                     false) {
-                  totalVariz = 0;
-                  totalBardasht = 0;
-                  totalTransactionsByMonthList = [];
-                  var nowJalai = DateTime.now().toJalali().withDay(1);
-                  var now = nowJalai.toDateTime();
-                  for (var i = 1; i < 13; i++) {
-                    TransactionsByMonth transactionsByMonth =
-                        TransactionsByMonth();
-                    transactionsByMonth.monthName = Jalali.fromDateTime(
-                            Jiffy(now).subtract(months: i - 1).dateTime)
-                        .formatter
-                        .mN;
-                    transactionsByMonth.monthName2Digit = Jalali.fromDateTime(
-                            Jiffy(now).subtract(months: i - 1).dateTime)
-                        .formatter
-                        .mm;
-                    transactionsByMonth.monthId = int.parse(Jalali.fromDateTime(
-                            Jiffy(now).subtract(months: i - 1).dateTime)
-                        .formatter
-                        .m);
-                    transactionsByMonth.yearName = Jalali.fromDateTime(
-                            Jiffy(now).subtract(months: i - 1).dateTime)
-                        .formatter
-                        .yyyy;
-                    transactionsByMonth.idOrder = (i);
-                    transactionsByMonth.statement = [];
-                    totalTransactionsByMonthList.add(transactionsByMonth);
-                  }
+                  try {
+                    totalVariz = 0;
+                    totalBardasht = 0;
+                    totalChargeFromWeb = 0;
+                    totalKifKifVariz = 0;
+                    totalKifKifBardasht = 0;
+                    totalInternetPackageBuy = 0;
+                    totalChargeSimBuy = 0;
+                    totalBillsPay = 0;
+                    totalTransactionsByMonthList = [];
+                    var nowJalai = DateTime.now().toJalali().withDay(1);
+                    var now = nowJalai.toDateTime();
+                    for (var i = 1; i < 13; i++) {
+                      TransactionsByMonth transactionsByMonth =
+                          TransactionsByMonth();
+                      transactionsByMonth.monthName = Jalali.fromDateTime(
+                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          .formatter
+                          .mN;
+                      transactionsByMonth.monthName2Digit = Jalali.fromDateTime(
+                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          .formatter
+                          .mm;
+                      transactionsByMonth.monthId = int.parse(
+                          Jalali.fromDateTime(
+                                  Jiffy(now).subtract(months: i - 1).dateTime)
+                              .formatter
+                              .m);
+                      transactionsByMonth.yearName = Jalali.fromDateTime(
+                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          .formatter
+                          .yyyy;
+                      transactionsByMonth.idOrder = (i);
+                      transactionsByMonth.statement = [];
+                      totalTransactionsByMonthList.add(transactionsByMonth);
+                    }
 
-                  for (var i = 0;
-                      i <
-                          transactionsHistoryCompleted.transactionsHistoryEntity
-                              .value!.statement!.length;
-                      i++) {
-                    String tYearName = transactionsHistoryCompleted
-                        .transactionsHistoryEntity.value!.statement![i].date!
-                        .substring(0, 4);
-                    String tMonth2Digit = transactionsHistoryCompleted
-                        .transactionsHistoryEntity.value!.statement![i].date!
-                        .substring(5, 7);
-                    for (var j = 0;
-                        j < totalTransactionsByMonthList.length;
-                        j++) {
-                      if ((totalTransactionsByMonthList[j].yearName ==
-                              tYearName) &&
-                          (totalTransactionsByMonthList[j].monthName2Digit ==
-                              tMonth2Digit)) {
-                        totalTransactionsByMonthList[j].statement!.add(
+                    for (var i = 0;
+                        i <
                             transactionsHistoryCompleted
                                 .transactionsHistoryEntity
                                 .value!
-                                .statement![i]);
+                                .statement!
+                                .length;
+                        i++) {
+                      String tYearName = transactionsHistoryCompleted
+                          .transactionsHistoryEntity.value!.statement![i].date!
+                          .substring(0, 4);
+                      String tMonth2Digit = transactionsHistoryCompleted
+                          .transactionsHistoryEntity.value!.statement![i].date!
+                          .substring(5, 7);
+                      for (var j = 0;
+                          j < totalTransactionsByMonthList.length;
+                          j++) {
+                        if ((totalTransactionsByMonthList[j].yearName ==
+                                tYearName) &&
+                            (totalTransactionsByMonthList[j].monthName2Digit ==
+                                tMonth2Digit)) {
+                          totalTransactionsByMonthList[j].statement!.add(
+                              transactionsHistoryCompleted
+                                  .transactionsHistoryEntity
+                                  .value!
+                                  .statement![i]);
+                        }
                       }
                     }
-                  }
 
-                  for (var i = 0;
-                      i <
+                    for (var i = 0;
+                        i <
+                            transactionsHistoryCompleted
+                                .transactionsHistoryEntity
+                                .value!
+                                .statement!
+                                .length;
+                        i++) {
+                      String tBedehKar = transactionsHistoryCompleted
+                          .transactionsHistoryEntity
+                          .value!
+                          .statement![i]
+                          .bedeAmount!
+                          .replaceAll(RegExp(','), '');
+                      String tBestanKar = transactionsHistoryCompleted
+                          .transactionsHistoryEntity
+                          .value!
+                          .statement![i]
+                          .besAmount!
+                          .replaceAll(RegExp(','), '');
+
+                      //kif pool
+                      if (transactionsHistoryCompleted.transactionsHistoryEntity
+                              .value!.statement![i].operationCode! ==
+                          "22") {
+                        if (double.parse(tBedehKar) == 0) {
+                          totalKifKifVariz =
+                              totalKifKifVariz + double.parse(tBestanKar);
+                        } else {
+                          totalKifKifBardasht =
+                              totalKifKifBardasht + double.parse(tBedehKar);
+                        }
+                      }
+
+                      //buy internet package
+                      if (transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "5" ||
                           transactionsHistoryCompleted.transactionsHistoryEntity
-                              .value!.statement!.length;
-                      i++) {
-                    String tBedehKar = transactionsHistoryCompleted
-                        .transactionsHistoryEntity
-                        .value!
-                        .statement![i]
-                        .bedeAmount!
-                        .replaceAll(RegExp(','), '');
-                    String tBestanKar = transactionsHistoryCompleted
-                        .transactionsHistoryEntity
-                        .value!
-                        .statement![i]
-                        .besAmount!
-                        .replaceAll(RegExp(','), '');
+                                  .value!.statement![i].operationCode! ==
+                              "3" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "313") {
+                        totalInternetPackageBuy =
+                            totalInternetPackageBuy + double.parse(tBedehKar);
+                      }
 
-                    totalBardasht = totalBardasht + double.parse(tBedehKar);
-                    totalVariz = totalVariz + double.parse(tBestanKar);
-                    totalTransactionsByMonthList[0].selected = true;
+                      //buy charge sim
+                      if (transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "7" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "8" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "9") {
+                        totalChargeSimBuy =
+                            totalChargeSimBuy + double.parse(tBedehKar);
+                      }
+
+                      //bill payment
+                      if (transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "300" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "301" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "302" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "306" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "310" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "311" ||
+                          transactionsHistoryCompleted.transactionsHistoryEntity
+                                  .value!.statement![i].operationCode! ==
+                              "312") {
+                        totalBillsPay = totalBillsPay + double.parse(tBedehKar);
+                      }
+
+                      //kif pool
+                      if (transactionsHistoryCompleted.transactionsHistoryEntity
+                              .value!.statement![i].operationCode! ==
+                          "204") {
+                        totalChargeFromWeb =
+                            totalChargeFromWeb + double.parse(tBestanKar);
+                      }
+
+                      totalBardasht = totalBardasht + double.parse(tBedehKar);
+                      totalVariz = totalVariz + double.parse(tBestanKar);
+
+                      totalTransactionsByMonthList[0].selected = true;
+                    }
+
+                    pageIndex = 6;
+                    state.transactionsHistoryStatus = TransactionsHistoryInit();
+                  } catch (e) {
+                    pageIndex = 6;
+                    state.transactionsHistoryStatus = TransactionsHistoryInit();
+                    var nowJalai = DateTime.now().toJalali().withDay(1);
+                    var now = nowJalai.toDateTime();
+                    for (var i = 1; i < 13; i++) {
+                      TransactionsByMonth transactionsByMonth =
+                          TransactionsByMonth();
+                      transactionsByMonth.monthName = Jalali.fromDateTime(
+                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          .formatter
+                          .mN;
+                      transactionsByMonth.monthName2Digit = Jalali.fromDateTime(
+                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          .formatter
+                          .mm;
+                      transactionsByMonth.monthId = int.parse(
+                          Jalali.fromDateTime(
+                                  Jiffy(now).subtract(months: i - 1).dateTime)
+                              .formatter
+                              .m);
+                      transactionsByMonth.yearName = Jalali.fromDateTime(
+                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          .formatter
+                          .yyyy;
+                      transactionsByMonth.idOrder = (i);
+                      transactionsByMonth.statement = [];
+                      totalTransactionsByMonthList.add(transactionsByMonth);
+                    }
                   }
-
-                  pageIndex = 6;
-                  state.transactionsHistoryStatus = TransactionsHistoryInit();
                 }
               }
 
@@ -570,7 +705,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
     // index 3 > decrease main page
     // index 4 > transfer main page -- 41 transfer sub1
     // index 5 > kif b kif -- 51 result
-    // index 6 > wallet transactions
+    // index 6 > wallet transactions __ 61 wallet transactions chart
     // index 7 > wallet transactions details
 
     if (pageIndex == 1) {
@@ -3747,46 +3882,69 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                   children: [
                     Expanded(
                         flex: 80,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "ریال",
-                                      style: TextStyle(
-                                          color: Colors.black54, fontSize: 13),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      totalVariz.toInt().toString().seRagham(),
-                                      style: TextStyle(
-                                          color: Colors.black54, fontSize: 17),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "مجموع واریز",
-                                  style: TextStyle(
-                                      color: Colors.black54, fontSize: 13),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(
-                              Icons.arrow_circle_down_outlined,
-                              color: Colors.green,
-                              size: 24,
-                            )
-                          ],
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+
+                              dataMap = {
+
+                                "کیف به کیف": totalKifKifVariz,
+                                "شارژ از طریق درگاه": totalChargeFromWeb,
+
+
+                              };
+
+
+                              pageIndex = 61;
+                              inComeSelectedForChart = true;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "ریال",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 13),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        totalVariz
+                                            .toInt()
+                                            .toString()
+                                            .seRagham(),
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 17),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    "مجموع واریز",
+                                    style: TextStyle(
+                                        color: Colors.black54, fontSize: 13),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.arrow_circle_down_outlined,
+                                color: Colors.green,
+                                size: 24,
+                              )
+                            ],
+                          ),
                         )),
                     Expanded(
                         flex: 1,
@@ -3798,49 +3956,70 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         )),
                     Expanded(
                         flex: 80,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "ریال",
-                                      style: TextStyle(
-                                          color: Colors.black54, fontSize: 13),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      totalBardasht
-                                          .toInt()
-                                          .toString()
-                                          .seRagham(),
-                                      style: TextStyle(
-                                          color: Colors.black54, fontSize: 17),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "مجموع برداشت",
-                                  style: TextStyle(
-                                      color: Colors.black54, fontSize: 13),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(
-                              Icons.arrow_circle_up_outlined,
-                              color: Colors.red,
-                              size: 24,
-                            )
-                          ],
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+
+                             dataMap = {
+
+                               "کیف به کیف": totalKifKifBardasht,
+                               "بسته اینترنت": totalInternetPackageBuy,
+                               "شارژ سیم کارت": totalChargeSimBuy,
+                               "پرداخت قبوض": totalBillsPay,
+
+                             };
+
+
+                              pageIndex = 61;
+                              inComeSelectedForChart = false;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "ریال",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 13),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        totalBardasht
+                                            .toInt()
+                                            .toString()
+                                            .seRagham(),
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 17),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    "مجموع برداشت",
+                                    style: TextStyle(
+                                        color: Colors.black54, fontSize: 13),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.arrow_circle_up_outlined,
+                                color: Colors.red,
+                                size: 24,
+                              )
+                            ],
+                          ),
                         ))
                   ],
                 ),
@@ -3861,6 +4040,125 @@ class _WalletScreenViewState extends State<WalletScreenView> {
               children: prepareTransactionsWidgets(),
             ),
           ),
+        ],
+      );
+    }
+
+    if (pageIndex == 61) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            pageIndex = 6;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/back_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text((inComeSelectedForChart)?"گردش کیف پول ( واریزی )":"گردش کیف پول ( برداشتی )")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(flex: 17, child: Container(
+
+
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+                PieChart(
+                  dataMap: dataMap,
+                  animationDuration: Duration(milliseconds: 1200),
+                  chartLegendSpacing: 48,
+                  chartRadius: MediaQuery.of(context).size.width / 3.2,
+                  // colorList: colorList,
+                  initialAngleInDegree: 0,
+                  chartType: ChartType.ring,
+                  ringStrokeWidth: 20,
+                  centerText: (inComeSelectedForChart)?"${totalVariz.toInt().toString().seRagham()}\nریال":"${totalBardasht.toInt().toString().seRagham()}\nریال",
+                  centerTextStyle: TextStyle(fontFamily: "shabnam_bold",color: Colors.black87),
+                  legendOptions: LegendOptions(
+                    showLegendsInRow: false,
+                    legendPosition: LegendPosition.right,
+                    showLegends: true,
+                    legendShape: BoxShape.circle,
+                    legendTextStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  chartValuesOptions: ChartValuesOptions(
+                    showChartValueBackground: false,
+                    showChartValues: false,
+                    showChartValuesInPercentage: true,
+                    showChartValuesOutside: false,
+                    decimalPlaces: 1,
+                  ),
+                  // gradientList: ---To add gradient colors---
+                  // emptyColorGradient: ---Empty Color gradient---
+                ),
+                Column(children: prepareChartDetails(),)
+                ,
+
+              ],),
+          ),
+
+          )),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed:(){
+
+
+                        setState(() {
+                          pageIndex = 6;
+                        });
+
+
+                      },
+                      child: Text('بازگشت'),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
         ],
       );
     }
@@ -4077,5 +4375,209 @@ class _WalletScreenViewState extends State<WalletScreenView> {
         ],
       );
     }
+  }
+
+
+  List<Widget>prepareChartDetails(){
+    List<Widget> items = [];
+    if(inComeSelectedForChart){
+      //درآمد
+      items.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16,right: 16,top: 48,bottom: 8),
+          child: Container(
+            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border:Border.all(
+
+                color: Colors.grey,
+
+                width: 1.0,
+              ),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
+              children: [
+                Text("واریز کیف به کیف    ${totalKifKifVariz.toInt().toString().seRagham()} ریال"),
+                SizedBox(width: 20,),
+                Icon(
+                  Icons.wallet,
+                  color: Colors.grey,
+                  size: 24,
+                )
+
+
+              ],),),
+        ),
+      );
+      items.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          child: Container(
+            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border:Border.all(
+
+                color: Colors.grey,
+
+                width: 1.0,
+              ),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
+              children: [
+                Text("شارژ از طریق درگاه بانکی    ${totalChargeFromWeb.toInt().toString().seRagham()} ریال"),
+                SizedBox(width: 20,),
+                Icon(
+                  Icons.monetization_on,
+                  color: Colors.grey,
+                  size: 24,
+                )
+
+
+              ],),),
+        ),
+      );
+    }else{
+      //هزینه
+      items.add(
+          Padding(
+            padding: const EdgeInsets.only(left: 16,right: 16,top: 48,bottom: 8),
+            child: Container(
+              padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+               border:Border.all(
+
+                 color: Colors.grey,
+
+                 width: 1.0,
+               ),
+               color: Colors.white,
+              ),
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
+              children: [
+                Text("برداشت کیف به کیف    ${totalKifKifBardasht.toInt().toString().seRagham()} ریال"),
+                SizedBox(width: 20,),
+                Icon(
+                  Icons.wallet,
+                  color: Colors.grey,
+                  size: 24,
+                )
+
+
+              ],),),
+          ),
+      );
+      items.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          child: Container(
+            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border:Border.all(
+
+                color: Colors.grey,
+
+                width: 1.0,
+              ),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
+              children: [
+                Text("خرید بسته اینترنت    ${totalInternetPackageBuy.toInt().toString().seRagham()} ریال"),
+                SizedBox(width: 20,),
+                Icon(
+                  Icons.wallet_giftcard_sharp,
+                  color: Colors.grey,
+                  size: 24,
+                )
+
+
+              ],),),
+        ),
+      );
+      items.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          child: Container(
+            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border:Border.all(
+
+                color: Colors.grey,
+
+                width: 1.0,
+              ),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
+              children: [
+                Text("خرید شارژ سیم کارت    ${totalChargeSimBuy.toInt().toString().seRagham()} ریال"),
+                SizedBox(width: 20,),
+                Icon(
+                  Icons.sim_card,
+                  color: Colors.grey,
+                  size: 24,
+                )
+
+
+              ],),),
+        ),
+      );
+      items.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          child: Container(
+            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border:Border.all(
+
+                color: Colors.grey,
+
+                width: 1.0,
+              ),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
+              children: [
+                Text("پرداخت قبوض    ${totalBillsPay.toInt().toString().seRagham()} ریال"),
+                SizedBox(width: 20,),
+                Icon(
+                  Icons.description,
+                  color: Colors.grey,
+                  size: 24,
+                )
+
+
+              ],),),
+        ),
+      );
+
+    }
+    return items;
   }
 }

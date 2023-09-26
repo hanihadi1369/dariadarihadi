@@ -16,3 +16,9 @@ class GetBalanceEvent extends MainEvent{
 class GetProfileEvent extends MainEvent{
   GetProfileEvent();
 }
+
+
+class RefreshTokenEvent extends MainEvent{
+  final String refreshToken;
+  RefreshTokenEvent(this.refreshToken);
+}

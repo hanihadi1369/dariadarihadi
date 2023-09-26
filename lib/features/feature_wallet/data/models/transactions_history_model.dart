@@ -125,6 +125,7 @@ class Statement {
     this.besAmount,
     this.description,
     this.operationName,
+    this.operationCode,
     this.serialNumber,
     this.oprationIcon,
     this.mobile,
@@ -142,6 +143,7 @@ class Statement {
     besAmount = json['besAmount'];
     description = json['description'];
     operationName = json['operationName'];
+    operationCode = json['operationCode'];
     serialNumber = json['serialNumber'];
     oprationIcon = json['oprationIcon'];
     mobile = json['mobile'];
@@ -158,6 +160,7 @@ class Statement {
   String? besAmount;
   String? description;
   String? operationName;
+  String? operationCode;
   int? serialNumber;
   String? oprationIcon;
   String? mobile;

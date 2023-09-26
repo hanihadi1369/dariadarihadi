@@ -5622,7 +5622,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           bill.billID = waterInquiryResult.billID;
                           // bill.paymentID = waterInquiryResult.paymentID;
                           // bill.phoneNumber = phoneNumber;
-                          bill.operationCode = 300;
+                          bill.operationCode = "300";
                           // bill.gatewayID ="";
                           List<Bills> bills = [];
                           bills.add(bill);
@@ -6960,7 +6960,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           bill.billID = barghInquiryResult.billID;
                           // bill.paymentID = barghInquiryResult.paymentID;
                           // bill.phoneNumber = phoneNumber;
-                          bill.operationCode = 301;
+                          bill.operationCode = "301";
                           // bill.gatewayID ="";
                           List<Bills> bills = [];
                           bills.add(bill);
@@ -8293,7 +8293,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           bill.billID = gasInquiryResult.billID;
                           // bill.paymentID = gasInquiryResult.paymentID;
                           // bill.phoneNumber = phoneNumber;
-                          bill.operationCode = 306;
+                          bill.operationCode = "306";
                           // bill.gatewayID ="";
                           List<Bills> bills = [];
                           bills.add(bill);
@@ -9137,7 +9137,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 30,
                     ),
                     Visibility(
-                      visible: false,
+                      visible: true,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -9718,8 +9718,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           // bill.billID = (midTermSelected)
                           //     ? fixLineInquiryResult.midTerm!.billID
                           //     : fixLineInquiryResult.finalTerm!.billID;
-                          bill.phoneNumber =_phoneBillController1.text.trim();
-                          bill.operationCode = 302;
+
+
+                          bill.isMidTerm = (midTermSelected)?true:false;
+
+
+                          bill.billID =_phoneBillController1.text.trim();
+                          bill.operationCode = "302";
 
                           List<Bills> bills = [];
                           bills.add(bill);
@@ -10588,7 +10593,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 30,
                     ),
                     Visibility(
-                      visible: false,
+                      visible: true,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -11164,8 +11169,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           //     ? mciInquiryResult.midTerm!.billID
                           //     : mciInquiryResult.finalTerm!.billID;
 
-                          bill.phoneNumber =_mciBillController1.text.trim();
-                          bill.operationCode = 310;
+                          bill.isMidTerm = (midTermSelected)?true:false;
+
+
+                          bill.billID =_mciBillController1.text.trim();
+                          bill.operationCode = "310";
 
                           List<Bills> bills = [];
                           bills.add(bill);
@@ -12031,7 +12039,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 30,
                     ),
                     Visibility(
-                      visible: false,
+                      visible: true,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -12606,8 +12614,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           // bill.billID = (midTermSelected)
                           //     ? mtnInquiryResult.midTerm!.billID
                           //     : mtnInquiryResult.finalTerm!.billID;
-                          bill.phoneNumber =_mtnBillController1.text.trim();
-                          bill.operationCode = 311;
+
+                          bill.isMidTerm = (midTermSelected)?true:false;
+
+                          bill.billID =_mtnBillController1.text.trim();
+                          bill.operationCode = "311";
 
                           List<Bills> bills = [];
                           bills.add(bill);
@@ -13473,7 +13484,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 30,
                     ),
                     Visibility(
-                      visible: false,
+                      visible: true,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -14057,8 +14068,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           // bill.billID = (midTermSelected)
                           //     ? rightelInquiryResult.midTerm!.billID
                           //     : rightelInquiryResult.finalTerm!.billID;
-                          bill.phoneNumber =_rightelBillController1.text.trim();
-                          bill.operationCode = 312;
+
+                          bill.isMidTerm = (midTermSelected)?true:false;
+
+                          bill.billID =_rightelBillController1.text.trim();
+                          bill.operationCode = "312";
 
                           List<Bills> bills = [];
                           bills.add(bill);
