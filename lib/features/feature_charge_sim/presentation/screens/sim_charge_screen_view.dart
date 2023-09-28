@@ -111,7 +111,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                       .toInt()!;
                   pageIndex = 4;
                 }
-                state.balanceStatus = BalanceInit();
+                state.chargeSimStatus = ChargeSimInit();
               }
 
               return Container(
@@ -947,7 +947,8 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      prepareFinalChargeCost().seRagham() + " ریال",
+                                      prepareFinalChargeCost().seRagham() +
+                                          " ریال",
                                       textDirection: TextDirection.rtl,
                                     ),
                                     Spacer(),
@@ -1264,7 +1265,8 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      prepareFinalChargeCost().seRagham() + " ریال",
+                                      prepareFinalChargeCost().seRagham() +
+                                          " ریال",
                                       textDirection: TextDirection.rtl,
                                     ),
                                     Spacer(),

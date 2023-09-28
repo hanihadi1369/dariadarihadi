@@ -23,6 +23,9 @@ import 'package:atba_application/features/feature_main/data/repository/main_repo
 import 'package:atba_application/features/feature_main/domain/repository/main_repository.dart';
 import 'package:atba_application/features/feature_main/domain/use_cases/get_balance_usecase.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/main_bloc.dart';
+import 'package:atba_application/features/feature_profile/data/repository/profile_repositoryimpl.dart';
+import 'package:atba_application/features/feature_profile/domain/repository/profile_repository.dart';
+import 'package:atba_application/features/feature_profile/domain/use_cases/update_profile_usecase.dart';
 import 'package:atba_application/features/feature_wallet/data/data_source/remote/api_provider_wallet.dart';
 import 'package:atba_application/features/feature_wallet/data/repository/wallet_repositoryimpl.dart';
 import 'package:atba_application/features/feature_wallet/domain/repository/wallet_repository.dart';
@@ -48,6 +51,8 @@ import 'features/feature_charge_sim/domain/use_cases/charge_sim_usecase.dart';
 import 'features/feature_charge_sim/presentation/block/charge_sim_bloc.dart';
 import 'features/feature_main/domain/use_cases/get_profile_usecase.dart';
 import 'features/feature_main/domain/use_cases/refresh_token_usecase.dart';
+import 'features/feature_profile/data/data_source/remote/api_provider_profile.dart';
+import 'features/feature_profile/presentation/bloc/profile_bloc.dart';
 import 'features/feature_wallet/domain/use_cases/get_balance_usecase.dart' as wallett;
 import 'features/feature_bill/domain/use_cases/get_balance_usecase.dart' as bill;
 import 'features/feature_charge_internet/domain/use_cases/get_balance_usecase.dart' as ceeee;
@@ -73,6 +78,11 @@ setup(){
   locator.registerSingleton<GetProfileUseCase>(GetProfileUseCase(locator()));
   locator.registerSingleton<RefreshTokenUseCase>(RefreshTokenUseCase(locator()));
   locator.registerSingleton<MainBloc>(MainBloc(locator(),locator(),locator()));
+
+  locator.registerSingleton<ApiProviderProfile>(ApiProviderProfile());
+  locator.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(locator()));
+  locator.registerSingleton<UpdateProfileUseCase>(UpdateProfileUseCase(locator()));
+  locator.registerSingleton<ProfileBloc>(ProfileBloc(locator()));
 
 
 

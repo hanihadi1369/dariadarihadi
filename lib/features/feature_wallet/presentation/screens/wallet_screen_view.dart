@@ -90,10 +90,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
   List<TransactionsByMonth> totalTransactionsByMonthList = [];
   Statement selectedTransactionDetail = Statement();
 
-
-
-
-  late Map<String, double> dataMap ;
+  late Map<String, double> dataMap;
 
   double totalVariz = 0;
   double totalBardasht = 0;
@@ -3885,15 +3882,10 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         child: InkWell(
                           onTap: () {
                             setState(() {
-
                               dataMap = {
-
                                 "کیف به کیف": totalKifKifVariz,
                                 "شارژ از طریق درگاه": totalChargeFromWeb,
-
-
                               };
-
 
                               pageIndex = 61;
                               inComeSelectedForChart = true;
@@ -3959,16 +3951,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         child: InkWell(
                           onTap: () {
                             setState(() {
-
-                             dataMap = {
-
-                               "کیف به کیف": totalKifKifBardasht,
-                               "بسته اینترنت": totalInternetPackageBuy,
-                               "شارژ سیم کارت": totalChargeSimBuy,
-                               "پرداخت قبوض": totalBillsPay,
-
-                             };
-
+                              dataMap = {
+                                "کیف به کیف": totalKifKifBardasht,
+                                "بسته اینترنت": totalInternetPackageBuy,
+                                "شارژ سیم کارت": totalChargeSimBuy,
+                                "پرداخت قبوض": totalBillsPay,
+                              };
 
                               pageIndex = 61;
                               inComeSelectedForChart = false;
@@ -4075,7 +4063,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         child: Center(
                             child: FittedBox(
                                 fit: BoxFit.scaleDown,
-                                child: Text((inComeSelectedForChart)?"گردش کیف پول ( واریزی )":"گردش کیف پول ( برداشتی )")))),
+                                child: Text((inComeSelectedForChart)
+                                    ? "گردش کیف پول ( واریزی )"
+                                    : "گردش کیف پول ( برداشتی )")))),
                     Expanded(flex: 2, child: Container()),
                     Expanded(
                       flex: 1,
@@ -4087,51 +4077,53 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                   ],
                 ),
               )),
-          Expanded(flex: 17, child: Container(
-
-
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-
-                PieChart(
-                  dataMap: dataMap,
-                  animationDuration: Duration(milliseconds: 1200),
-                  chartLegendSpacing: 48,
-                  chartRadius: MediaQuery.of(context).size.width / 3.2,
-                  // colorList: colorList,
-                  initialAngleInDegree: 0,
-                  chartType: ChartType.ring,
-                  ringStrokeWidth: 20,
-                  centerText: (inComeSelectedForChart)?"${totalVariz.toInt().toString().seRagham()}\nریال":"${totalBardasht.toInt().toString().seRagham()}\nریال",
-                  centerTextStyle: TextStyle(fontFamily: "shabnam_bold",color: Colors.black87),
-                  legendOptions: LegendOptions(
-                    showLegendsInRow: false,
-                    legendPosition: LegendPosition.right,
-                    showLegends: true,
-                    legendShape: BoxShape.circle,
-                    legendTextStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+          Expanded(
+              flex: 17,
+              child: Container(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      PieChart(
+                        dataMap: dataMap,
+                        animationDuration: Duration(milliseconds: 1200),
+                        chartLegendSpacing: 48,
+                        chartRadius: MediaQuery.of(context).size.width / 3.2,
+                        // colorList: colorList,
+                        initialAngleInDegree: 0,
+                        chartType: ChartType.ring,
+                        ringStrokeWidth: 20,
+                        centerText: (inComeSelectedForChart)
+                            ? "${totalVariz.toInt().toString().seRagham()}\nریال"
+                            : "${totalBardasht.toInt().toString().seRagham()}\nریال",
+                        centerTextStyle: TextStyle(
+                            fontFamily: "shabnam_bold", color: Colors.black87),
+                        legendOptions: LegendOptions(
+                          showLegendsInRow: false,
+                          legendPosition: LegendPosition.right,
+                          showLegends: true,
+                          legendShape: BoxShape.circle,
+                          legendTextStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        chartValuesOptions: ChartValuesOptions(
+                          showChartValueBackground: false,
+                          showChartValues: false,
+                          showChartValuesInPercentage: true,
+                          showChartValuesOutside: false,
+                          decimalPlaces: 1,
+                        ),
+                        // gradientList: ---To add gradient colors---
+                        // emptyColorGradient: ---Empty Color gradient---
+                      ),
+                      Column(
+                        children: prepareChartDetails(),
+                      ),
+                    ],
                   ),
-                  chartValuesOptions: ChartValuesOptions(
-                    showChartValueBackground: false,
-                    showChartValues: false,
-                    showChartValuesInPercentage: true,
-                    showChartValuesOutside: false,
-                    decimalPlaces: 1,
-                  ),
-                  // gradientList: ---To add gradient colors---
-                  // emptyColorGradient: ---Empty Color gradient---
                 ),
-                Column(children: prepareChartDetails(),)
-                ,
-
-              ],),
-          ),
-
-          )),
+              )),
           Expanded(
             flex: 2,
             child: Container(
@@ -4143,14 +4135,10 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(
-                      onPressed:(){
-
-
+                      onPressed: () {
                         setState(() {
                           pageIndex = 6;
                         });
-
-
                       },
                       child: Text('بازگشت'),
                     ),
@@ -4377,22 +4365,20 @@ class _WalletScreenViewState extends State<WalletScreenView> {
     }
   }
 
-
-  List<Widget>prepareChartDetails(){
+  List<Widget> prepareChartDetails() {
     List<Widget> items = [];
-    if(inComeSelectedForChart){
+    if (inComeSelectedForChart) {
       //درآمد
       items.add(
         Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,top: 48,bottom: 8),
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 48, bottom: 8),
           child: Container(
-            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2),
-              border:Border.all(
-
+              border: Border.all(
                 color: Colors.grey,
-
                 width: 1.0,
               ),
               color: Colors.white,
@@ -4400,31 +4386,32 @@ class _WalletScreenViewState extends State<WalletScreenView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
-                Text("واریز کیف به کیف    ${totalKifKifVariz.toInt().toString().seRagham()} ریال"),
-                SizedBox(width: 20,),
+                Text(
+                    "واریز کیف به کیف    ${totalKifKifVariz.toInt().toString().seRagham()} ریال"),
+                SizedBox(
+                  width: 20,
+                ),
                 Icon(
                   Icons.wallet,
                   color: Colors.grey,
                   size: 24,
                 )
-
-
-              ],),),
+              ],
+            ),
+          ),
         ),
       );
       items.add(
         Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
           child: Container(
-            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2),
-              border:Border.all(
-
+              border: Border.all(
                 color: Colors.grey,
-
                 width: 1.0,
               ),
               color: Colors.white,
@@ -4432,65 +4419,67 @@ class _WalletScreenViewState extends State<WalletScreenView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
-                Text("شارژ از طریق درگاه بانکی    ${totalChargeFromWeb.toInt().toString().seRagham()} ریال"),
-                SizedBox(width: 20,),
+                Text(
+                    "شارژ از طریق درگاه بانکی    ${totalChargeFromWeb.toInt().toString().seRagham()} ریال"),
+                SizedBox(
+                  width: 20,
+                ),
                 Icon(
                   Icons.monetization_on,
                   color: Colors.grey,
                   size: 24,
                 )
-
-
-              ],),),
+              ],
+            ),
+          ),
         ),
       );
-    }else{
+    } else {
       //هزینه
       items.add(
-          Padding(
-            padding: const EdgeInsets.only(left: 16,right: 16,top: 48,bottom: 8),
-            child: Container(
-              padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-               border:Border.all(
-
-                 color: Colors.grey,
-
-                 width: 1.0,
-               ),
-               color: Colors.white,
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 48, bottom: 8),
+          child: Container(
+            padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
               ),
-              child: Row(
+              color: Colors.white,
+            ),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
-                Text("برداشت کیف به کیف    ${totalKifKifBardasht.toInt().toString().seRagham()} ریال"),
-                SizedBox(width: 20,),
+                Text(
+                    "برداشت کیف به کیف    ${totalKifKifBardasht.toInt().toString().seRagham()} ریال"),
+                SizedBox(
+                  width: 20,
+                ),
                 Icon(
                   Icons.wallet,
                   color: Colors.grey,
                   size: 24,
                 )
-
-
-              ],),),
+              ],
+            ),
           ),
+        ),
       );
       items.add(
         Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
           child: Container(
-            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2),
-              border:Border.all(
-
+              border: Border.all(
                 color: Colors.grey,
-
                 width: 1.0,
               ),
               color: Colors.white,
@@ -4498,31 +4487,32 @@ class _WalletScreenViewState extends State<WalletScreenView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
-                Text("خرید بسته اینترنت    ${totalInternetPackageBuy.toInt().toString().seRagham()} ریال"),
-                SizedBox(width: 20,),
+                Text(
+                    "خرید بسته اینترنت    ${totalInternetPackageBuy.toInt().toString().seRagham()} ریال"),
+                SizedBox(
+                  width: 20,
+                ),
                 Icon(
                   Icons.wallet_giftcard_sharp,
                   color: Colors.grey,
                   size: 24,
                 )
-
-
-              ],),),
+              ],
+            ),
+          ),
         ),
       );
       items.add(
         Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
           child: Container(
-            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2),
-              border:Border.all(
-
+              border: Border.all(
                 color: Colors.grey,
-
                 width: 1.0,
               ),
               color: Colors.white,
@@ -4530,31 +4520,32 @@ class _WalletScreenViewState extends State<WalletScreenView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
-                Text("خرید شارژ سیم کارت    ${totalChargeSimBuy.toInt().toString().seRagham()} ریال"),
-                SizedBox(width: 20,),
+                Text(
+                    "خرید شارژ سیم کارت    ${totalChargeSimBuy.toInt().toString().seRagham()} ریال"),
+                SizedBox(
+                  width: 20,
+                ),
                 Icon(
                   Icons.sim_card,
                   color: Colors.grey,
                   size: 24,
                 )
-
-
-              ],),),
+              ],
+            ),
+          ),
         ),
       );
       items.add(
         Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
           child: Container(
-            padding: EdgeInsets.only(top: 16,bottom: 16,left: 16,right: 16),
+            padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2),
-              border:Border.all(
-
+              border: Border.all(
                 color: Colors.grey,
-
                 width: 1.0,
               ),
               color: Colors.white,
@@ -4562,21 +4553,22 @@ class _WalletScreenViewState extends State<WalletScreenView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
-                Text("پرداخت قبوض    ${totalBillsPay.toInt().toString().seRagham()} ریال"),
-                SizedBox(width: 20,),
+                Text(
+                    "پرداخت قبوض    ${totalBillsPay.toInt().toString().seRagham()} ریال"),
+                SizedBox(
+                  width: 20,
+                ),
                 Icon(
                   Icons.description,
                   color: Colors.grey,
                   size: 24,
                 )
-
-
-              ],),),
+              ],
+            ),
+          ),
         ),
       );
-
     }
     return items;
   }

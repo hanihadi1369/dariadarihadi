@@ -1,3 +1,6 @@
+import 'package:atba_application/core/params/update_profile_param.dart';
+import 'package:atba_application/core/widgets/loading.dart';
+import 'package:atba_application/features/feature_profile/presentation/bloc/profile_bloc.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/wallet_bloc.dart';
 import 'package:atba_application/features/feature_wallet/presentation/screens/wallet_screen_view.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -11,29 +14,36 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 
-import '../../core/utils/colors.dart';
-import '../../core/utils/slide_right_transition.dart';
-import '../../locator.dart';
-
-import 'kbk_screen_view.dart';
+import '../../../../core/utils/colors.dart';
+import '../../../../core/utils/slide_right_transition.dart';
+import '../../../../locator.dart';
+import '../../../unbounded_features/kbk_screen_view.dart';
+import '../bloc/update_profile_status.dart';
 
 class ProfileScreenView extends StatefulWidget {
-   int? balanceAmount;
+  int? balanceAmount;
   String? firstName;
   String? lastName;
   String? mobileNumber;
+  String? nationalCode;
+  String? email;
+  String? shaba;
 
   ProfileScreenView(int balanceAmount, String firstName, String lastName,
-      String mobileNumber) {
+      String mobileNumber,String nationalCode, String email, String shaba) {
     this.balanceAmount = balanceAmount;
     this.firstName = firstName;
     this.lastName = lastName;
     this.mobileNumber = mobileNumber;
+    this.nationalCode = nationalCode;
+    this.email = email;
+    this.shaba = shaba;
   }
 
   @override
-  _ProfileScreenViewState createState() => _ProfileScreenViewState(
-      balanceAmount!, firstName!, lastName!, mobileNumber!);
+  _ProfileScreenViewState createState() =>
+      _ProfileScreenViewState(
+          balanceAmount!, firstName!, lastName!, mobileNumber!,nationalCode!,email!,shaba!);
 }
 
 class _ProfileScreenViewState extends State<ProfileScreenView> {
@@ -41,13 +51,21 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
   String? firstName;
   String? lastName;
   String? mobileNumber;
+  String? nationalCode;
+  String? email;
+  String? shaba;
+
+
 
   _ProfileScreenViewState(int balanceAmount, String firstName, String lastName,
-      String mobileNumber) {
+      String mobileNumber, String nationalCode, String email, String shaba) {
     this.balanceAmount = balanceAmount;
     this.firstName = firstName;
     this.lastName = lastName;
     this.mobileNumber = mobileNumber;
+    this.nationalCode = nationalCode;
+    this.email = email;
+    this.shaba = shaba;
   }
 
   int pageIndex = 1;
@@ -56,24 +74,36 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
   final _formKey_lastname = GlobalKey<FormState>();
   final _formKey_phonenumber = GlobalKey<FormState>();
 
-  TextEditingController _firstnameController = TextEditingController();
+  final _formKey_nationalCode = GlobalKey<FormState>();
+  final _formKey_email = GlobalKey<FormState>();
+  final _formKey_shaba = GlobalKey<FormState>();
 
+  TextEditingController _firstnameController = TextEditingController();
   TextEditingController _lastnameController = TextEditingController();
   TextEditingController _phonenumberController = TextEditingController();
 
-  bool _isButtonNextDisabled_page2_condition1 = true; //first name
-  bool _isButtonNextDisabled_page2_condition2 = true; //last name
-  bool _isButtonNextDisabled_page2_condition3 = true; //phone number
+
+  TextEditingController _nationalCodeController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _shabaController = TextEditingController();
+
+  bool _isButtonNextDisabled_page2_condition1 = false; //first name
+  bool _isButtonNextDisabled_page2_condition2 = false; //last name
+  bool _isButtonNextDisabled_page2_condition3 = false; //national Code (should be 10)
+  bool _isButtonNextDisabled_page2_condition4 = false; //shaba (should be 26)
+
+
+
+  // BlocProvider.of<MainBloc>(context)
+  //     .add(GetBalanceEvent()),
+
 
   @override
   void initState() {
-    if(firstName == null || lastName == null || firstName =="null" ||
-        lastName =="null"||firstName=="***"||lastName=="***"){
 
-    }else{
-      _firstnameController.text = firstName!;
-      _lastnameController.text = lastName!;
-    }
+
+    prepareDefaultParameters();
+
 
     super.initState();
   }
@@ -88,11 +118,57 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.white,
-          child: preparePageIndex(),
+        child: BlocConsumer<ProfileBloc, ProfileState>(
+          listener: (context, state) {
+            if (state.updateProfileStatus is UpdateProfileError) {
+              UpdateProfileError error = state.updateProfileStatus as UpdateProfileError;
+              _showSnackBar(error.message);
+              state.updateProfileStatus = UpdateProfileInit();
+            }
+
+          },
+          builder: (context, state) {
+            if (state.updateProfileStatus is UpdateProfileLoading) {
+              return LoadingPage();
+            }
+
+            if (state.updateProfileStatus is UpdateProfileCompleted) {
+              UpdateProfileCompleted updateProfileCompleted =
+              state.updateProfileStatus as UpdateProfileCompleted;
+              if (updateProfileCompleted.updateProfileEntity.isFailed == false) {
+
+
+                firstName = updateProfileCompleted.updateProfileEntity.value!.firstName.toString();
+                lastName = updateProfileCompleted.updateProfileEntity.value!.lastName.toString();
+                nationalCode = updateProfileCompleted.updateProfileEntity.value!.nationalCode.toString();
+                email = updateProfileCompleted.updateProfileEntity.value!.email.toString();
+                shaba = updateProfileCompleted.updateProfileEntity.value!.iban.toString();
+
+
+
+
+                prepareDefaultParameters();
+
+
+
+                state.updateProfileStatus = UpdateProfileInit();
+                pageIndex = 1;
+
+                // if (profileCompleted.getProfileEntity.value!.image != null) {
+                //   avatarProfile = base64Decode(
+                //       profileCompleted.getProfileEntity.value!.image!);
+                // }
+              }
+            }
+
+
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.white,
+              child: preparePageIndex(),
+            );
+          },
         ),
       ),
     );
@@ -180,10 +256,14 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            (firstName == null || lastName == null || firstName =="null" ||
-                            lastName =="null"||firstName=="***"||lastName=="***"
-
-                            )?"نامشخص":  "${firstName}  ${lastName}",
+                            (firstName == null ||
+                                lastName == null ||
+                                firstName == "null" ||
+                                lastName == "null" ||
+                                firstName == "***" ||
+                                lastName == "***")
+                                ? "نامشخص"
+                                : "${firstName}  ${lastName}",
                             textDirection: TextDirection.rtl,
                             style: TextStyle(fontSize: 13),
                           ),
@@ -195,7 +275,8 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                           child: Row(
                             children: [
                               Text(
-                                "${balanceAmount!.toString().seRagham()} ریال".toPersianDigit(),
+                                "${balanceAmount!.toString().seRagham()} ریال"
+                                    .toPersianDigit(),
                                 textDirection: TextDirection.rtl,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
@@ -239,7 +320,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                     color: Colors.transparent,
                                   ),
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
+                                  BorderRadius.all(Radius.circular(20))),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -248,7 +329,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                         foregroundDecoration: BoxDecoration(
                                           color: Colors.grey,
                                           backgroundBlendMode:
-                                              BlendMode.saturation,
+                                          BlendMode.saturation,
                                         ),
                                         padding: EdgeInsets.all(15),
                                         child: Image.asset(
@@ -267,7 +348,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                                 child: Text(
                                                   "ویرایش حساب",
                                                   style:
-                                                      TextStyle(fontSize: 13),
+                                                  TextStyle(fontSize: 13),
                                                 ))),
                                       )),
                                   Expanded(
@@ -299,7 +380,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                     color: Colors.transparent,
                                   ),
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
+                                  BorderRadius.all(Radius.circular(20))),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -308,7 +389,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                         foregroundDecoration: BoxDecoration(
                                           color: Colors.grey,
                                           backgroundBlendMode:
-                                              BlendMode.saturation,
+                                          BlendMode.saturation,
                                         ),
                                         padding: EdgeInsets.all(15),
                                         child: Image.asset(
@@ -327,7 +408,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                                 child: Text(
                                                   "شارژ کیف پول",
                                                   style:
-                                                      TextStyle(fontSize: 13),
+                                                  TextStyle(fontSize: 13),
                                                 ))),
                                       )),
                                   Expanded(
@@ -612,10 +693,10 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                 ),
               )),
           Expanded(
-              flex: 12,
+              flex: 15,
               child: Container(
                 padding:
-                    EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
+                EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
                 color: Colors.transparent,
                 child: Container(
                   child: Column(
@@ -633,191 +714,293 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                         flex: 9,
                         child: Container(
                             child: Column(
-                          children: [
-                            Expanded(
-                                flex: 3,
-                                child: Container(
-                                  child: Form(
-                                    key: _formKey_firstname,
-                                    child: Column(
-                                      crossAxisAlignment:
+                              children: [
+                                Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      child: Form(
+                                        key: _formKey_firstname,
+                                        child: Column(
+                                          crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
-                                      children: [
-                                        Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: TextFormField(
-                                            maxLength: 20,
-                                            controller: _firstnameController,
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'مقدار وارد شده خالی است';
-                                              }
+                                          children: [
+                                            Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: TextFormField(
+                                                maxLength: 20,
+                                                controller: _firstnameController,
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'مقدار وارد شده خالی است';
+                                                  }
 
-                                              return null;
-                                            },
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _isButtonNextDisabled_page2_condition1 =
+                                                  return null;
+                                                },
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _isButtonNextDisabled_page2_condition1 =
                                                     !_formKey_firstname
                                                         .currentState!
                                                         .validate();
-                                              });
-                                            },
-                                            keyboardType: TextInputType.text,
-                                            decoration: InputDecoration(
-                                              enabledBorder:
+                                                  });
+                                                },
+                                                keyboardType: TextInputType
+                                                    .text,
+                                                decoration: InputDecoration(
+                                                  enabledBorder:
                                                   UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-                                              focusedBorder:
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
                                                   UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-                                              filled: true,
-                                              hintText: "نام",
-                                              hintStyle: TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                              fillColor: Color(0x32E1E3E0),
-                                              floatingLabelBehavior:
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  filled: true,
+                                                  hintText: "نام",
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                  fillColor: Color(0x32E1E3E0),
+                                                  floatingLabelBehavior:
                                                   FloatingLabelBehavior.auto,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 3,
-                                child: Container(
-                                  child: Form(
-                                    key: _formKey_lastname,
-                                    child: Column(
-                                      crossAxisAlignment:
+                                      ),
+                                    )),
+                                Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      child: Form(
+                                        key: _formKey_lastname,
+                                        child: Column(
+                                          crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
-                                      children: [
-                                        Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: TextFormField(
-                                            maxLength: 20,
-                                            controller: _lastnameController,
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'مقدار وارد شده خالی است';
-                                              }
+                                          children: [
+                                            Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: TextFormField(
+                                                maxLength: 20,
+                                                controller: _lastnameController,
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'مقدار وارد شده خالی است';
+                                                  }
 
-                                              return null;
-                                            },
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _isButtonNextDisabled_page2_condition2 =
+                                                  return null;
+                                                },
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _isButtonNextDisabled_page2_condition2 =
                                                     !_formKey_lastname
                                                         .currentState!
                                                         .validate();
-                                              });
-                                            },
-                                            keyboardType: TextInputType.text,
-                                            decoration: InputDecoration(
-                                              enabledBorder:
+                                                  });
+                                                },
+                                                keyboardType: TextInputType
+                                                    .text,
+                                                decoration: InputDecoration(
+                                                  enabledBorder:
                                                   UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-                                              focusedBorder:
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
                                                   UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-                                              filled: true,
-                                              hintText: "نام خانوادگی",
-                                              hintStyle: TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                              fillColor: Color(0x32E1E3E0),
-                                              floatingLabelBehavior:
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  filled: true,
+                                                  hintText: "نام خانوادگی",
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                  fillColor: Color(0x32E1E3E0),
+                                                  floatingLabelBehavior:
                                                   FloatingLabelBehavior.auto,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                            // Expanded(
-                            //     flex: 3,
-                            //     child: Container(
-                            //       child: Form(
-                            //         key: _formKey_phonenumber,
-                            //         child: Column(
-                            //           crossAxisAlignment:
-                            //               CrossAxisAlignment.stretch,
-                            //           children: [
-                            //             Directionality(
-                            //               textDirection: TextDirection.rtl,
-                            //               child: TextFormField(
-                            //                 maxLength: 11,
-                            //                 controller: _phonenumberController,
-                            //                 validator: (value) {
-                            //                   if (value == null ||
-                            //                       value.isEmpty) {
-                            //                     return 'مقدار وارد شده خالی است';
-                            //                   }
-                            //
-                            //                   if (value.length != 11) {
-                            //                     return 'شماره تلفن همراه معتبر نیست';
-                            //                   }
-                            //
-                            //                   return null;
-                            //                 },
-                            //                 onChanged: (value) {
-                            //                   setState(() {
-                            //                     _isButtonNextDisabled_page2_condition3 =
-                            //                         !_formKey_phonenumber
-                            //                             .currentState!
-                            //                             .validate();
-                            //                   });
-                            //                 },
-                            //                 keyboardType: TextInputType.number,
-                            //                 decoration: InputDecoration(
-                            //                   enabledBorder:
-                            //                       UnderlineInputBorder(
-                            //                     borderSide: BorderSide(
-                            //                         color: Colors.grey),
-                            //                   ),
-                            //                   focusedBorder:
-                            //                       UnderlineInputBorder(
-                            //                     borderSide: BorderSide(
-                            //                         color: Colors.grey),
-                            //                   ),
-                            //                   filled: true,
-                            //                   hintText: "شماره تلفن همراه",
-                            //                   hintStyle: TextStyle(
-                            //                     fontSize: 12,
-                            //                   ),
-                            //                   fillColor: Color(0x32E1E3E0),
-                            //                   floatingLabelBehavior:
-                            //                       FloatingLabelBehavior.auto,
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     )),
-                            Expanded(flex: 2, child: Container()),
-                          ],
-                        )),
+                                      ),
+                                    )),
+                                Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      child: Form(
+                                        key: _formKey_nationalCode,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: TextFormField(
+                                                maxLength: 11,
+                                                controller: _nationalCodeController,
+                                                validator: (value) {
+                                                  if (value != null &&
+                                                      (!value!.isEmpty)) {
+                                                    if (value.length != 10) {
+                                                      return 'کد ملی وارد شده معتبر نیست';
+                                                    }
+                                                  }
+
+
+
+                                                  return null;
+                                                },
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _isButtonNextDisabled_page2_condition3 =
+                                                        !_formKey_nationalCode
+                                                            .currentState!
+                                                            .validate();
+                                                  });
+                                                },
+                                                keyboardType: TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  filled: true,
+                                                  hintText: "کد ملی",
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                  fillColor: Color(0x32E1E3E0),
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior.auto,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                                Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      child: Form(
+                                        key: _formKey_email,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                          children: [
+                                            Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: TextFormField(
+                                                maxLength: 40,
+                                                controller: _emailController,
+                                                keyboardType: TextInputType.text,
+                                                decoration: InputDecoration(
+                                                  enabledBorder:
+                                                  UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
+                                                  UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  filled: true,
+                                                  hintText: "ایمیل",
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                  fillColor: Color(0x32E1E3E0),
+                                                  floatingLabelBehavior:
+                                                  FloatingLabelBehavior.auto,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                                Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      child: Form(
+                                        key: _formKey_shaba,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                          children: [
+                                            Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: TextFormField(
+                                                maxLength: 26,
+                                                controller: _shabaController,
+                                                validator: (value) {
+                                                  if (value != null &&
+                                                      (!value!.isEmpty)) {
+                                                    if (value.length != 26) {
+                                                      return 'شماره شبا باید 26 عدد باشد';
+                                                    }
+                                                  }
+
+                                                  return null;
+                                                },
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _isButtonNextDisabled_page2_condition4 =
+                                                    !_formKey_shaba
+                                                        .currentState!
+                                                        .validate();
+                                                  });
+                                                },
+                                                keyboardType: TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  enabledBorder:
+                                                  UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
+                                                  UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  filled: true,
+                                                  hintText: "شماره شبا",
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                  fillColor: Color(0x32E1E3E0),
+                                                  floatingLabelBehavior:
+                                                  FloatingLabelBehavior.auto,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                                Expanded(flex: 2, child: Container()),
+                              ],
+                            )),
                       ),
                     ],
                   ),
                 ),
               )),
-          Expanded(flex: 4, child: Container()),
+          Expanded(flex: 1, child: Container()),
           Expanded(
             flex: 2,
             child: Container(
@@ -829,12 +1012,30 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: (_isButtonNextDisabled_page2_condition1 ==
-                                  true ||
-                              _isButtonNextDisabled_page2_condition2 == true ||
-                              _isButtonNextDisabled_page2_condition3 == true)
+                      onPressed: (
+                          _isButtonNextDisabled_page2_condition1 == true ||
+                          _isButtonNextDisabled_page2_condition2 == true ||
+                          _isButtonNextDisabled_page2_condition3 == true ||
+                          _isButtonNextDisabled_page2_condition4 == true
+
+                      )
                           ? null
-                          : () {},
+                          : () {
+
+                        UpdateProfileParam updateProfileParam =
+                            UpdateProfileParam(
+                              firstName: _firstnameController.text.toString().trim(),
+                              lastName: _lastnameController.text.toString().trim(),
+                              nationalCode: _nationalCodeController.text.toString().trim(),
+                              email: _emailController.text.toString().trim(),
+                              shaba: _shabaController.text.toString().trim()
+                            );
+                        BlocProvider.of<ProfileBloc>(context)
+                            .add(UpdateProfileEvent(updateProfileParam));
+
+
+
+                      },
                       child: Text('تایید'),
                     ),
                   )
@@ -845,5 +1046,61 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
         ],
       );
     }
+  }
+
+  prepareDefaultParameters(){
+    if (firstName == null ||
+        lastName == null ||
+        firstName == "null" ||
+        lastName == "null" ||
+        firstName == "***" ||
+        lastName == "***") {} else {
+      _firstnameController.text = firstName!;
+      _lastnameController.text = lastName!;
+    }
+
+    if (nationalCode == null ||
+        nationalCode == "null" ||
+        nationalCode == "***"
+    ) {} else {
+      _nationalCodeController.text = nationalCode!;
+    }
+
+    if (email == null ||
+        email == "null" ||
+        email == "***"
+    ) {} else {
+      _emailController.text = email!;
+    }
+
+    if (shaba == null ||
+        shaba == "null" ||
+        shaba == "***"
+    ) {} else {
+      _shabaController.text = shaba!;
+    }
+  }
+
+  _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: Duration(seconds: 4),
+        content: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              message,
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.right,
+              style: TextStyle(fontFamily: "shabnam_bold"),
+            ))));
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //       duration: Duration(seconds: 4),
+    //       content: Align(
+    //           alignment: Alignment.centerRight,
+    //           child: Text(
+    //             message,
+    //             style: TextStyle(fontFamily: "shabnam_bold"),
+    //           ))));
+    // });
   }
 }

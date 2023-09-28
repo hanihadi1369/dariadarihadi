@@ -38,9 +38,9 @@ class MainRepositoryImpl extends MainRepository {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          // if(dioError.response!.statusCode == 500){
-          //   return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
-          // }
+          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
+            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          }
           //
           // if(dioError.response!.statusCode == 400){
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
@@ -90,9 +90,9 @@ class MainRepositoryImpl extends MainRepository {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          // if(dioError.response!.statusCode == 500){
-          //   return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
-          // }
+          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
+            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          }
           //
           // if(dioError.response!.statusCode == 400){
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");

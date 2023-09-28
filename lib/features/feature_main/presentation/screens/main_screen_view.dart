@@ -14,12 +14,12 @@ import 'package:atba_application/features/feature_login/presentation/screens/log
 import 'package:atba_application/features/feature_main/presentation/bloc/balance_status.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/main_bloc.dart';
 import 'package:atba_application/features/feature_main/presentation/bloc/profile_status.dart';
+import 'package:atba_application/features/feature_profile/presentation/screens/profile_screen_view.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/wallet_bloc.dart'
     as wallett;
 import 'package:atba_application/features/feature_wallet/presentation/screens/wallet_screen_view.dart';
 import 'package:atba_application/features/feature_charge_internet/presentation/screens/internet_charge_screen_view.dart';
 import 'package:atba_application/features/unbounded_features/kbk_screen_view.dart';
-import 'package:atba_application/features/unbounded_features/profile_screen_view.dart';
 import 'package:atba_application/features/unbounded_features/ticket_screen_view.dart';
 import 'package:atba_application/locator.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +33,7 @@ import '../../../feature_charge_internet/presentation/block/charge_internet_bloc
 import '../../../feature_charge_sim/presentation/block/charge_sim_bloc.dart'
     as csim;
 import '../../../feature_login/presentation/bloc/login_bloc.dart';
+import '../../../feature_profile/presentation/bloc/profile_bloc.dart';
 import '../bloc/refresh_token_status.dart';
 
 class MainScreenView extends StatefulWidget {
@@ -46,6 +47,9 @@ class MainScreenViewState extends State<MainScreenView> {
   static String balance = "***";
   static String firstName = "***";
   static String lastName = "***";
+  static String nationalCode = "***";
+  static String email = "***";
+  static String iban = "***";
   static String phoneNumber = "***";
   Uint8List? avatarProfile = null;
 
@@ -73,54 +77,28 @@ class MainScreenViewState extends State<MainScreenView> {
           listener: (context, state) {
             if (state.balanceStatus is BalanceError) {
               BalanceError error = state.balanceStatus as BalanceError;
-               if (error.message == "عدم پاسخگویی سرور : شناسه نامعتبر"){
-
-
-
-                 TokenKeeper.getRefreshToken().then((value) {
-                   BlocProvider.of<MainBloc>(context)
-                       .add(RefreshTokenEvent(value));
-                   state.balanceStatus = BalanceInit();
-                 });
-
-
-
-
-
-
-
-
-
-
-               }else{
-                 _showSnackBar(error.message);
-                 state.balanceStatus = BalanceInit();
-               }
-
-
-
-
-
-
+              if (error.message == "عدم پاسخگویی سرور : شناسه نامعتبر") {
+                TokenKeeper.getRefreshToken().then((value) {
+                  BlocProvider.of<MainBloc>(context)
+                      .add(RefreshTokenEvent(value));
+                  state.balanceStatus = BalanceInit();
+                });
+              } else {
+                _showSnackBar(error.message);
+                state.balanceStatus = BalanceInit();
+              }
             }
             if (state.profileStatus is ProfileError) {
               ProfileError error = state.profileStatus as ProfileError;
-              if (error.message == "عدم پاسخگویی سرور : شناسه نامعتبر"){
+              if (error.message == "عدم پاسخگویی سرور : شناسه نامعتبر") {
                 state.profileStatus = ProfileInit();
-              }else{
+              } else {
                 _showSnackBar(error.message);
                 state.profileStatus = ProfileInit();
               }
-
-
-
-
-
-
             }
-            if(state.refreshTokenStatus is RefreshTokenError){
+            if (state.refreshTokenStatus is RefreshTokenError) {
               TokenKeeper.deleteAccessToken().then((value) {
-
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -132,18 +110,14 @@ class MainScreenViewState extends State<MainScreenView> {
                     },
                   ),
                 );
-
-
               });
             }
 
             if (state.refreshTokenStatus is RefreshTokenCompleted) {
               RefreshTokenCompleted refreshTokenCompleted =
-              state.refreshTokenStatus as RefreshTokenCompleted;
+                  state.refreshTokenStatus as RefreshTokenCompleted;
               if (refreshTokenCompleted.refreshTokenEntity.isFailed == true) {
-
                 TokenKeeper.deleteAccessToken().then((value) {
-
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -155,48 +129,36 @@ class MainScreenViewState extends State<MainScreenView> {
                       },
                     ),
                   );
-
-
                 });
-
-
-
-
               } else {
                 TokenKeeper.saveAccessToken(refreshTokenCompleted
-                    .refreshTokenEntity.value!.tokens!.accesstoken!)
+                        .refreshTokenEntity.value!.tokens!.accesstoken!)
                     .then(
-                      (value) => {
+                  (value) => {
                     TokenKeeper.accesstoken = refreshTokenCompleted
                         .refreshTokenEntity.value!.tokens!.accesstoken!,
                     TokenKeeper.saveRefreshToken(refreshTokenCompleted
-                        .refreshTokenEntity.value!.tokens!.refreshToken!)
+                            .refreshTokenEntity.value!.tokens!.refreshToken!)
                         .then(
-                          (value) => {
+                      (value) => {
                         TokenKeeper.refreshToken = refreshTokenCompleted
                             .refreshTokenEntity.value!.tokens!.refreshToken!,
                         TokenKeeper.saveRefreshTokenExpirationDate(
-                            refreshTokenCompleted.refreshTokenEntity.value!
-                                .tokens!.refreshTokenExpirationDate!)
+                                refreshTokenCompleted.refreshTokenEntity.value!
+                                    .tokens!.refreshTokenExpirationDate!)
                             .then(
-                              (value) => {
+                          (value) => {
                             TokenKeeper.refreshTokenExpirationDate =
-                            refreshTokenCompleted.refreshTokenEntity.value!
-                                .tokens!.refreshTokenExpirationDate!,
-
-
-                              state.refreshTokenStatus = RefreshTokenInit(),
-                              state.balanceStatus = BalanceInit(),
-                          state.profileStatus = ProfileInit(),
-
-
-
-                      _getPhoneNumber(),
-                      BlocProvider.of<MainBloc>(context).add(GetBalanceEvent()),
-                      BlocProvider.of<MainBloc>(context).add(GetProfileEvent()),
-
-
-
+                                refreshTokenCompleted.refreshTokenEntity.value!
+                                    .tokens!.refreshTokenExpirationDate!,
+                            state.refreshTokenStatus = RefreshTokenInit(),
+                            state.balanceStatus = BalanceInit(),
+                            state.profileStatus = ProfileInit(),
+                            _getPhoneNumber(),
+                            BlocProvider.of<MainBloc>(context)
+                                .add(GetBalanceEvent()),
+                            BlocProvider.of<MainBloc>(context)
+                                .add(GetProfileEvent()),
                           },
                         )
                       },
@@ -205,15 +167,11 @@ class MainScreenViewState extends State<MainScreenView> {
                 );
               }
             }
-
-
-
           },
           builder: (context, state) {
             if (state.balanceStatus is BalanceLoading ||
-                state.profileStatus is ProfileLoading  ||
-                state.refreshTokenStatus is RefreshTokenLoading
-            ) {
+                state.profileStatus is ProfileLoading ||
+                state.refreshTokenStatus is RefreshTokenLoading) {
               return LoadingPage();
             }
             if (state.balanceStatus is BalanceCompleted) {
@@ -229,11 +187,13 @@ class MainScreenViewState extends State<MainScreenView> {
               ProfileCompleted profileCompleted =
                   state.profileStatus as ProfileCompleted;
               if (profileCompleted.getProfileEntity.isFailed == false) {
-                firstName = profileCompleted.getProfileEntity.value!.firstName
-                    .toString();
+                firstName = profileCompleted.getProfileEntity.value!.firstName.toString();
 
-                lastName = profileCompleted.getProfileEntity.value!.lastName
-                    .toString();
+                lastName = profileCompleted.getProfileEntity.value!.lastName.toString();
+
+                nationalCode = profileCompleted.getProfileEntity.value!.nationalCode.toString();
+                email = profileCompleted.getProfileEntity.value!.email.toString();
+                iban = profileCompleted.getProfileEntity.value!.iban.toString();
 
                 if (profileCompleted.getProfileEntity.value!.image != null) {
                   avatarProfile = base64Decode(
@@ -875,18 +835,29 @@ class MainScreenViewState extends State<MainScreenView> {
                             Expanded(
                               child: InkWell(
                                 onTap: () async {
-                                  await Navigator.push(
+                                  Navigator.push(
                                     context,
-                                    SlideRightRoute(
-                                      page: ProfileScreenView(
-                                          int.parse(balance),
-                                          firstName,
-                                          lastName,
-                                          phoneNumber),
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BlocProvider.value(
+                                          value: locator<ProfileBloc>(),
+                                          child: ProfileScreenView(
+                                              int.parse(balance),
+                                              firstName,
+                                              lastName,
+                                              phoneNumber,
+                                            nationalCode,
+                                            email,
+                                            iban
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ).then((value) => {
                                         BlocProvider.of<MainBloc>(context)
-                                            .add(GetBalanceEvent())
+                                            .add(GetBalanceEvent()),
+                                        BlocProvider.of<MainBloc>(context)
+                                            .add(GetProfileEvent())
                                       });
                                 },
                                 child: Container(

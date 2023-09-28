@@ -163,6 +163,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
 
   double heightOfModalBottomSheet = 50;
 
+  String orderId = "";
+
   String getTicketName(int index) {
     if (index == 1) {
       return "تک سفره مشترک مترو و بی آر تی";
@@ -200,6 +202,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
   @override
   void initState() {
     super.initState();
+
     _getPhoneNumber();
     BlocProvider.of<BillBloc>(context).add(GetBillsEvent());
   }
@@ -213,7 +216,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (pageIndex == 1) {
+        if ((pageIndex == 1) ||
+            (pageIndex == 11) ||
+            (pageIndex == 12) ||
+            (pageIndex == 13) ||
+            (pageIndex == 14) ||
+            (pageIndex == 15) ||
+            (pageIndex == 16) ||
+            (pageIndex == 17)) {
           Navigator.of(context).pop();
         }
 
@@ -231,7 +241,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
             (pageIndex == 33) ||
             (pageIndex == 34)) {
           setState(() {
-            pageIndex = 30;
+            pageIndex = 1;
           });
         }
 
@@ -278,6 +288,99 @@ class _BillsScreenViewState extends State<BillsScreenView> {
           });
         }
 
+        if (pageIndex == 3111 || pageIndex == 301) {
+          setState(() {
+            _addToMyBillsList = false;
+            _waterBillController1.text = "";
+            _waterBillController2.text = "";
+            pageIndex = 1;
+          });
+        }
+        if (pageIndex == 3222 || pageIndex == 302) {
+          setState(() {
+            _addToMyBillsList = false;
+            _barghBillController1.text = "";
+            _barghBillController2.text = "";
+            pageIndex = 1;
+          });
+        }
+        if (pageIndex == 3333 || pageIndex == 303) {
+          setState(() {
+            _addToMyBillsList = false;
+            _gazBillController1.text = "";
+            _gazBillController2.text = "";
+            pageIndex = 1;
+          });
+        }
+        if (pageIndex == 3444 || pageIndex == 304) {
+          setState(() {
+            _addToMyBillsList = false;
+            _phoneBillController1.text = "";
+            _phoneBillController2.text = "";
+            pageIndex = 1;
+          });
+        }
+        if (pageIndex == 3555 || pageIndex == 305) {
+          setState(() {
+            _addToMyBillsList = false;
+            _mciBillController1.text = "";
+            _mciBillController2.text = "";
+            pageIndex = 1;
+          });
+        }
+        if (pageIndex == 3666 || pageIndex == 306) {
+          setState(() {
+            _addToMyBillsList = false;
+            _mtnBillController1.text = "";
+            _mtnBillController2.text = "";
+            pageIndex = 1;
+          });
+        }
+        if (pageIndex == 3777 || pageIndex == 307) {
+          setState(() {
+            _addToMyBillsList = false;
+            _rightelBillController1.text = "";
+            _rightelBillController2.text = "";
+            pageIndex = 1;
+          });
+        }
+
+        if (pageIndex == 31111) {
+          setState(() {
+            pageIndex = 3111;
+          });
+        }
+        if (pageIndex == 32222) {
+          setState(() {
+            pageIndex = 3222;
+          });
+        }
+        if (pageIndex == 33333) {
+          setState(() {
+            pageIndex = 3333;
+          });
+        }
+        if (pageIndex == 34444) {
+          setState(() {
+            pageIndex = 3444;
+          });
+        }
+        if (pageIndex == 35555) {
+          setState(() {
+            pageIndex = 3555;
+          });
+        }
+        if (pageIndex == 36666) {
+          setState(() {
+            pageIndex = 3666;
+          });
+        }
+        if (pageIndex == 37777) {
+          setState(() {
+            pageIndex = 3777;
+          });
+        }
+
         return Future.value(false);
       },
       child: Scaffold(
@@ -297,21 +400,18 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 _showSnackBar(error.message);
                 state.createBillStatus = CreateBillInit();
               }
-
               if (state.updateBillStatus is UpdateBillError) {
                 UpdateBillError error =
                     state.updateBillStatus as UpdateBillError;
                 _showSnackBar(error.message);
                 state.updateBillStatus = UpdateBillInit();
               }
-
               if (state.deleteBillStatus is DeleteBillError) {
                 DeleteBillError error =
                     state.deleteBillStatus as DeleteBillError;
                 _showSnackBar(error.message);
                 state.deleteBillStatus = DeleteBillInit();
               }
-
               if (state.barghBillInquiryStatus is BarghBillInquiryError) {
                 BarghBillInquiryError error =
                     state.barghBillInquiryStatus as BarghBillInquiryError;
@@ -336,7 +436,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 _showSnackBar(error.message);
                 state.fixLineBillInquiryStatus = FixLineBillInquiryInit();
               }
-
               if (state.mciBillInquiryStatus is MciBillInquiryError) {
                 MciBillInquiryError error =
                     state.mciBillInquiryStatus as MciBillInquiryError;
@@ -355,7 +454,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 _showSnackBar(error.message);
                 state.rightelBillInquiryStatus = RightelBillInquiryInit();
               }
-
               if (state.paymentFromWalletStatus is PaymentFromWalletError) {
                 PaymentFromWalletError error =
                     state.paymentFromWalletStatus as PaymentFromWalletError;
@@ -384,6 +482,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   state.balanceStatus is BalanceLoading) {
                 return LoadingPage();
               }
+
               if (state.billsStatus is BillsCompleted) {
                 BillsCompleted billsCompleted =
                     state.billsStatus as BillsCompleted;
@@ -548,6 +647,41 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   pageIndex = 377;
                 }
                 state.rightelBillInquiryStatus = RightelBillInquiryInit();
+              }
+
+              if (state.paymentFromWalletStatus is PaymentFromWalletCompleted) {
+                PaymentFromWalletCompleted paymentFromWalletCompleted =
+                    state.paymentFromWalletStatus as PaymentFromWalletCompleted;
+                if (paymentFromWalletCompleted
+                        .paymentFromWalletEntity.isFailed ==
+                    false) {
+                  orderId = paymentFromWalletCompleted
+                      .paymentFromWalletEntity.value!.orderId!
+                      .toInt()
+                      .toString();
+                  if (pageIndex == 3111) {
+                    pageIndex = 301;
+                  }
+                  if (pageIndex == 3222) {
+                    pageIndex = 302;
+                  }
+                  if (pageIndex == 3333) {
+                    pageIndex = 303;
+                  }
+                  if (pageIndex == 3444) {
+                    pageIndex = 304;
+                  }
+                  if (pageIndex == 3555) {
+                    pageIndex = 305;
+                  }
+                  if (pageIndex == 3666) {
+                    pageIndex = 306;
+                  }
+                  if (pageIndex == 3777) {
+                    pageIndex = 307;
+                  }
+                }
+                state.paymentFromWalletStatus = PaymentFromWalletInit();
               }
 
               if (state.balanceStatus is BalanceCompleted) {
@@ -4767,7 +4901,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 30;
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -5349,7 +5483,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 311;
+                            _addToMyBillsList = false;
+                            _waterBillController1.text = "";
+                            _waterBillController2.text = "";
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -6081,6 +6218,246 @@ class _BillsScreenViewState extends State<BillsScreenView> {
         ],
       );
     }
+    if (pageIndex == 301) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("پرداخت قبض آب")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _addToMyBillsList = false;
+                            _waterBillController1.text = "";
+                            _waterBillController2.text = "";
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/close_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 16,
+            // child: Screenshot(
+            //   controller: screenshotController,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 35, right: 35, top: 0, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text("${waterInquiryResult.billID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه قبض",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(((waterInquiryResult.paymentID!) == "")
+                                  ? "پرداخت شده"
+                                  : "${waterInquiryResult.paymentID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه پرداخت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                waterInquiryResult.amount!.trim().seRagham() +
+                                    " ریال",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              Spacer(),
+                              Text(
+                                "مبلغ پرداختی",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(orderId),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+                Expanded(flex: 4, child: Container()),
+              ],
+            ),
+            // ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              // screenshotController.capture().then((Uint8List? image) {
+                              //   //Capture Done
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () async {
+                              // screenshotController.capture().then((Uint8List? image) async {
+                              //   //Capture Done
+                              //
+                              //   if (image != null) {
+                              //     final directory = await getApplicationDocumentsDirectory();
+                              //     final imagePath = await File('${directory.path}/image.png').create();
+                              //     await imagePath.writeAsBytes(image);
+                              //
+                              //     /// Share Plugin
+                              //     await Share.shareFiles([imagePath.path]);
+                              //   }
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 32) {
       return Column(
@@ -6098,7 +6475,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 30;
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -6686,7 +7063,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 322;
+                            _addToMyBillsList = false;
+                            _barghBillController1.text = "";
+                            _barghBillController2.text = "";
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -7420,6 +7800,250 @@ class _BillsScreenViewState extends State<BillsScreenView> {
         ],
       );
     }
+    if (pageIndex == 302) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("پرداخت قبض برق")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _addToMyBillsList = false;
+                            _barghBillController1.text = "";
+                            _barghBillController2.text = "";
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/close_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 16,
+            // child: Screenshot(
+            //   controller: screenshotController,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 35, right: 35, top: 0, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text("${barghInquiryResult.billID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه قبض",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(((barghInquiryResult.paymentID!) == "")
+                                  ? "پرداخت شده"
+                                  : "${barghInquiryResult.paymentID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه پرداخت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                barghInquiryResult.amount!
+                                        .toInt()
+                                        .toString()
+                                        .trim()
+                                        .seRagham() +
+                                    " ریال",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              Spacer(),
+                              Text(
+                                "مبلغ پرداختی",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(orderId),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+                Expanded(flex: 4, child: Container()),
+              ],
+            ),
+            // ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              // screenshotController.capture().then((Uint8List? image) {
+                              //   //Capture Done
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () async {
+                              // screenshotController.capture().then((Uint8List? image) async {
+                              //   //Capture Done
+                              //
+                              //   if (image != null) {
+                              //     final directory = await getApplicationDocumentsDirectory();
+                              //     final imagePath = await File('${directory.path}/image.png').create();
+                              //     await imagePath.writeAsBytes(image);
+                              //
+                              //     /// Share Plugin
+                              //     await Share.shareFiles([imagePath.path]);
+                              //   }
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 33) {
       return Column(
@@ -7437,7 +8061,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 30;
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -8020,7 +8644,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 333;
+                            _addToMyBillsList = false;
+                            _gazBillController1.text = "";
+                            _gazBillController2.text = "";
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -8752,6 +9379,246 @@ class _BillsScreenViewState extends State<BillsScreenView> {
         ],
       );
     }
+    if (pageIndex == 303) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("پرداخت قبض گاز")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _addToMyBillsList = false;
+                            _gazBillController1.text = "";
+                            _gazBillController2.text = "";
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/close_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 16,
+            // child: Screenshot(
+            //   controller: screenshotController,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 35, right: 35, top: 0, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text("${gasInquiryResult.billID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه قبض",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(((gasInquiryResult.paymentID!) == "")
+                                  ? "پرداخت شده"
+                                  : "${gasInquiryResult.paymentID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه پرداخت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                gasInquiryResult.amount!.trim().seRagham() +
+                                    " ریال",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              Spacer(),
+                              Text(
+                                "مبلغ پرداختی",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(orderId),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+                Expanded(flex: 4, child: Container()),
+              ],
+            ),
+            // ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              // screenshotController.capture().then((Uint8List? image) {
+                              //   //Capture Done
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () async {
+                              // screenshotController.capture().then((Uint8List? image) async {
+                              //   //Capture Done
+                              //
+                              //   if (image != null) {
+                              //     final directory = await getApplicationDocumentsDirectory();
+                              //     final imagePath = await File('${directory.path}/image.png').create();
+                              //     await imagePath.writeAsBytes(image);
+                              //
+                              //     /// Share Plugin
+                              //     await Share.shareFiles([imagePath.path]);
+                              //   }
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 34) {
       return Column(
@@ -8769,7 +9636,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 30;
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -9320,9 +10187,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? ( fixLineInquiryResult.midTerm!.paymentID==null    ||      fixLineInquiryResult.midTerm!.paymentID!
-                                        .trim() ==
-                                    "")
+                            ? (fixLineInquiryResult.midTerm!.paymentID ==
+                                        null ||
+                                    fixLineInquiryResult.midTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -9346,7 +10215,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3444;
                                     });
                                   }
-                            : ( fixLineInquiryResult.finalTerm!.paymentID==null    ||  fixLineInquiryResult.finalTerm!.paymentID!.trim() == "")
+                            : (fixLineInquiryResult.finalTerm!.paymentID ==
+                                        null ||
+                                    fixLineInquiryResult.finalTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -9411,7 +10284,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 344;
+                            _addToMyBillsList = false;
+                            _phoneBillController1.text = "";
+                            _phoneBillController2.text = "";
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -9719,11 +10595,9 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           //     ? fixLineInquiryResult.midTerm!.billID
                           //     : fixLineInquiryResult.finalTerm!.billID;
 
+                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-                          bill.isMidTerm = (midTermSelected)?true:false;
-
-
-                          bill.billID =_phoneBillController1.text.trim();
+                          bill.billID = _phoneBillController1.text.trim();
                           bill.operationCode = "302";
 
                           List<Bills> bills = [];
@@ -10216,6 +11090,262 @@ class _BillsScreenViewState extends State<BillsScreenView> {
         ],
       );
     }
+    if (pageIndex == 304) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("پرداخت قبض تلفن")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _addToMyBillsList = false;
+                            _phoneBillController1.text = "";
+                            _phoneBillController2.text = "";
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/close_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 16,
+            // child: Screenshot(
+            //   controller: screenshotController,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 35, right: 35, top: 0, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                  "${(midTermSelected) ? fixLineInquiryResult.midTerm!.billID : fixLineInquiryResult.finalTerm!.billID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه قبض",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text((midTermSelected)
+                                  ? ((fixLineInquiryResult
+                                              .midTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${fixLineInquiryResult.midTerm!.paymentID}"
+                                  : ((fixLineInquiryResult
+                                              .finalTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${fixLineInquiryResult.finalTerm!.paymentID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه پرداخت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                (midTermSelected)
+                                    ? fixLineInquiryResult.midTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال"
+                                    : fixLineInquiryResult.finalTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              Spacer(),
+                              Text(
+                                "مبلغ پرداختی",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(orderId),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+                Expanded(flex: 4, child: Container()),
+              ],
+            ),
+            // ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              // screenshotController.capture().then((Uint8List? image) {
+                              //   //Capture Done
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () async {
+                              // screenshotController.capture().then((Uint8List? image) async {
+                              //   //Capture Done
+                              //
+                              //   if (image != null) {
+                              //     final directory = await getApplicationDocumentsDirectory();
+                              //     final imagePath = await File('${directory.path}/image.png').create();
+                              //     await imagePath.writeAsBytes(image);
+                              //
+                              //     /// Share Plugin
+                              //     await Share.shareFiles([imagePath.path]);
+                              //   }
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 35) {
       return Column(
@@ -10233,7 +11363,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 30;
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -10775,8 +11905,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? ( mciInquiryResult.midTerm!.paymentID==null    ||   mciInquiryResult.midTerm!.paymentID!.trim() ==
-                                    "")
+                            ? (mciInquiryResult.midTerm!.paymentID == null ||
+                                    mciInquiryResult.midTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -10799,8 +11931,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3555;
                                     });
                                   }
-                            : (mciInquiryResult.finalTerm!.paymentID==null    ||mciInquiryResult.finalTerm!.paymentID!.trim() ==
-                                    "")
+                            : (mciInquiryResult.finalTerm!.paymentID == null ||
+                                    mciInquiryResult.finalTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -10864,7 +11998,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 355;
+                            _addToMyBillsList = false;
+                            _mciBillController1.text = "";
+                            _mciBillController2.text = "";
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -11169,10 +12306,9 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           //     ? mciInquiryResult.midTerm!.billID
                           //     : mciInquiryResult.finalTerm!.billID;
 
-                          bill.isMidTerm = (midTermSelected)?true:false;
+                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-
-                          bill.billID =_mciBillController1.text.trim();
+                          bill.billID = _mciBillController1.text.trim();
                           bill.operationCode = "310";
 
                           List<Bills> bills = [];
@@ -11662,6 +12798,260 @@ class _BillsScreenViewState extends State<BillsScreenView> {
         ],
       );
     }
+    if (pageIndex == 305) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("پرداخت قبض همراه اول")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _addToMyBillsList = false;
+                            _mciBillController1.text = "";
+                            _mciBillController2.text = "";
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/close_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 16,
+            // child: Screenshot(
+            //   controller: screenshotController,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 35, right: 35, top: 0, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                  "${(midTermSelected) ? mciInquiryResult.midTerm!.billID : mciInquiryResult.finalTerm!.billID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه قبض",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text((midTermSelected)
+                                  ? ((mciInquiryResult.midTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${mciInquiryResult.midTerm!.paymentID}"
+                                  : ((mciInquiryResult.finalTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${mciInquiryResult.finalTerm!.paymentID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه پرداخت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                (midTermSelected)
+                                    ? mciInquiryResult.midTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال"
+                                    : mciInquiryResult.finalTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              Spacer(),
+                              Text(
+                                "مبلغ پرداختی",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(orderId),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+                Expanded(flex: 4, child: Container()),
+              ],
+            ),
+            // ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              // screenshotController.capture().then((Uint8List? image) {
+                              //   //Capture Done
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () async {
+                              // screenshotController.capture().then((Uint8List? image) async {
+                              //   //Capture Done
+                              //
+                              //   if (image != null) {
+                              //     final directory = await getApplicationDocumentsDirectory();
+                              //     final imagePath = await File('${directory.path}/image.png').create();
+                              //     await imagePath.writeAsBytes(image);
+                              //
+                              //     /// Share Plugin
+                              //     await Share.shareFiles([imagePath.path]);
+                              //   }
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 36) {
       return Column(
@@ -11679,7 +13069,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 30;
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -12221,8 +13611,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? (mtnInquiryResult.midTerm!.paymentID==null    ||mtnInquiryResult.midTerm!.paymentID!.trim() ==
-                                    "")
+                            ? (mtnInquiryResult.midTerm!.paymentID == null ||
+                                    mtnInquiryResult.midTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -12245,8 +13637,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3666;
                                     });
                                   }
-                            : (mtnInquiryResult.finalTerm!.paymentID==null    ||mtnInquiryResult.finalTerm!.paymentID!.trim() ==
-                                    "")
+                            : (mtnInquiryResult.finalTerm!.paymentID == null ||
+                                    mtnInquiryResult.finalTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -12310,7 +13704,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 366;
+                            _addToMyBillsList = false;
+                            _mtnBillController1.text = "";
+                            _mtnBillController2.text = "";
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -12615,9 +14012,9 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           //     ? mtnInquiryResult.midTerm!.billID
                           //     : mtnInquiryResult.finalTerm!.billID;
 
-                          bill.isMidTerm = (midTermSelected)?true:false;
+                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-                          bill.billID =_mtnBillController1.text.trim();
+                          bill.billID = _mtnBillController1.text.trim();
                           bill.operationCode = "311";
 
                           List<Bills> bills = [];
@@ -13107,6 +14504,260 @@ class _BillsScreenViewState extends State<BillsScreenView> {
         ],
       );
     }
+    if (pageIndex == 306) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("پرداخت قبض ایرانسل")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _addToMyBillsList = false;
+                            _mtnBillController1.text = "";
+                            _mtnBillController2.text = "";
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/close_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 16,
+            // child: Screenshot(
+            //   controller: screenshotController,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 35, right: 35, top: 0, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                  "${(midTermSelected) ? mtnInquiryResult.midTerm!.billID : mtnInquiryResult.finalTerm!.billID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه قبض",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text((midTermSelected)
+                                  ? ((mtnInquiryResult.midTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${mtnInquiryResult.midTerm!.paymentID}"
+                                  : ((mtnInquiryResult.finalTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${mtnInquiryResult.finalTerm!.paymentID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه پرداخت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                (midTermSelected)
+                                    ? mtnInquiryResult.midTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال"
+                                    : mtnInquiryResult.finalTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              Spacer(),
+                              Text(
+                                "مبلغ پرداختی",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(orderId),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+                Expanded(flex: 4, child: Container()),
+              ],
+            ),
+            // ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              // screenshotController.capture().then((Uint8List? image) {
+                              //   //Capture Done
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () async {
+                              // screenshotController.capture().then((Uint8List? image) async {
+                              //   //Capture Done
+                              //
+                              //   if (image != null) {
+                              //     final directory = await getApplicationDocumentsDirectory();
+                              //     final imagePath = await File('${directory.path}/image.png').create();
+                              //     await imagePath.writeAsBytes(image);
+                              //
+                              //     /// Share Plugin
+                              //     await Share.shareFiles([imagePath.path]);
+                              //   }
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 37) {
       return Column(
@@ -13124,7 +14775,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 30;
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -13668,9 +15319,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: (midTermSelected)
-                            ? (rightelInquiryResult.midTerm!.paymentID==null    ||rightelInquiryResult.midTerm!.paymentID!
-                                        .trim() ==
-                                    "")
+                            ? (rightelInquiryResult.midTerm!.paymentID ==
+                                        null ||
+                                    rightelInquiryResult.midTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -13694,9 +15347,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       pageIndex = 3777;
                                     });
                                   }
-                            : (rightelInquiryResult.finalTerm!.paymentID==null    ||rightelInquiryResult.finalTerm!.paymentID!
-                                        .trim() ==
-                                    "")
+                            : (rightelInquiryResult.finalTerm!.paymentID ==
+                                        null ||
+                                    rightelInquiryResult.finalTerm!.paymentID!
+                                            .trim() ==
+                                        "")
                                 ? null
                                 : () {
                                     BlocProvider.of<BillBloc>(context)
@@ -13761,7 +15416,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 377;
+                            _addToMyBillsList = false;
+                            _rightelBillController1.text = "";
+                            _rightelBillController2.text = "";
+                            pageIndex = 1;
                           });
                         },
                         child: Image.asset(
@@ -14069,9 +15727,9 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                           //     ? rightelInquiryResult.midTerm!.billID
                           //     : rightelInquiryResult.finalTerm!.billID;
 
-                          bill.isMidTerm = (midTermSelected)?true:false;
+                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-                          bill.billID =_rightelBillController1.text.trim();
+                          bill.billID = _rightelBillController1.text.trim();
                           bill.operationCode = "312";
 
                           List<Bills> bills = [];
@@ -14128,7 +15786,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 37777;
+                            pageIndex = 3777;
                           });
                         },
                         child: Image.asset(
@@ -14564,6 +16222,262 @@ class _BillsScreenViewState extends State<BillsScreenView> {
         ],
       );
     }
+    if (pageIndex == 307) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_green_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 10,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("پرداخت قبض رایتل")))),
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _addToMyBillsList = false;
+                            _rightelBillController1.text = "";
+                            _rightelBillController2.text = "";
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/image_icon/close_icon.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 16,
+            // child: Screenshot(
+            //   controller: screenshotController,
+            child: Column(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 35, right: 35, top: 0, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                  "${(midTermSelected) ? rightelInquiryResult.midTerm!.billID : rightelInquiryResult.finalTerm!.billID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه قبض",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text((midTermSelected)
+                                  ? ((rightelInquiryResult
+                                              .midTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${rightelInquiryResult.midTerm!.paymentID}"
+                                  : ((rightelInquiryResult
+                                              .finalTerm!.paymentID!) ==
+                                          "")
+                                      ? "پرداخت شده"
+                                      : "${rightelInquiryResult.finalTerm!.paymentID}"),
+                              Spacer(),
+                              Text(
+                                "شناسه پرداخت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                (midTermSelected)
+                                    ? rightelInquiryResult.midTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال"
+                                    : rightelInquiryResult.finalTerm!.amount!
+                                            .toString()
+                                            .seRagham() +
+                                        " ریال",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              Spacer(),
+                              Text(
+                                "مبلغ پرداختی",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(orderId),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+                Expanded(flex: 4, child: Container()),
+              ],
+            ),
+            // ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              // screenshotController.capture().then((Uint8List? image) {
+                              //   //Capture Done
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () async {
+                              // screenshotController.capture().then((Uint8List? image) async {
+                              //   //Capture Done
+                              //
+                              //   if (image != null) {
+                              //     final directory = await getApplicationDocumentsDirectory();
+                              //     final imagePath = await File('${directory.path}/image.png').create();
+                              //     await imagePath.writeAsBytes(image);
+                              //
+                              //     /// Share Plugin
+                              //     await Share.shareFiles([imagePath.path]);
+                              //   }
+                              //
+                              // }).catchError((onError) {
+                              //   print(onError);
+                              // });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 2) {
       return Column(
@@ -14685,9 +16599,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 UpdateBillParam updateBillParam =
                                     UpdateBillParam(
                                         billId: selectedBillForUpdate.id!,
-                                        billType:selectedBillForUpdate.type!.toInt(),
+                                        billType:
+                                            selectedBillForUpdate.type!.toInt(),
                                         billCode: selectedBillForUpdate.code!,
-                                        billTitle: _editBillController.text.toString());
+                                        billTitle: _editBillController.text
+                                            .toString());
 
                                 BlocProvider.of<BillBloc>(context)
                                     .add(UpdateBillEvent(updateBillParam));
@@ -14744,7 +16660,12 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                         //water inquiry
                         WaterBillInquiryParam waterBillInquiryParam =
                             WaterBillInquiryParam(
-                                waterBillID: bills[i].id!, traceNumber: "");
+                                waterBillID: bills[i].code!, traceNumber: "");
+                        _waterBillController1.text = bills[i].code!.trim();
+                        _waterBillController2.text = bills[i].title!.trim();
+                        _isButtonNextDisabled_water_1 = false;
+                        _isButtonNextDisabled_water_2 = false;
+
                         BlocProvider.of<BillBloc>(context)
                             .add(WaterBillInquiryEvent(waterBillInquiryParam));
                       }
@@ -14752,8 +16673,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                         //bargh inquiry
                         BarghBillInquiryParam barghBillInquiryParam =
                             BarghBillInquiryParam(
-                                electricityBillID: bills[i].id!,
+                                electricityBillID: bills[i].code!,
                                 traceNumber: "");
+                        _barghBillController1.text = bills[i].code!.trim();
+                        _barghBillController2.text = bills[i].title!.trim();
+                        _isButtonNextDisabled_bargh_1 = false;
+                        _isButtonNextDisabled_bargh_2 = false;
+
                         BlocProvider.of<BillBloc>(context)
                             .add(BarghBillInquiryEvent(barghBillInquiryParam));
                       }
@@ -14763,6 +16689,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             FixLineBillInquiryParam(
                                 fixedLineNumber: bills[i].code!,
                                 traceNumber: "");
+                        _phoneBillController1.text = bills[i].code!.trim();
+                        _phoneBillController2.text = bills[i].title!.trim();
+                        _isButtonNextDisabled_phone_1 = false;
+                        _isButtonNextDisabled_phone_2 = false;
+
                         BlocProvider.of<BillBloc>(context).add(
                             FixLineBillInquiryEvent(fixLineBillInquiryParam));
                       }
@@ -14771,8 +16702,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                         GasBillInquiryParam gasBillInquiryParam =
                             GasBillInquiryParam(
                                 participateCode: "",
-                                gasBillID: bills[i].id!,
+                                gasBillID: bills[i].code!,
                                 traceNumber: "");
+                        _gazBillController1.text = bills[i].code!.trim();
+                        _gazBillController2.text = bills[i].title!.trim();
+                        _isButtonNextDisabled_gas_1 = false;
+                        _isButtonNextDisabled_gas_2 = false;
+
                         BlocProvider.of<BillBloc>(context)
                             .add(GasBillInquiryEvent(gasBillInquiryParam));
                       }
@@ -14781,6 +16717,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                         FixMobileBillInquiryParam fixMobileBillInquiryParam =
                             FixMobileBillInquiryParam(
                                 mobileNumber: bills[i].code!, traceNumber: "");
+                        _mciBillController1.text = bills[i].code!.trim();
+                        _mciBillController2.text = bills[i].title!.trim();
+                        _isButtonNextDisabled_mci_1 = false;
+                        _isButtonNextDisabled_mci_2 = false;
                         BlocProvider.of<BillBloc>(context).add(
                             MciBillInquiryEvent(fixMobileBillInquiryParam));
                       }
@@ -14789,6 +16729,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                         FixMobileBillInquiryParam fixMobileBillInquiryParam =
                             FixMobileBillInquiryParam(
                                 mobileNumber: bills[i].code!, traceNumber: "");
+                        _mtnBillController1.text = bills[i].code!.trim();
+                        _mtnBillController2.text = bills[i].title!.trim();
+                        _isButtonNextDisabled_mtn_1 = false;
+                        _isButtonNextDisabled_mtn_2 = false;
                         BlocProvider.of<BillBloc>(context).add(
                             MtnBillInquiryEvent(fixMobileBillInquiryParam));
                       }
@@ -14797,6 +16741,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                         FixMobileBillInquiryParam fixMobileBillInquiryParam =
                             FixMobileBillInquiryParam(
                                 mobileNumber: bills[i].code!, traceNumber: "");
+                        _rightelBillController1.text = bills[i].code!.trim();
+                        _rightelBillController2.text = bills[i].title!.trim();
+                        _isButtonNextDisabled_rightel_1 = false;
+                        _isButtonNextDisabled_rightel_2 = false;
                         BlocProvider.of<BillBloc>(context).add(
                             RightelBillInquiryEvent(fixMobileBillInquiryParam));
                       }

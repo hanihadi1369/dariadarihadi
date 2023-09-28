@@ -47,9 +47,9 @@ class ChargeInternetRepositoryImpl extends ChargeInternetRepository {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          // if (dioError.response!.statusCode == 500) {
-          //   return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
-          // }
+          if (dioError.response!.statusCode == 500|| dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502) {
+            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -109,9 +109,9 @@ class ChargeInternetRepositoryImpl extends ChargeInternetRepository {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          // if (dioError.response!.statusCode == 500) {
-          //   return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
-          // }
+          if (dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502) {
+            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -165,9 +165,9 @@ class ChargeInternetRepositoryImpl extends ChargeInternetRepository {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          // if(dioError.response!.statusCode == 500){
-          //   return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
-          // }
+          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
+            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          }
           //
           // if(dioError.response!.statusCode == 404){
           //   return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
