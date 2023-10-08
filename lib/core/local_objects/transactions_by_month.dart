@@ -8,4 +8,32 @@ class TransactionsByMonth{
   int? monthId;
   List<Statement>? statement;
   bool selected = false;
+
+
+
+
+
+
+  double totalVariz = 0;
+  double totalBardasht = 0;
+
+  double totalKifKifVariz = 0;
+  double totalChargeFromWeb = 0;
+
+  double totalKifKifBardasht = 0;
+  double totalInternetPackageBuy = 0;
+  double totalChargeSimBuy = 0;
+  double totalBillsPay = 0;
+
+  bool inComeSelectedForChart = false;
+
+
+
+
+
+
+
+
+
+
 }

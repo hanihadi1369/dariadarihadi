@@ -47,6 +47,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
   bool shouldShowOnCompletedMessage = false;
 
   int seccondsForOtpTimer = 120;
+  bool _isSnackbarActive = false ;
 
   @override
   void initState() {
@@ -197,15 +198,24 @@ class _LoginScreenViewState extends State<LoginScreenView> {
   }
 
   _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: Duration(seconds: 4),
-        content: Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              message.trim(),
-              textDirection: TextDirection.rtl,
-              style: TextStyle(fontFamily: "shabnam_bold"),
-            ))));
+    if(!_isSnackbarActive){
+      _isSnackbarActive = true ;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: Duration(seconds: 4),
+          content: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                message.trim(),
+                textDirection: TextDirection.rtl,
+                style: TextStyle(fontFamily: "shabnam_bold"),
+              ))))
+      .closed
+      .then((value) {
+        _isSnackbarActive = false;
+      })
+      ;
+    }
+
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     //       duration: Duration(seconds: 4),

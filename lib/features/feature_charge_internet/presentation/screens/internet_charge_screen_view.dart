@@ -80,15 +80,14 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
         }
         if (pageIndex == 2) {
           setState(() {
-            pageIndex =1;
+            pageIndex = 1;
           });
         }
         if (pageIndex == 3) {
           setState(() {
-            pageIndex =2;
+            pageIndex = 2;
           });
         }
-
 
         return Future.value(false);
       },
@@ -499,20 +498,178 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                       onPressed: _isButtonNextDisabled_page1
                           ? null
                           : () {
-                              ShowInternetPackagesParam
-                                  showInternetPackagesParam =
-                                  ShowInternetPackagesParam(
-                                      mobile: _phoneController.text
-                                          .toString()
-                                          .trim(),
-                                      operatorType: (operatorSelected == 1)
-                                          ? 2
-                                          : (operatorSelected == 2)
-                                              ? 1
-                                              : 0);
+
+
+
+                        // should show bottom sheet dialog
+                        showMaterialModalBottomSheet(
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15))),
+                          builder: (context) => Container(
+                            height: MediaQuery.of(context).size.height /
+                                (2.5),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.stretch,
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Center(
+                                    child: Text(
+                                      "نوع سیم کارت",
+                                      style: TextStyle(
+                                          color: MyColors.otp_underline,
+                                          fontSize: 16),
+                                    )),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Center(
+                                    child: Text(
+                                      _phoneController.text,
+                                      style: TextStyle(color: Colors.grey),
+                                    )),
+                                Divider(
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                InkWell(
+                                  onTap: () {
+
+                                    setState(() {
+                                      simCardType = 1;
+                                      Navigator.pop(context);
+                                    });
+
+
+
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        right: 16, top: 5, bottom: 5),
+                                    width: double.infinity,
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          "اعتباری",
+                                          style: TextStyle(
+                                              color: Colors.black),
+                                        )),
+                                  ),
+                                ),
+                                Divider(
+                                  thickness: 0.5,
+                                  color: Colors.grey,
+                                ),
+                                InkWell(
+                                  onTap: () {
+
+                                    setState(() {
+                                      simCardType = 2;
+                                      Navigator.pop(context);
+                                    });
+
+
+
+
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        right: 16, top: 5, bottom: 5),
+                                    width: double.infinity,
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          "دائمی",
+                                          style: TextStyle(
+                                              color: Colors.black),
+                                        )),
+                                  ),
+                                ),
+                                Divider(
+                                  thickness: 0.5,
+                                  color: Colors.grey,
+                                ),
+                                Spacer(),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 32, right: 32),
+                                  child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                        MaterialStateProperty
+                                            .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                            return Colors.white;
+                                          },
+                                        ),
+                                        padding: MaterialStateProperty
+                                            .all<EdgeInsetsGeometry>(
+                                          EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 8),
+                                        ),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                10.0),
+                                            side: BorderSide(
+                                                color: MyColors
+                                                    .otp_underline),
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          simCardType= 0;
+                                          Navigator.pop(context);
+                                        });
+
+                                      },
+                                      child: Text(
+                                        "انصراف",
+                                        style: TextStyle(
+                                            color:
+                                            MyColors.otp_underline),
+                                      )),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ).then((value) => {
+
+
+                            if(simCardType!=0){
                               BlocProvider.of<ChargeInternetBloc>(context).add(
                                   ShowInternetPackagesEvent(
-                                      showInternetPackagesParam));
+                                      ShowInternetPackagesParam(
+                                          mobile: _phoneController.text
+                                              .toString()
+                                              .trim(),
+                                          operatorType: (operatorSelected == 1)
+                                              ? 2
+                                              : (operatorSelected == 2)
+                                              ? 1
+                                              : 0)))
+                            }
+
+
+
+                        });
+
+
+
+
+
 
                               // //should show bottom sheet dialog
                               // showMaterialModalBottomSheet(
@@ -1496,9 +1653,12 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                           Expanded(
                               child: Container(
                             padding: EdgeInsets.only(right: 10),
-                            child: Image.asset(
-                              'assets/image_icon/save_in_gallery.png',
-                              fit: BoxFit.scaleDown,
+                            child:  Visibility(
+                              visible: false,
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
                             ),
                           )),
                           Expanded(

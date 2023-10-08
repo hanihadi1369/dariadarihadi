@@ -1382,9 +1382,12 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                           Expanded(
                               child: Container(
                             padding: EdgeInsets.only(right: 10),
-                            child: Image.asset(
-                              'assets/image_icon/save_in_gallery.png',
-                              fit: BoxFit.scaleDown,
+                            child:  Visibility(
+                              visible: false,
+                              child: Image.asset(
+                                'assets/image_icon/save_in_gallery.png',
+                                fit: BoxFit.scaleDown,
+                              ),
                             ),
                           )),
                           Expanded(

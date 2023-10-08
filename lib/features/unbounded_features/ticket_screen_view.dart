@@ -462,7 +462,7 @@ class _TicketScreenViewState extends State<TicketScreenView> {
                           pageIndex = 2;
                         });
                       },
-                      child: Text('خرید بلیط تک سفره'),
+                      child: Text('خرید بلیط'),
                     ),
                   )
                 ],

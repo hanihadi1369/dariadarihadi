@@ -38,7 +38,7 @@ class ApiProviderChargeSimCard {
     var params = {"totalAmount": totalAmount, "cellNumber": cellNumber, "operatorType": operatorType  , "simCardType": simCardType};
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/WalletCharge/api/v1/MultiTopUp",
+      Constants.baseUrl + "/charge/api/v1/MultiTopUp",
       data: body,
     );
     return response;

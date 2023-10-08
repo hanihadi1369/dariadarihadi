@@ -247,44 +247,86 @@ class _BillsScreenViewState extends State<BillsScreenView> {
 
         if (pageIndex == 311) {
           setState(() {
-            _addToMyBillsList = false;
-            pageIndex = 31;
+            if(isSimpleInquiry){
+              _addToMyBillsList = false;
+              pageIndex = 1;
+            }else{
+              _addToMyBillsList = false;
+              pageIndex = 31;
+            }
+
           });
         }
         if (pageIndex == 322) {
           setState(() {
-            _addToMyBillsList = false;
-            pageIndex = 32;
+            if(isSimpleInquiry){
+              _addToMyBillsList = false;
+              pageIndex = 1;
+            }else{
+              _addToMyBillsList = false;
+              pageIndex = 32;
+            }
+
           });
         }
         if (pageIndex == 333) {
           setState(() {
-            _addToMyBillsList = false;
-            pageIndex = 33;
+            if(isSimpleInquiry){
+              _addToMyBillsList = false;
+              pageIndex = 1;
+            }else{
+              _addToMyBillsList = false;
+              pageIndex = 33;
+            }
+
           });
         }
         if (pageIndex == 344) {
           setState(() {
-            _addToMyBillsList = false;
-            pageIndex = 34;
+            if(isSimpleInquiry){
+              _addToMyBillsList = false;
+              pageIndex = 1;
+            }else{
+              _addToMyBillsList = false;
+              pageIndex = 34;
+            }
+
           });
         }
         if (pageIndex == 355) {
           setState(() {
-            _addToMyBillsList = false;
-            pageIndex = 35;
+            if(isSimpleInquiry){
+              _addToMyBillsList = false;
+              pageIndex = 1;
+            }else{
+              _addToMyBillsList = false;
+              pageIndex = 35;
+            }
+
           });
         }
         if (pageIndex == 366) {
           setState(() {
-            _addToMyBillsList = false;
-            pageIndex = 36;
+            if(isSimpleInquiry){
+              _addToMyBillsList = false;
+              pageIndex = 1;
+            }else{
+              _addToMyBillsList = false;
+              pageIndex = 36;
+            }
+
           });
         }
         if (pageIndex == 377) {
           setState(() {
-            _addToMyBillsList = false;
-            pageIndex = 37;
+            if(isSimpleInquiry){
+              _addToMyBillsList = false;
+              pageIndex = 1;
+            }else{
+              _addToMyBillsList = false;
+              pageIndex = 37;
+            }
+
           });
         }
 
@@ -5182,8 +5224,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _addToMyBillsList = false;
-                            pageIndex = 31;
+                            if(isSimpleInquiry){
+                              _addToMyBillsList = false;
+                              pageIndex = 1;
+                            }else{
+                              _addToMyBillsList = false;
+                              pageIndex = 31;
+                            }
+
                           });
                         },
                         child: Image.asset(
@@ -5354,11 +5402,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CheckboxWidget(callback: (value) {
-                      setState(() {
-                        _addToMyBillsList = value;
-                      });
-                    }),
+                    Visibility(
+                        visible : !isSimpleInquiry,
+                      child: CheckboxWidget(callback: (value) {
+                        setState(() {
+                          _addToMyBillsList = value;
+                        });
+                      }),
+                    ),
                   ],
                 ),
               )),
@@ -5369,45 +5420,48 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Visibility(
-                        visible: !_addToMyBillsList,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                return Colors.white;
-                              },
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: MyColors.otp_underline),
+                    child: Visibility(
+                        visible : !isSimpleInquiry,
+                      child: SizedBox(
+                        height: 50,
+                        child: Visibility(
+                          visible: !_addToMyBillsList,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  return Colors.white;
+                                },
+                              ),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: MyColors.otp_underline),
+                                ),
                               ),
                             ),
+                            onPressed: () {
+                              CreateBillParam createBillParam = CreateBillParam(
+                                  billType: 300,
+                                  billCode: _waterBillController1.text.toString(),
+                                  billTitle:
+                                      _waterBillController2.text.toString());
+                              BlocProvider.of<BillBloc>(context)
+                                  .add(CreateBillEvent(createBillParam));
+                            },
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'افزودن به قبض های من',
+                                  style: TextStyle(color: MyColors.otp_underline),
+                                )),
                           ),
-                          onPressed: () {
-                            CreateBillParam createBillParam = CreateBillParam(
-                                billType: 300,
-                                billCode: _waterBillController1.text.toString(),
-                                billTitle:
-                                    _waterBillController2.text.toString());
-                            BlocProvider.of<BillBloc>(context)
-                                .add(CreateBillEvent(createBillParam));
-                          },
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'افزودن به قبض های من',
-                                style: TextStyle(color: MyColors.otp_underline),
-                              )),
                         ),
                       ),
                     ),
@@ -6416,10 +6470,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(right: 10),
+                              child:  Visibility(
+                              visible: false,
                               child: Image.asset(
                                 'assets/image_icon/save_in_gallery.png',
                                 fit: BoxFit.scaleDown,
                               ),
+                            ),
                             ),
                           )),
                           Expanded(
@@ -6759,8 +6816,16 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _addToMyBillsList = false;
-                            pageIndex = 32;
+
+
+                            if(isSimpleInquiry){
+                              _addToMyBillsList = false;
+                              pageIndex = 1;
+                            }else{
+                              _addToMyBillsList = false;
+                              pageIndex = 32;
+                            }
+
                           });
                         },
                         child: Image.asset(
@@ -6934,11 +6999,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CheckboxWidget(callback: (value) {
-                      setState(() {
-                        _addToMyBillsList = value;
-                      });
-                    }),
+                    Visibility(
+                        visible : !isSimpleInquiry,
+                      child: CheckboxWidget(callback: (value) {
+                        setState(() {
+                          _addToMyBillsList = value;
+                        });
+                      }),
+                    ),
                   ],
                 ),
               )),
@@ -6949,45 +7017,48 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Visibility(
-                        visible: !_addToMyBillsList,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                return Colors.white;
-                              },
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: MyColors.otp_underline),
+                    child: Visibility(
+                      visible : !isSimpleInquiry,
+                      child: SizedBox(
+                        height: 50,
+                        child: Visibility(
+                          visible: !_addToMyBillsList,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  return Colors.white;
+                                },
+                              ),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: MyColors.otp_underline),
+                                ),
                               ),
                             ),
+                            onPressed: () {
+                              CreateBillParam createBillParam = CreateBillParam(
+                                  billType: 301,
+                                  billCode: _barghBillController1.text.toString(),
+                                  billTitle:
+                                      _barghBillController2.text.toString());
+                              BlocProvider.of<BillBloc>(context)
+                                  .add(CreateBillEvent(createBillParam));
+                            },
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'افزودن به قبض های من',
+                                  style: TextStyle(color: MyColors.otp_underline),
+                                )),
                           ),
-                          onPressed: () {
-                            CreateBillParam createBillParam = CreateBillParam(
-                                billType: 301,
-                                billCode: _barghBillController1.text.toString(),
-                                billTitle:
-                                    _barghBillController2.text.toString());
-                            BlocProvider.of<BillBloc>(context)
-                                .add(CreateBillEvent(createBillParam));
-                          },
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'افزودن به قبض های من',
-                                style: TextStyle(color: MyColors.otp_underline),
-                              )),
                         ),
                       ),
                     ),
@@ -8002,10 +8073,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(right: 10),
+                              child:  Visibility(
+                              visible: false,
                               child: Image.asset(
                                 'assets/image_icon/save_in_gallery.png',
                                 fit: BoxFit.scaleDown,
                               ),
+                            ),
                             ),
                           )),
                           Expanded(
@@ -8344,8 +8418,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _addToMyBillsList = false;
-                            pageIndex = 33;
+                            if(isSimpleInquiry){
+                              _addToMyBillsList = false;
+                              pageIndex = 1;
+                            }else{
+                              _addToMyBillsList = false;
+                              pageIndex = 33;
+                            }
+
                           });
                         },
                         child: Image.asset(
@@ -8517,11 +8597,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CheckboxWidget(callback: (value) {
-                      setState(() {
-                        _addToMyBillsList = value;
-                      });
-                    }),
+                    Visibility(
+                        visible : !isSimpleInquiry,
+                      child: CheckboxWidget(callback: (value) {
+                        setState(() {
+                          _addToMyBillsList = value;
+                        });
+                      }),
+                    ),
                   ],
                 ),
               )),
@@ -8532,44 +8615,47 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Visibility(
-                        visible: !_addToMyBillsList,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                return Colors.white;
-                              },
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: MyColors.otp_underline),
+                    child: Visibility(
+                      visible : !isSimpleInquiry,
+                      child: SizedBox(
+                        height: 50,
+                        child: Visibility(
+                          visible: !_addToMyBillsList,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  return Colors.white;
+                                },
+                              ),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: MyColors.otp_underline),
+                                ),
                               ),
                             ),
+                            onPressed: () {
+                              CreateBillParam createBillParam = CreateBillParam(
+                                  billType: 306,
+                                  billCode: _gazBillController1.text.toString(),
+                                  billTitle: _gazBillController2.text.toString());
+                              BlocProvider.of<BillBloc>(context)
+                                  .add(CreateBillEvent(createBillParam));
+                            },
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'افزودن به قبض های من',
+                                  style: TextStyle(color: MyColors.otp_underline),
+                                )),
                           ),
-                          onPressed: () {
-                            CreateBillParam createBillParam = CreateBillParam(
-                                billType: 306,
-                                billCode: _gazBillController1.text.toString(),
-                                billTitle: _gazBillController2.text.toString());
-                            BlocProvider.of<BillBloc>(context)
-                                .add(CreateBillEvent(createBillParam));
-                          },
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'افزودن به قبض های من',
-                                style: TextStyle(color: MyColors.otp_underline),
-                              )),
                         ),
                       ),
                     ),
@@ -9577,10 +9663,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(right: 10),
+                              child:  Visibility(
+                              visible: false,
                               child: Image.asset(
                                 'assets/image_icon/save_in_gallery.png',
                                 fit: BoxFit.scaleDown,
                               ),
+                            ),
                             ),
                           )),
                           Expanded(
@@ -9919,8 +10008,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _addToMyBillsList = false;
-                            pageIndex = 34;
+                            if(isSimpleInquiry){
+                              _addToMyBillsList = false;
+                              pageIndex = 1;
+                            }else{
+                              _addToMyBillsList = false;
+                              pageIndex = 34;
+                            }
+
                           });
                         },
                         child: Image.asset(
@@ -10121,11 +10216,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CheckboxWidget(callback: (value) {
-                      setState(() {
-                        _addToMyBillsList = value;
-                      });
-                    }),
+                    Visibility(
+                        visible : !isSimpleInquiry,
+                      child: CheckboxWidget(callback: (value) {
+                        setState(() {
+                          _addToMyBillsList = value;
+                        });
+                      }),
+                    ),
                   ],
                 ),
               )),
@@ -10136,45 +10234,48 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Visibility(
-                        visible: !_addToMyBillsList,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                return Colors.white;
-                              },
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: MyColors.otp_underline),
+                    child: Visibility(
+                      visible : !isSimpleInquiry,
+                      child: SizedBox(
+                        height: 50,
+                        child: Visibility(
+                          visible: !_addToMyBillsList,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  return Colors.white;
+                                },
+                              ),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: MyColors.otp_underline),
+                                ),
                               ),
                             ),
+                            onPressed: () {
+                              CreateBillParam createBillParam = CreateBillParam(
+                                  billType: 302,
+                                  billCode: _phoneBillController1.text.toString(),
+                                  billTitle:
+                                      _phoneBillController2.text.toString());
+                              BlocProvider.of<BillBloc>(context)
+                                  .add(CreateBillEvent(createBillParam));
+                            },
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'افزودن به قبض های من',
+                                  style: TextStyle(color: MyColors.otp_underline),
+                                )),
                           ),
-                          onPressed: () {
-                            CreateBillParam createBillParam = CreateBillParam(
-                                billType: 302,
-                                billCode: _phoneBillController1.text.toString(),
-                                billTitle:
-                                    _phoneBillController2.text.toString());
-                            BlocProvider.of<BillBloc>(context)
-                                .add(CreateBillEvent(createBillParam));
-                          },
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'افزودن به قبض های من',
-                                style: TextStyle(color: MyColors.otp_underline),
-                              )),
                         ),
                       ),
                     ),
@@ -11304,10 +11405,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(right: 10),
+                              child:  Visibility(
+                              visible: false,
                               child: Image.asset(
                                 'assets/image_icon/save_in_gallery.png',
                                 fit: BoxFit.scaleDown,
                               ),
+                            ),
                             ),
                           )),
                           Expanded(
@@ -11638,8 +11742,15 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _addToMyBillsList = false;
-                            pageIndex = 35;
+
+                            if(isSimpleInquiry){
+                              _addToMyBillsList = false;
+                              pageIndex = 1;
+                            }else{
+                              _addToMyBillsList = false;
+                              pageIndex = 35;
+                            }
+
                           });
                         },
                         child: Image.asset(
@@ -11840,11 +11951,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CheckboxWidget(callback: (value) {
-                      setState(() {
-                        _addToMyBillsList = value;
-                      });
-                    }),
+                    Visibility(
+                        visible : !isSimpleInquiry,
+                      child: CheckboxWidget(callback: (value) {
+                        setState(() {
+                          _addToMyBillsList = value;
+                        });
+                      }),
+                    ),
                   ],
                 ),
               )),
@@ -11855,44 +11969,47 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Visibility(
-                        visible: !_addToMyBillsList,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                return Colors.white;
-                              },
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: MyColors.otp_underline),
+                    child: Visibility(
+                      visible : !isSimpleInquiry,
+                      child: SizedBox(
+                        height: 50,
+                        child: Visibility(
+                          visible: !_addToMyBillsList,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  return Colors.white;
+                                },
+                              ),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: MyColors.otp_underline),
+                                ),
                               ),
                             ),
+                            onPressed: () {
+                              CreateBillParam createBillParam = CreateBillParam(
+                                  billType: 310,
+                                  billCode: _mciBillController1.text.toString(),
+                                  billTitle: _mciBillController2.text.toString());
+                              BlocProvider.of<BillBloc>(context)
+                                  .add(CreateBillEvent(createBillParam));
+                            },
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'افزودن به قبض های من',
+                                  style: TextStyle(color: MyColors.otp_underline),
+                                )),
                           ),
-                          onPressed: () {
-                            CreateBillParam createBillParam = CreateBillParam(
-                                billType: 310,
-                                billCode: _mciBillController1.text.toString(),
-                                billTitle: _mciBillController2.text.toString());
-                            BlocProvider.of<BillBloc>(context)
-                                .add(CreateBillEvent(createBillParam));
-                          },
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'افزودن به قبض های من',
-                                style: TextStyle(color: MyColors.otp_underline),
-                              )),
                         ),
                       ),
                     ),
@@ -13010,10 +13127,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(right: 10),
+                              child:  Visibility(
+                              visible: false,
                               child: Image.asset(
                                 'assets/image_icon/save_in_gallery.png',
                                 fit: BoxFit.scaleDown,
                               ),
+                            ),
                             ),
                           )),
                           Expanded(
@@ -13344,8 +13464,15 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _addToMyBillsList = false;
-                            pageIndex = 36;
+
+                            if(isSimpleInquiry){
+                              _addToMyBillsList = false;
+                              pageIndex = 1;
+                            }else{
+                              _addToMyBillsList = false;
+                              pageIndex = 36;
+                            }
+
                           });
                         },
                         child: Image.asset(
@@ -13546,11 +13673,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CheckboxWidget(callback: (value) {
-                      setState(() {
-                        _addToMyBillsList = value;
-                      });
-                    }),
+                    Visibility(
+                        visible : !isSimpleInquiry,
+                      child: CheckboxWidget(callback: (value) {
+                        setState(() {
+                          _addToMyBillsList = value;
+                        });
+                      }),
+                    ),
                   ],
                 ),
               )),
@@ -13561,44 +13691,47 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Visibility(
-                        visible: !_addToMyBillsList,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                return Colors.white;
-                              },
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: MyColors.otp_underline),
+                    child: Visibility(
+                      visible : !isSimpleInquiry,
+                      child: SizedBox(
+                        height: 50,
+                        child: Visibility(
+                          visible: !_addToMyBillsList,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  return Colors.white;
+                                },
+                              ),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: MyColors.otp_underline),
+                                ),
                               ),
                             ),
+                            onPressed: () {
+                              CreateBillParam createBillParam = CreateBillParam(
+                                  billType: 311,
+                                  billCode: _mtnBillController1.text.toString(),
+                                  billTitle: _mtnBillController2.text.toString());
+                              BlocProvider.of<BillBloc>(context)
+                                  .add(CreateBillEvent(createBillParam));
+                            },
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'افزودن به قبض های من',
+                                  style: TextStyle(color: MyColors.otp_underline),
+                                )),
                           ),
-                          onPressed: () {
-                            CreateBillParam createBillParam = CreateBillParam(
-                                billType: 311,
-                                billCode: _mtnBillController1.text.toString(),
-                                billTitle: _mtnBillController2.text.toString());
-                            BlocProvider.of<BillBloc>(context)
-                                .add(CreateBillEvent(createBillParam));
-                          },
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'افزودن به قبض های من',
-                                style: TextStyle(color: MyColors.otp_underline),
-                              )),
                         ),
                       ),
                     ),
@@ -14716,10 +14849,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(right: 10),
+                              child:  Visibility(
+                              visible: false,
                               child: Image.asset(
                                 'assets/image_icon/save_in_gallery.png',
                                 fit: BoxFit.scaleDown,
                               ),
+                            ),
                             ),
                           )),
                           Expanded(
@@ -15050,8 +15186,16 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            _addToMyBillsList = false;
-                            pageIndex = 37;
+
+
+                            if(isSimpleInquiry){
+                              _addToMyBillsList = false;
+                              pageIndex = 1;
+                            }else{
+                              _addToMyBillsList = false;
+                              pageIndex = 37;
+                            }
+
                           });
                         },
                         child: Image.asset(
@@ -15252,11 +15396,14 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CheckboxWidget(callback: (value) {
-                      setState(() {
-                        _addToMyBillsList = value;
-                      });
-                    }),
+                    Visibility(
+                      visible : !isSimpleInquiry,
+                      child: CheckboxWidget(callback: (value) {
+                        setState(() {
+                          _addToMyBillsList = value;
+                        });
+                      }),
+                    ),
                   ],
                 ),
               )),
@@ -15267,46 +15414,49 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Visibility(
-                        visible: !_addToMyBillsList,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                return Colors.white;
-                              },
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: MyColors.otp_underline),
+                    child: Visibility(
+                      visible : !isSimpleInquiry,
+                      child: SizedBox(
+                        height: 50,
+                        child: Visibility(
+                          visible: !_addToMyBillsList,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  return Colors.white;
+                                },
+                              ),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: MyColors.otp_underline),
+                                ),
                               ),
                             ),
+                            onPressed: () {
+                              CreateBillParam createBillParam = CreateBillParam(
+                                  billType: 312,
+                                  billCode:
+                                      _rightelBillController1.text.toString(),
+                                  billTitle:
+                                      _rightelBillController2.text.toString());
+                              BlocProvider.of<BillBloc>(context)
+                                  .add(CreateBillEvent(createBillParam));
+                            },
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'افزودن به قبض های من',
+                                  style: TextStyle(color: MyColors.otp_underline),
+                                )),
                           ),
-                          onPressed: () {
-                            CreateBillParam createBillParam = CreateBillParam(
-                                billType: 312,
-                                billCode:
-                                    _rightelBillController1.text.toString(),
-                                billTitle:
-                                    _rightelBillController2.text.toString());
-                            BlocProvider.of<BillBloc>(context)
-                                .add(CreateBillEvent(createBillParam));
-                          },
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'افزودن به قبض های من',
-                                style: TextStyle(color: MyColors.otp_underline),
-                              )),
                         ),
                       ),
                     ),
@@ -16436,10 +16586,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(right: 10),
+                              child:  Visibility(
+                              visible: false,
                               child: Image.asset(
                                 'assets/image_icon/save_in_gallery.png',
                                 fit: BoxFit.scaleDown,
                               ),
+                            ),
                             ),
                           )),
                           Expanded(

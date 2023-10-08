@@ -38,7 +38,7 @@ class ApiProviderChargeInternet {
     var params = {"operatorType": operatorType, "mobile": mobile};
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/walletintpackage/api/v1/ShowInternetPackage",
+      Constants.baseUrl + "/internet/api/v1/ShowInternetPackage",
       data: body,
     );
     return response;
@@ -63,7 +63,7 @@ class ApiProviderChargeInternet {
 
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/walletintpackage/api/v1/BuyInternetPackage",
+      Constants.baseUrl + "/internet/api/v1/BuyInternetPackage",
       data: body,
     );
     return response;

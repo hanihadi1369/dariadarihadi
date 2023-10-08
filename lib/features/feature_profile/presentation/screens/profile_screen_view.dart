@@ -3,6 +3,7 @@ import 'package:atba_application/core/widgets/loading.dart';
 import 'package:atba_application/features/feature_profile/presentation/bloc/profile_bloc.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/wallet_bloc.dart';
 import 'package:atba_application/features/feature_wallet/presentation/screens/wallet_screen_view.dart';
+import 'package:atba_application/features/unbounded_features/bime_screen_view.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -447,7 +448,19 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () async {
+
+
+
+                        await Navigator.push(
+                          context,
+                          SlideRightRoute(
+                            page: BimeScreenView(),
+                          ),
+                        );
+
+
+                      },
                       child: Container(
                         padding: EdgeInsets.only(top: 10),
                         child: Column(

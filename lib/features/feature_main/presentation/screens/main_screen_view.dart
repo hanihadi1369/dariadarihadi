@@ -19,8 +19,10 @@ import 'package:atba_application/features/feature_wallet/presentation/block/wall
     as wallett;
 import 'package:atba_application/features/feature_wallet/presentation/screens/wallet_screen_view.dart';
 import 'package:atba_application/features/feature_charge_internet/presentation/screens/internet_charge_screen_view.dart';
+import 'package:atba_application/features/unbounded_features/bime_screen_view.dart';
 import 'package:atba_application/features/unbounded_features/kbk_screen_view.dart';
 import 'package:atba_application/features/unbounded_features/ticket_screen_view.dart';
+import 'package:atba_application/features/unbounded_features/travel_screen_view.dart';
 import 'package:atba_application/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -187,12 +189,17 @@ class MainScreenViewState extends State<MainScreenView> {
               ProfileCompleted profileCompleted =
                   state.profileStatus as ProfileCompleted;
               if (profileCompleted.getProfileEntity.isFailed == false) {
-                firstName = profileCompleted.getProfileEntity.value!.firstName.toString();
+                firstName = profileCompleted.getProfileEntity.value!.firstName
+                    .toString();
 
-                lastName = profileCompleted.getProfileEntity.value!.lastName.toString();
+                lastName = profileCompleted.getProfileEntity.value!.lastName
+                    .toString();
 
-                nationalCode = profileCompleted.getProfileEntity.value!.nationalCode.toString();
-                email = profileCompleted.getProfileEntity.value!.email.toString();
+                nationalCode = profileCompleted
+                    .getProfileEntity.value!.nationalCode
+                    .toString();
+                email =
+                    profileCompleted.getProfileEntity.value!.email.toString();
                 iban = profileCompleted.getProfileEntity.value!.iban.toString();
 
                 if (profileCompleted.getProfileEntity.value!.image != null) {
@@ -588,7 +595,18 @@ class MainScreenViewState extends State<MainScreenView> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: () async {
+
+
+                                  await Navigator.push(
+                                    context,
+                                    SlideRightRoute(
+                                      page: BimeScreenView(),
+                                    ),
+                                  );
+
+
+                                },
                                 child: Container(
                                   child: Column(
                                     children: [
@@ -611,17 +629,51 @@ class MainScreenViewState extends State<MainScreenView> {
                                   ),
                                 ),
                               ),
+                              Visibility(
+                                visible: false,
+                                child: InkWell(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      SlideRightRoute(
+                                        page: TicketScreenView(),
+                                      ),
+                                    ).then((value) => {
+                                          BlocProvider.of<MainBloc>(context)
+                                              .add(GetBalanceEvent())
+                                        });
+                                  },
+                                  child: Container(
+                                    child: Column(
+                                      children: [
+                                        Image.asset(
+                                          'assets/image_icon/buy_ticket_main_icon.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "بلیط شهری",
+                                          textDirection: TextDirection.rtl,
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                               InkWell(
                                 onTap: () async {
                                   await Navigator.push(
                                     context,
                                     SlideRightRoute(
-                                      page: TicketScreenView(),
+                                      page: TravelScreenView(),
                                     ),
-                                  ).then((value) => {
-                                        BlocProvider.of<MainBloc>(context)
-                                            .add(GetBalanceEvent())
-                                      });
+                                  );
                                 },
                                 child: Container(
                                   child: Column(
@@ -634,7 +686,41 @@ class MainScreenViewState extends State<MainScreenView> {
                                         height: 20,
                                       ),
                                       Text(
-                                        "خرید بلیت",
+                                        "سفر",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  await Navigator.push(
+                                    context,
+                                    SlideRightRoute(
+                                      page: TicketScreenView(),
+                                    ),
+                                  ).then((value) => {
+                                    BlocProvider.of<MainBloc>(context)
+                                        .add(GetBalanceEvent())
+                                  });
+                                },
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/image_icon/buy_ticket_main_icon.png',
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        "بلیط شهری",
                                         textDirection: TextDirection.rtl,
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
@@ -667,7 +753,17 @@ class MainScreenViewState extends State<MainScreenView> {
                           children: [
                             Expanded(
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () async {
+
+
+                                  await Navigator.push(
+                                    context,
+                                    SlideRightRoute(
+                                      page: BimeScreenView(),
+                                    ),
+                                  );
+
+                                },
                                 child: Container(
                                   padding: EdgeInsets.only(top: 10),
                                   child: Column(
@@ -846,10 +942,9 @@ class MainScreenViewState extends State<MainScreenView> {
                                               firstName,
                                               lastName,
                                               phoneNumber,
-                                            nationalCode,
-                                            email,
-                                            iban
-                                          ),
+                                              nationalCode,
+                                              email,
+                                              iban),
                                         );
                                       },
                                     ),
@@ -905,6 +1000,10 @@ class MainScreenViewState extends State<MainScreenView> {
 
   prepareFirstLastTitle() {
     if (firstName == "***" || lastName == "***") {
+      return "نامشخص";
+    }
+
+    if (firstName.trim() == "" || lastName.trim() == "") {
       return "نامشخص";
     }
     if (firstName == "null" || lastName == "null") {
