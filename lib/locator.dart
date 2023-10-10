@@ -30,6 +30,7 @@ import 'package:atba_application/features/feature_wallet/data/data_source/remote
 import 'package:atba_application/features/feature_wallet/data/repository/wallet_repositoryimpl.dart';
 import 'package:atba_application/features/feature_wallet/domain/repository/wallet_repository.dart';
 import 'package:atba_application/features/feature_wallet/domain/use_cases/charge_wallet_usecase.dart';
+import 'package:atba_application/features/feature_wallet/domain/use_cases/transaction_status_usecase.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/wallet_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -92,8 +93,9 @@ setup(){
   locator.registerSingleton<ChargeWalletUseCase>(ChargeWalletUseCase(locator()));
   locator.registerSingleton<TransferKifBKifUseCase>(TransferKifBKifUseCase(locator()));
   locator.registerSingleton<TransactionHistoryUseCase>(TransactionHistoryUseCase(locator()));
+  locator.registerSingleton<TransactionStatusUseCase>(TransactionStatusUseCase(locator()));
   locator.registerSingleton<wallett.GetBalanceUseCase>(wallett.GetBalanceUseCase(locator()));
-  locator.registerSingleton<WalletBloc>(WalletBloc(locator(),locator(),locator(),locator()));
+  locator.registerSingleton<WalletBloc>(WalletBloc(locator(),locator(),locator(),locator(), locator()));
 
 
 

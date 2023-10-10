@@ -35,24 +35,31 @@ import '../../../../core/params/transaction_history_param.dart';
 import '../../../../core/utils/colors.dart';
 import '../../../../core/widgets/loading.dart';
 import '../block/charge_wallet_status.dart';
+import '../block/transaction_status_status.dart';
 import '../block/transfer_kifbkif_status.dart';
 import '../block/wallet_bloc.dart';
 import 'dart:ui' as ui;
 
 class WalletScreenView extends StatefulWidget {
+
+
+  int pageIndex ;
   @override
-  _WalletScreenViewState createState() => _WalletScreenViewState();
+  _WalletScreenViewState createState() => _WalletScreenViewState(pageIndex);
+
+  WalletScreenView(this.pageIndex);
 }
 
 class _WalletScreenViewState extends State<WalletScreenView> {
-  int pageIndex = 1;
+  int pageIndex ;
+
+
+  _WalletScreenViewState(this.pageIndex);
 
   final _formKey_kart_number = GlobalKey<FormState>();
   final _formKey_increase_amount = GlobalKey<FormState>();
   final _formKey_decrease_amount = GlobalKey<FormState>();
   final _formKey_transfer_amount = GlobalKey<FormState>();
-
-  // ScreenshotController screenshotController = new ScreenshotController();
 
   TextEditingController _kartNumberController = TextEditingController();
   TextEditingController _kartNumberController_transfer =
@@ -99,8 +106,15 @@ class _WalletScreenViewState extends State<WalletScreenView> {
 
   late Map<String, double> dataMap;
 
-  GlobalKey previewContainer = new GlobalKey();
+  GlobalKey previewContainer7 = new GlobalKey();
+  GlobalKey previewContainer22 = new GlobalKey();
+  GlobalKey previewContainer51 = new GlobalKey();
   bool shouldShowLoading = false;
+
+  String serialChargeWalletFromUrl = "";
+  String amountChargeWalletFromUrl = "";
+  String opTypeChargeWalletFromUrl = "";
+  String statusChargeWalletFromUrl = "";
 
   @override
   void initState() {
@@ -154,6 +168,13 @@ class _WalletScreenViewState extends State<WalletScreenView> {
         body: SafeArea(
           child: BlocConsumer<WalletBloc, WalletState>(
             listener: (context, state) async {
+              if (state.transactionStatusStatus is TransactionStatusError) {
+                TransactionStatusError error =
+                    state.transactionStatusStatus as TransactionStatusError;
+                // _showSnackBar(error.message);
+                _showSnackBar("نتیجه تراکنش نامشخص است");
+                state.transactionStatusStatus = TransactionStatusInit();
+              }
               if (state.balanceStatus is BalanceError) {
                 BalanceError error = state.balanceStatus as BalanceError;
                 _showSnackBar(error.message);
@@ -180,11 +201,15 @@ class _WalletScreenViewState extends State<WalletScreenView> {
               if (state.chargeWalletStatus is ChargeWalletCompleted) {
                 ChargeWalletCompleted chargeWalletCompleted =
                     state.chargeWalletStatus as ChargeWalletCompleted;
+
+                state.chargeWalletStatus = ChargeWalletInit();
+
                 if (chargeWalletCompleted.chargeWalletEntity.isFailed ==
                     false) {
                   try {
                     await launchUrlString(
-                        chargeWalletCompleted.chargeWalletEntity.value!.url!);
+                        chargeWalletCompleted.chargeWalletEntity.value!.url!,
+                        mode: LaunchMode.externalApplication);
                   } catch (e) {}
                 }
               }
@@ -194,8 +219,33 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                   state.balanceStatus is BalanceLoading ||
                   state.transferKifBKifStatus is TransferKifBKifLoading ||
                   state.transactionsHistoryStatus
-                      is TransactionsHistoryLoading) {
+                      is TransactionsHistoryLoading ||
+                  state.transactionStatusStatus is TransactionStatusLoading) {
                 return LoadingPage();
+              }
+
+              if (state.transactionStatusStatus is TransactionStatusCompleted) {
+                TransactionStatusCompleted transactionStatusCompleted =
+                    state.transactionStatusStatus as TransactionStatusCompleted;
+                if (transactionStatusCompleted
+                        .transactionsHistoryEntity.isFailed ==
+                    false) {
+                  pageIndex = 22;
+                  if (transactionStatusCompleted
+                              .transactionsHistoryEntity.value ==
+                          null ||
+                      transactionStatusCompleted.transactionsHistoryEntity
+                              .value!.statement!.length ==
+                          0) {
+                    //failed transaction
+                    statusChargeWalletFromUrl = "false";
+                  } else {
+                    //success transaction
+                    statusChargeWalletFromUrl = "true";
+                  }
+                }
+
+                state.transactionStatusStatus = TransactionStatusInit();
               }
 
               if (state.balanceStatus is BalanceCompleted) {
@@ -489,8 +539,50 @@ class _WalletScreenViewState extends State<WalletScreenView> {
     try {
       ReceiveIntent.receivedIntentStream.listen((event) async {
         if (event?.extra != null) {
-          int i = 5;
-          i++;
+          event?.extra!.forEach((key, value) {
+            if (key == "msg_from_browser") {
+              String result = value.toString().trim();
+              List<String> resultList = [];
+              resultList = result.split(",");
+              serialChargeWalletFromUrl = "";
+              amountChargeWalletFromUrl = "";
+              opTypeChargeWalletFromUrl = "";
+              statusChargeWalletFromUrl = "";
+
+              resultList.forEach((element) {
+                if (element.contains("serial")) {
+                  serialChargeWalletFromUrl =
+                      element.substring(7, element.length);
+                }
+                if (element.contains("amount")) {
+                  amountChargeWalletFromUrl =
+                      element.substring(7, element.length);
+                }
+                if (element.contains("opType")) {
+                  opTypeChargeWalletFromUrl =
+                      element.substring(7, element.length);
+                }
+                if (element.contains("status")) {
+                  statusChargeWalletFromUrl =
+                      element.substring(7, element.length);
+                }
+              });
+
+              if (serialChargeWalletFromUrl != "") {
+                BlocProvider.of<WalletBloc>(context)
+                    .add(TransactionStatusEvent(serialChargeWalletFromUrl));
+
+                setState(() {
+                  serialChargeWalletFromUrl = serialChargeWalletFromUrl;
+                  amountChargeWalletFromUrl = amountChargeWalletFromUrl;
+                  opTypeChargeWalletFromUrl = opTypeChargeWalletFromUrl;
+                  statusChargeWalletFromUrl = statusChargeWalletFromUrl;
+                });
+              } else {
+                _showSnackBar("نتیجه تراکنش نامشخص است");
+              }
+            }
+          });
         }
       });
     } on PlatformException {}
@@ -940,7 +1032,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                       child: Container(
                                         padding: EdgeInsets.all(5),
                                         child: Image.asset(
-                                          'assets/image_icon/wallet_transactions.png',
+                                          'assets/image_icon/2.png',
                                           fit: BoxFit.contain,
                                         ),
                                       )),
@@ -1855,14 +1947,14 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         fit: BoxFit.scaleDown,
                       ),
                     ),
-                    Expanded(flex: 5, child: Container()),
+                    Expanded(flex: 2, child: Container()),
                     Expanded(
-                        flex: 4,
+                        flex: 10,
                         child: Center(
                             child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text("افزایش موجودی کیف پول")))),
-                    Expanded(flex: 5, child: Container()),
+                    Expanded(flex: 2, child: Container()),
                     Expanded(
                       flex: 1,
                       child: InkWell(
@@ -1879,146 +1971,168 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                 ),
               )),
           Expanded(
-              flex: 4,
-              child: Container(
-                padding:
-                    EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 10),
-                color: Colors.transparent,
+              flex: 12,
+              child: RepaintBoundary(
+                key: previewContainer22,
                 child: Container(
+                  color: Colors.white,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                          flex: 1,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                  flex: 1,
-                                  child:
-                                      Container(child: Text("شارژ کیف پول"))),
-                            ],
-                          )),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                            child: Column(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 32, right: 32),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "شارژ شد",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 13),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      _increaseAmountController.text
-                                              .trim()
-                                              .seRagham() +
-                                          " ریال",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "مبلغ",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 13),
-                                    )
-                                  ],
-                                ),
+                          flex: 4,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      flex: 1,
+                                      child: Visibility(
+                                        visible: false,
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                    child:
+                                                        Text("شارژ کیف پول"))),
+                                          ],
+                                        ),
+                                      )),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          (statusChargeWalletFromUrl == "true")
+                                              ? 'assets/image_icon/success_wallet_charge.png'
+                                              : 'assets/image_icon/failed_payment.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                        child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 32, right: 32),
+                                            child: (statusChargeWalletFromUrl ==
+                                                    "false")
+                                                ? Text(
+                                                    "چنانچه مبلغی از حساب شما کسر شد\nتا72 ساعت آینده به حسابتان برمیگردد",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 13),
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                : Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "شارژ شد",
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        amountChargeWalletFromUrl
+                                                                .trim()
+                                                                .seRagham() +
+                                                            " ریال",
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        style: TextStyle(
+                                                            fontSize: 15),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        "مبلغ",
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                      )
+                                                    ],
+                                                  ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        )),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                          )),
+                      Expanded(flex: 1, child: Container()),
                       Expanded(
                           flex: 1,
                           child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/success_wallet_charge.png',
-                              fit: BoxFit.scaleDown,
+                              padding: EdgeInsets.only(left: 32, right: 32),
+                              child: DottedLine(
+                                direction: Axis.horizontal,
+                                lineLength: double.infinity,
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: MyColors.otp_underline,
+                                dashRadius: 0.0,
+                                dashGapLength: 4.0,
+                                dashGapColor: Colors.transparent,
+                                dashGapRadius: 0.0,
+                              ))),
+                      Expanded(
+                          flex: 6,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(DateTime.now().toPersianDate(
+                                        twoDigits: true,
+                                        showTime: true,
+                                        timeSeprator: ' - ')),
+                                    //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                    Spacer(),
+                                    Text(
+                                      "تاریخ و ساعت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(serialChargeWalletFromUrl),
+                                    Spacer(),
+                                    Text(
+                                      "شماره سفارش",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider()
+                              ],
                             ),
-                          ))
+                          )),
                     ],
                   ),
-                ),
-              )),
-          Expanded(flex: 1, child: Container()),
-          Expanded(
-              flex: 1,
-              child: Container(
-                  padding: EdgeInsets.only(left: 32, right: 32),
-                  child: DottedLine(
-                    direction: Axis.horizontal,
-                    lineLength: double.infinity,
-                    lineThickness: 1.0,
-                    dashLength: 4.0,
-                    dashColor: MyColors.otp_underline,
-                    dashRadius: 0.0,
-                    dashGapLength: 4.0,
-                    dashGapColor: Colors.transparent,
-                    dashGapRadius: 0.0,
-                  ))),
-          Expanded(
-              flex: 6,
-              child: Container(
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Text(DateTime.now().toPersianDate(
-                            twoDigits: true,
-                            showTime: true,
-                            timeSeprator: ' - ')),
-                        //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
-
-                        Spacer(),
-                        Text(
-                          "تاریخ و ساعت",
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    Divider(),
-                    Row(
-                      children: [
-                        Text("5047 0610 **** 5432"),
-                        Spacer(),
-                        Text(
-                          "کارت",
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    Divider(),
-                    Row(
-                      children: [
-                        Text("12345678"),
-                        Spacer(),
-                        Text(
-                          "شماره پیگیری",
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    Divider()
-                  ],
                 ),
               )),
           Expanded(flex: 4, child: Container()),
@@ -2035,23 +2149,28 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: Container(
+                          //   padding: EdgeInsets.only(right: 10),
+                          //   child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          // )),
                           Expanded(
-                              child: Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child:  Visibility(
-                              visible: false,
+                              child: InkWell(
+                            onTap: () {
+                              _captureSocialPng(previewContainer22);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
                               child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
+                                'assets/image_icon/share.png',
                                 fit: BoxFit.scaleDown,
                               ),
-                            ),
-                          )),
-                          Expanded(
-                              child: Container(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Image.asset(
-                              'assets/image_icon/share.png',
-                              fit: BoxFit.scaleDown,
                             ),
                           )),
                         ],
@@ -3076,17 +3195,17 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
-                              child: Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                          )),
+                          // Expanded(
+                          //     child: Container(
+                          //   padding: EdgeInsets.only(right: 10),
+                          //   child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: Container(
                             padding: EdgeInsets.only(left: 10),
@@ -3640,153 +3759,158 @@ class _WalletScreenViewState extends State<WalletScreenView> {
               )),
           Expanded(
             flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 4,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                  child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 32, right: 32),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "انتقال یافت",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 13),
+            child: RepaintBoundary(
+              key: previewContainer51,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Expanded(
+                        flex: 4,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: 35, right: 35, top: 0, bottom: 10),
+                          color: Colors.transparent,
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(flex: 1, child: Container()),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                      child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 32, right: 32),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "انتقال یافت",
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 13),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                _textEdit_controler_kifbkif_2
+                                                        .text
+                                                        .trim()
+                                                        .seRagham() +
+                                                    " ریال",
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "مبلغ",
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 13),
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            _textEdit_controler_kifbkif_2.text
-                                                    .trim()
-                                                    .seRagham() +
-                                                " ریال",
-                                            textDirection: TextDirection.rtl,
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            "مبلغ",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 13),
-                                          )
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              )),
+                                    ],
+                                  )),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Image.asset(
+                                        'assets/image_icon/success_transfer.png',
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    ))
+                              ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_transfer.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(flex: 1, child: Container()),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 6,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
+                          ),
+                        )),
+                    Expanded(flex: 1, child: Container()),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: DottedLine(
+                              direction: Axis.horizontal,
+                              lineLength: double.infinity,
+                              lineThickness: 1.0,
+                              dashLength: 4.0,
+                              dashColor: MyColors.otp_underline,
+                              dashRadius: 0.0,
+                              dashGapLength: 4.0,
+                              dashGapColor: Colors.transparent,
+                              dashGapRadius: 0.0,
+                            ))),
+                    Expanded(
+                        flex: 6,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 32, right: 32),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+                              Row(
+                                children: [
+                                  Text(DateTime.now().toPersianDate(
+                                      twoDigits: true,
+                                      showTime: true,
+                                      timeSeprator: ' - ')),
+                                  //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
+                                  Spacer(),
+                                  Text(
+                                    "تاریخ و ساعت",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(_textEdit_controler_kifbkif_1.text
+                                      .toString()
+                                      .trim()),
+                                  Spacer(),
+                                  Text(
+                                    "شماره همراه",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(transferKifBKifRecepit),
+                                  Spacer(),
+                                  Text(
+                                    "شماره پیگیری",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider()
                             ],
                           ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(_textEdit_controler_kifbkif_1.text
-                                  .toString()
-                                  .trim()),
-                              Spacer(),
-                              Text(
-                                "شماره همراه",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(transferKifBKifRecepit),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
+                        )),
+                    Expanded(flex: 4, child: Container()),
+                  ],
+                ),
+              ),
             ),
-            // ),
           ),
           Expanded(
             flex: 2,
@@ -3801,45 +3925,31 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer51);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -3931,12 +4041,19 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           onTap: () {
                             setState(() {
                               dataMap = {
-                                "کیف به کیف": totalTransactionsByMonthList[indexMonthYearIndexSelected].totalKifKifVariz,
-                                "شارژ از طریق درگاه": totalTransactionsByMonthList[indexMonthYearIndexSelected].totalChargeFromWeb,
+                                "کیف به کیف": totalTransactionsByMonthList[
+                                        indexMonthYearIndexSelected]
+                                    .totalKifKifVariz,
+                                "شارژ از طریق درگاه":
+                                    totalTransactionsByMonthList[
+                                            indexMonthYearIndexSelected]
+                                        .totalChargeFromWeb,
                               };
 
                               pageIndex = 61;
-                              totalTransactionsByMonthList[indexMonthYearIndexSelected].inComeSelectedForChart = true;
+                              totalTransactionsByMonthList[
+                                      indexMonthYearIndexSelected]
+                                  .inComeSelectedForChart = true;
                             });
                           },
                           child: Row(
@@ -3958,7 +4075,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                         width: 5,
                                       ),
                                       Text(
-                                        totalTransactionsByMonthList[indexMonthYearIndexSelected].totalVariz
+                                        totalTransactionsByMonthList[
+                                                indexMonthYearIndexSelected]
+                                            .totalVariz
                                             .toInt()
                                             .toString()
                                             .seRagham(),
@@ -4000,14 +4119,24 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           onTap: () {
                             setState(() {
                               dataMap = {
-                                "کیف به کیف": totalTransactionsByMonthList[indexMonthYearIndexSelected].totalKifKifBardasht,
-                                "بسته اینترنت": totalTransactionsByMonthList[indexMonthYearIndexSelected].totalInternetPackageBuy,
-                                "شارژ سیم کارت": totalTransactionsByMonthList[indexMonthYearIndexSelected].totalChargeSimBuy,
-                                "پرداخت قبوض": totalTransactionsByMonthList[indexMonthYearIndexSelected].totalBillsPay,
+                                "کیف به کیف": totalTransactionsByMonthList[
+                                        indexMonthYearIndexSelected]
+                                    .totalKifKifBardasht,
+                                "بسته اینترنت": totalTransactionsByMonthList[
+                                        indexMonthYearIndexSelected]
+                                    .totalInternetPackageBuy,
+                                "شارژ سیم کارت": totalTransactionsByMonthList[
+                                        indexMonthYearIndexSelected]
+                                    .totalChargeSimBuy,
+                                "پرداخت قبوض": totalTransactionsByMonthList[
+                                        indexMonthYearIndexSelected]
+                                    .totalBillsPay,
                               };
 
                               pageIndex = 61;
-                              totalTransactionsByMonthList[indexMonthYearIndexSelected].inComeSelectedForChart = false;
+                              totalTransactionsByMonthList[
+                                      indexMonthYearIndexSelected]
+                                  .inComeSelectedForChart = false;
                             });
                           },
                           child: Row(
@@ -4029,7 +4158,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                         width: 5,
                                       ),
                                       Text(
-                                        totalTransactionsByMonthList[indexMonthYearIndexSelected].totalBardasht
+                                        totalTransactionsByMonthList[
+                                                indexMonthYearIndexSelected]
+                                            .totalBardasht
                                             .toInt()
                                             .toString()
                                             .seRagham(),
@@ -4111,7 +4242,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         child: Center(
                             child: FittedBox(
                                 fit: BoxFit.scaleDown,
-                                child: Text((totalTransactionsByMonthList[indexMonthYearIndexSelected].inComeSelectedForChart)
+                                child: Text((totalTransactionsByMonthList[
+                                            indexMonthYearIndexSelected]
+                                        .inComeSelectedForChart)
                                     ? "گردش کیف پول ( واریزی )"
                                     : "گردش کیف پول ( برداشتی )")))),
                     Expanded(flex: 2, child: Container()),
@@ -4132,7 +4265,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       PieChart(
                         dataMap: dataMap,
                         animationDuration: Duration(milliseconds: 1200),
@@ -4142,7 +4277,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         initialAngleInDegree: 0,
                         chartType: ChartType.ring,
                         ringStrokeWidth: 20,
-                        centerText: (totalTransactionsByMonthList[indexMonthYearIndexSelected].inComeSelectedForChart)
+                        centerText: (totalTransactionsByMonthList[
+                                    indexMonthYearIndexSelected]
+                                .inComeSelectedForChart)
                             ? "${totalTransactionsByMonthList[indexMonthYearIndexSelected].totalVariz.toInt().toString().seRagham()}\nریال"
                             : "${totalTransactionsByMonthList[indexMonthYearIndexSelected].totalBardasht.toInt().toString().seRagham()}\nریال",
                         centerTextStyle: TextStyle(
@@ -4166,22 +4303,34 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         // gradientList: ---To add gradient colors---
                         // emptyColorGradient: ---Empty Color gradient---
                       ),
-                      SizedBox(height: 15,),
+                      SizedBox(
+                        height: 15,
+                      ),
                       Row(
-
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(totalTransactionsByMonthList[indexMonthYearIndexSelected].monthName.toString(),style: TextStyle(color: Colors.blueAccent)),
-
-                             Text(" - ",style: TextStyle(color: Colors.blueAccent),),
-                          Text(totalTransactionsByMonthList[indexMonthYearIndexSelected].yearName.toString(),style: TextStyle(color: Colors.blueAccent),),
-
-                        ],),
+                          Text(
+                              totalTransactionsByMonthList[
+                                      indexMonthYearIndexSelected]
+                                  .monthName
+                                  .toString(),
+                              style: TextStyle(color: Colors.blueAccent)),
+                          Text(
+                            " - ",
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+                          Text(
+                            totalTransactionsByMonthList[
+                                    indexMonthYearIndexSelected]
+                                .yearName
+                                .toString(),
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+                        ],
+                      ),
                       Column(
                         children: prepareChartDetails(),
                       ),
-                      
-
                     ],
                   ),
                 ),
@@ -4259,7 +4408,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
           Expanded(
             flex: 14,
             child: RepaintBoundary(
-              key: previewContainer,
+              key: previewContainer7,
               child: Container(
                 color: Colors.white,
                 child: Column(
@@ -4419,26 +4568,26 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     saveToGallery();
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              saveToGallery();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () {
-                              _captureSocialPng();
+                              _captureSocialPng(previewContainer7);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -4461,7 +4610,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
 
   List<Widget> prepareChartDetails() {
     List<Widget> items = [];
-    if (totalTransactionsByMonthList[indexMonthYearIndexSelected].inComeSelectedForChart) {
+    if (totalTransactionsByMonthList[indexMonthYearIndexSelected]
+        .inComeSelectedForChart) {
       //درآمد
       items.add(
         Padding(
@@ -4667,7 +4817,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
     return items;
   }
 
-  Future<void> _captureSocialPng() {
+  Future<void> _captureSocialPng(GlobalKey previewContainer) {
     List<String> imagePaths = [];
 
     final RenderBox box = context.findRenderObject() as RenderBox;
@@ -4699,7 +4849,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
     });
   }
 
-  saveToGallery() {
+  saveToGallery(GlobalKey previewContainer) {
     List<String> imagePaths = [];
 
     final RenderBox box = context.findRenderObject() as RenderBox;

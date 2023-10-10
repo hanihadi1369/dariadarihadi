@@ -921,21 +921,21 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
-                              child: Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                          )
-
-
-
-                          ),
+                          // Expanded(
+                          //     child: Container(
+                          //   padding: EdgeInsets.only(right: 10),
+                          //   child: Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          // )
+                          //
+                          //
+                          //
+                          // ),
                           Expanded(
                               child: Container(
                             padding: EdgeInsets.only(left: 10),

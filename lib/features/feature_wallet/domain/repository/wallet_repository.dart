@@ -15,6 +15,7 @@ abstract class WalletRepository{
   Future<DataState<GetBalanceEntity>> getBalanceOperation();
   Future<DataState<TransferKifBKifEntity>> doTransferKifBKifOperation(int  amount,String mobileNumber);
   Future<DataState<TransactionsHistoryEntity>> getTransactionsHistoryOperation(String  dateFrom,String dateTo);
+  Future<DataState<TransactionsHistoryEntity>> getTransactionStatusOperation(String  serial);
 
 
 }

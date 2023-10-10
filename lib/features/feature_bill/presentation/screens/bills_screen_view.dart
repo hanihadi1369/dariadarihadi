@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:atba_application/core/params/BillPaymentFromWalletParam.dart';
 import 'package:atba_application/core/params/Bills.dart';
@@ -15,10 +16,14 @@ import 'package:atba_application/features/feature_bill/presentation/widgets/chec
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:share/share.dart';
 
 import '../../../../core/params/bargh_bill_inquiry_param.dart';
 import '../../../../core/params/create_bill_param.dart';
@@ -58,6 +63,7 @@ import 'package:atba_application/features/feature_bill/data/models/rightel_bill_
 
 import 'package:atba_application/features/feature_bill/data/models/payment_from_wallet_model.dart'
     as paymentFromWalletIM;
+import 'dart:ui' as ui;
 
 class BillsScreenView extends StatefulWidget {
   @override
@@ -117,6 +123,15 @@ class _BillsScreenViewState extends State<BillsScreenView> {
 
   bool _addToMyBillsList = false;
   bool midTermSelected = false;
+  bool shouldShowLoading = false;
+
+  GlobalKey previewContainer301 = new GlobalKey();
+  GlobalKey previewContainer302 = new GlobalKey();
+  GlobalKey previewContainer303 = new GlobalKey();
+  GlobalKey previewContainer304 = new GlobalKey();
+  GlobalKey previewContainer305 = new GlobalKey();
+  GlobalKey previewContainer306 = new GlobalKey();
+  GlobalKey previewContainer307 = new GlobalKey();
 
   //***************************************************************************
 
@@ -247,86 +262,79 @@ class _BillsScreenViewState extends State<BillsScreenView> {
 
         if (pageIndex == 311) {
           setState(() {
-            if(isSimpleInquiry){
+            if (isSimpleInquiry) {
               _addToMyBillsList = false;
               pageIndex = 1;
-            }else{
+            } else {
               _addToMyBillsList = false;
               pageIndex = 31;
             }
-
           });
         }
         if (pageIndex == 322) {
           setState(() {
-            if(isSimpleInquiry){
+            if (isSimpleInquiry) {
               _addToMyBillsList = false;
               pageIndex = 1;
-            }else{
+            } else {
               _addToMyBillsList = false;
               pageIndex = 32;
             }
-
           });
         }
         if (pageIndex == 333) {
           setState(() {
-            if(isSimpleInquiry){
+            if (isSimpleInquiry) {
               _addToMyBillsList = false;
               pageIndex = 1;
-            }else{
+            } else {
               _addToMyBillsList = false;
               pageIndex = 33;
             }
-
           });
         }
         if (pageIndex == 344) {
           setState(() {
-            if(isSimpleInquiry){
+            if (isSimpleInquiry) {
               _addToMyBillsList = false;
               pageIndex = 1;
-            }else{
+            } else {
               _addToMyBillsList = false;
               pageIndex = 34;
             }
-
           });
         }
         if (pageIndex == 355) {
           setState(() {
-            if(isSimpleInquiry){
+            if (isSimpleInquiry) {
               _addToMyBillsList = false;
               pageIndex = 1;
-            }else{
+            } else {
               _addToMyBillsList = false;
               pageIndex = 35;
             }
-
           });
         }
         if (pageIndex == 366) {
           setState(() {
-            if(isSimpleInquiry){
+            if (isSimpleInquiry) {
               _addToMyBillsList = false;
               pageIndex = 1;
-            }else{
+            } else {
               _addToMyBillsList = false;
               pageIndex = 36;
             }
-
           });
         }
         if (pageIndex == 377) {
           setState(() {
-            if(isSimpleInquiry){
+            if (isSimpleInquiry) {
               _addToMyBillsList = false;
               pageIndex = 1;
-            }else{
+            } else {
               _addToMyBillsList = false;
               pageIndex = 37;
             }
-
           });
         }
 
@@ -734,6 +742,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       .toString();
                 }
                 state.balanceStatus = BalanceInit();
+              }
+
+              if (shouldShowLoading) {
+                return LoadingPage();
               }
 
               return Container(
@@ -5224,14 +5236,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            if(isSimpleInquiry){
+                            if (isSimpleInquiry) {
                               _addToMyBillsList = false;
                               pageIndex = 1;
-                            }else{
+                            } else {
                               _addToMyBillsList = false;
                               pageIndex = 31;
                             }
-
                           });
                         },
                         child: Image.asset(
@@ -5403,7 +5414,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
-                        visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: CheckboxWidget(callback: (value) {
                         setState(() {
                           _addToMyBillsList = value;
@@ -5421,7 +5432,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 children: [
                   Expanded(
                     child: Visibility(
-                        visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: SizedBox(
                         height: 50,
                         child: Visibility(
@@ -5436,20 +5447,23 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               ),
                               padding:
                                   MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(color: MyColors.otp_underline),
+                                  side:
+                                      BorderSide(color: MyColors.otp_underline),
                                 ),
                               ),
                             ),
                             onPressed: () {
                               CreateBillParam createBillParam = CreateBillParam(
                                   billType: 300,
-                                  billCode: _waterBillController1.text.toString(),
+                                  billCode:
+                                      _waterBillController1.text.toString(),
                                   billTitle:
                                       _waterBillController2.text.toString());
                               BlocProvider.of<BillBloc>(context)
@@ -5459,7 +5473,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'افزودن به قبض های من',
-                                  style: TextStyle(color: MyColors.otp_underline),
+                                  style:
+                                      TextStyle(color: MyColors.otp_underline),
                                 )),
                           ),
                         ),
@@ -6320,130 +6335,160 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               )),
           Expanded(
             flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+            child: RepaintBoundary(
+              key: previewContainer301,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: 35, right: 35, top: 0, bottom: 10),
+                          color: Colors.transparent,
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Image.asset(
+                                        'assets/image_icon/water_bill_icon.png',
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    )),
+                                Expanded(flex: 1, child: Container(child: Text("قبض آب"),)),
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
+                              ],
+                            ),
                           ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text("${waterInquiryResult.billID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه قبض",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
+                        )),
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: 35, right: 35, top: 0, bottom: 10),
+                          color: Colors.transparent,
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(flex: 1, child: Container()),
+                                Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Image.asset(
+                                        'assets/image_icon/success_payment.png',
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    ))
+                              ],
+                            ),
                           ),
-                          Divider(),
-                          Row(
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: DottedLine(
+                              direction: Axis.horizontal,
+                              lineLength: double.infinity,
+                              lineThickness: 1.0,
+                              dashLength: 4.0,
+                              dashColor: MyColors.otp_underline,
+                              dashRadius: 0.0,
+                              dashGapLength: 4.0,
+                              dashGapColor: Colors.transparent,
+                              dashGapRadius: 0.0,
+                            ))),
+                    Expanded(
+                        flex: 7,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 32, right: 32),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text(((waterInquiryResult.paymentID!) == "")
-                                  ? "پرداخت شده"
-                                  : "${waterInquiryResult.paymentID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه پرداخت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                waterInquiryResult.amount!.trim().seRagham() +
-                                    " ریال",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(color: Colors.green),
+                              Row(
+                                children: [
+                                  Text(DateTime.now().toPersianDate(
+                                      twoDigits: true,
+                                      showTime: true,
+                                      timeSeprator: ' - ')),
+                                  //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                  Spacer(),
+                                  Text(
+                                    "تاریخ و ساعت",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
                               ),
-                              Spacer(),
-                              Text(
-                                "مبلغ پرداختی",
-                                style: TextStyle(color: Colors.grey),
-                              )
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text("${waterInquiryResult.billID}"),
+                                  Spacer(),
+                                  Text(
+                                    "شناسه قبض",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(((waterInquiryResult.paymentID!) == "")
+                                      ? "پرداخت شده"
+                                      : "${waterInquiryResult.paymentID}"),
+                                  Spacer(),
+                                  Text(
+                                    "شناسه پرداخت",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(
+                                    waterInquiryResult.amount!
+                                            .trim()
+                                            .seRagham() +
+                                        " ریال",
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "مبلغ پرداختی",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(orderId),
+                                  Spacer(),
+                                  Text(
+                                    "شماره پیگیری",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider()
                             ],
                           ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(orderId),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
+                        )),
+                    Expanded(flex: 4, child: Container()),
+                  ],
+                ),
+              ),
             ),
-            // ),
           ),
           Expanded(
             flex: 2,
@@ -6458,45 +6503,31 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer301);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -6816,16 +6847,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-
-
-                            if(isSimpleInquiry){
+                            if (isSimpleInquiry) {
                               _addToMyBillsList = false;
                               pageIndex = 1;
-                            }else{
+                            } else {
                               _addToMyBillsList = false;
                               pageIndex = 32;
                             }
-
                           });
                         },
                         child: Image.asset(
@@ -7000,7 +7028,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
-                        visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: CheckboxWidget(callback: (value) {
                         setState(() {
                           _addToMyBillsList = value;
@@ -7018,7 +7046,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 children: [
                   Expanded(
                     child: Visibility(
-                      visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: SizedBox(
                         height: 50,
                         child: Visibility(
@@ -7033,20 +7061,23 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               ),
                               padding:
                                   MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(color: MyColors.otp_underline),
+                                  side:
+                                      BorderSide(color: MyColors.otp_underline),
                                 ),
                               ),
                             ),
                             onPressed: () {
                               CreateBillParam createBillParam = CreateBillParam(
                                   billType: 301,
-                                  billCode: _barghBillController1.text.toString(),
+                                  billCode:
+                                      _barghBillController1.text.toString(),
                                   billTitle:
                                       _barghBillController2.text.toString());
                               BlocProvider.of<BillBloc>(context)
@@ -7056,7 +7087,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'افزودن به قبض های من',
-                                  style: TextStyle(color: MyColors.otp_underline),
+                                  style:
+                                      TextStyle(color: MyColors.otp_underline),
                                 )),
                           ),
                         ),
@@ -7919,134 +7951,162 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               )),
           Expanded(
             flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+            child: RepaintBoundary(
+              key: previewContainer302,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: 35, right: 35, top: 0, bottom: 10),
+                          color: Colors.transparent,
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Image.asset(
+                                        'assets/image_icon/bargh_bill_icon.png',
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    )),
+                                Expanded(flex: 1, child: Container(child: Text("قبض برق"),)),
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
+                              ],
+                            ),
                           ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text("${barghInquiryResult.billID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه قبض",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
+                        )),
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: 35, right: 35, top: 0, bottom: 10),
+                          color: Colors.transparent,
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(flex: 1, child: Container()),
+                                Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Image.asset(
+                                        'assets/image_icon/success_payment.png',
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    ))
+                              ],
+                            ),
                           ),
-                          Divider(),
-                          Row(
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: DottedLine(
+                              direction: Axis.horizontal,
+                              lineLength: double.infinity,
+                              lineThickness: 1.0,
+                              dashLength: 4.0,
+                              dashColor: MyColors.otp_underline,
+                              dashRadius: 0.0,
+                              dashGapLength: 4.0,
+                              dashGapColor: Colors.transparent,
+                              dashGapRadius: 0.0,
+                            ))),
+                    Expanded(
+                        flex: 7,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 32, right: 32),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text(((barghInquiryResult.paymentID!) == "")
-                                  ? "پرداخت شده"
-                                  : "${barghInquiryResult.paymentID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه پرداخت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                barghInquiryResult.amount!
-                                        .toInt()
-                                        .toString()
-                                        .trim()
-                                        .seRagham() +
-                                    " ریال",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(color: Colors.green),
+                              Row(
+                                children: [
+                                  Text(DateTime.now().toPersianDate(
+                                      twoDigits: true,
+                                      showTime: true,
+                                      timeSeprator: ' - ')),
+                                  //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                  Spacer(),
+                                  Text(
+                                    "تاریخ و ساعت",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
                               ),
-                              Spacer(),
-                              Text(
-                                "مبلغ پرداختی",
-                                style: TextStyle(color: Colors.grey),
-                              )
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text("${barghInquiryResult.billID}"),
+                                  Spacer(),
+                                  Text(
+                                    "شناسه قبض",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(((barghInquiryResult.paymentID!) == "")
+                                      ? "پرداخت شده"
+                                      : "${barghInquiryResult.paymentID}"),
+                                  Spacer(),
+                                  Text(
+                                    "شناسه پرداخت",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(
+                                    barghInquiryResult.amount!
+                                            .toInt()
+                                            .toString()
+                                            .trim()
+                                            .seRagham() +
+                                        " ریال",
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "مبلغ پرداختی",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: [
+                                  Text(orderId),
+                                  Spacer(),
+                                  Text(
+                                    "شماره پیگیری",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                              Divider()
                             ],
                           ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(orderId),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
+                        )),
+                    Expanded(flex: 4, child: Container()),
+                  ],
+                ),
+              ),
             ),
-            // ),
           ),
           Expanded(
             flex: 2,
@@ -8061,45 +8121,31 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer302);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -8418,14 +8464,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            if(isSimpleInquiry){
+                            if (isSimpleInquiry) {
                               _addToMyBillsList = false;
                               pageIndex = 1;
-                            }else{
+                            } else {
                               _addToMyBillsList = false;
                               pageIndex = 33;
                             }
-
                           });
                         },
                         child: Image.asset(
@@ -8598,7 +8643,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
-                        visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: CheckboxWidget(callback: (value) {
                         setState(() {
                           _addToMyBillsList = value;
@@ -8616,7 +8661,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 children: [
                   Expanded(
                     child: Visibility(
-                      visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: SizedBox(
                         height: 50,
                         child: Visibility(
@@ -8631,13 +8676,15 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               ),
                               padding:
                                   MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(color: MyColors.otp_underline),
+                                  side:
+                                      BorderSide(color: MyColors.otp_underline),
                                 ),
                               ),
                             ),
@@ -8645,7 +8692,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               CreateBillParam createBillParam = CreateBillParam(
                                   billType: 306,
                                   billCode: _gazBillController1.text.toString(),
-                                  billTitle: _gazBillController2.text.toString());
+                                  billTitle:
+                                      _gazBillController2.text.toString());
                               BlocProvider.of<BillBloc>(context)
                                   .add(CreateBillEvent(createBillParam));
                             },
@@ -8653,7 +8701,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'افزودن به قبض های من',
-                                  style: TextStyle(color: MyColors.otp_underline),
+                                  style:
+                                      TextStyle(color: MyColors.otp_underline),
                                 )),
                           ),
                         ),
@@ -9513,130 +9562,159 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               )),
           Expanded(
             flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+            child: RepaintBoundary(
+                key: previewContainer303,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/gas_bill_icon.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )),
+                                  Expanded(flex: 1, child: Container(child: Text("قبض گاز"),)),
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text("${gasInquiryResult.billID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه قبض",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(((gasInquiryResult.paymentID!) == "")
-                                  ? "پرداخت شده"
-                                  : "${gasInquiryResult.paymentID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه پرداخت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                gasInquiryResult.amount!.trim().seRagham() +
-                                    " ریال",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(color: Colors.green),
+                                ],
                               ),
-                              Spacer(),
-                              Text(
-                                "مبلغ پرداختی",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(orderId),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
-            ),
-            // ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 1, child: Container()),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/success_payment.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 32, right: 32),
+                              child: DottedLine(
+                                direction: Axis.horizontal,
+                                lineLength: double.infinity,
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: MyColors.otp_underline,
+                                dashRadius: 0.0,
+                                dashGapLength: 4.0,
+                                dashGapColor: Colors.transparent,
+                                dashGapRadius: 0.0,
+                              ))),
+                      Expanded(
+                          flex: 7,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(DateTime.now().toPersianDate(
+                                        twoDigits: true,
+                                        showTime: true,
+                                        timeSeprator: ' - ')),
+                                    //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                    Spacer(),
+                                    Text(
+                                      "تاریخ و ساعت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text("${gasInquiryResult.billID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه قبض",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(((gasInquiryResult.paymentID!) == "")
+                                        ? "پرداخت شده"
+                                        : "${gasInquiryResult.paymentID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه پرداخت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                      gasInquiryResult.amount!
+                                              .trim()
+                                              .seRagham() +
+                                          " ریال",
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "مبلغ پرداختی",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(orderId),
+                                    Spacer(),
+                                    Text(
+                                      "شماره پیگیری",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          )),
+                      Expanded(flex: 4, child: Container()),
+                    ],
+                  ),
+                )),
           ),
           Expanded(
             flex: 2,
@@ -9651,45 +9729,31 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer303);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -10008,14 +10072,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            if(isSimpleInquiry){
+                            if (isSimpleInquiry) {
                               _addToMyBillsList = false;
                               pageIndex = 1;
-                            }else{
+                            } else {
                               _addToMyBillsList = false;
                               pageIndex = 34;
                             }
-
                           });
                         },
                         child: Image.asset(
@@ -10217,7 +10280,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
-                        visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: CheckboxWidget(callback: (value) {
                         setState(() {
                           _addToMyBillsList = value;
@@ -10235,7 +10298,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 children: [
                   Expanded(
                     child: Visibility(
-                      visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: SizedBox(
                         height: 50,
                         child: Visibility(
@@ -10250,20 +10313,23 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               ),
                               padding:
                                   MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(color: MyColors.otp_underline),
+                                  side:
+                                      BorderSide(color: MyColors.otp_underline),
                                 ),
                               ),
                             ),
                             onPressed: () {
                               CreateBillParam createBillParam = CreateBillParam(
                                   billType: 302,
-                                  billCode: _phoneBillController1.text.toString(),
+                                  billCode:
+                                      _phoneBillController1.text.toString(),
                                   billTitle:
                                       _phoneBillController2.text.toString());
                               BlocProvider.of<BillBloc>(context)
@@ -10273,7 +10339,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'افزودن به قبض های من',
-                                  style: TextStyle(color: MyColors.otp_underline),
+                                  style:
+                                      TextStyle(color: MyColors.otp_underline),
                                 )),
                           ),
                         ),
@@ -11239,146 +11306,175 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               )),
           Expanded(
             flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+            child: RepaintBoundary(
+                key: previewContainer304,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/phone_bill_icon.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )),
+                                  Expanded(flex: 1, child: Container(child: Text("قبض تلفن ثابت"),)),
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                  "${(midTermSelected) ? fixLineInquiryResult.midTerm!.billID : fixLineInquiryResult.finalTerm!.billID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه قبض",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text((midTermSelected)
-                                  ? ((fixLineInquiryResult
-                                              .midTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${fixLineInquiryResult.midTerm!.paymentID}"
-                                  : ((fixLineInquiryResult
-                                              .finalTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${fixLineInquiryResult.finalTerm!.paymentID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه پرداخت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                (midTermSelected)
-                                    ? fixLineInquiryResult.midTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال"
-                                    : fixLineInquiryResult.finalTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(color: Colors.green),
+                                ],
                               ),
-                              Spacer(),
-                              Text(
-                                "مبلغ پرداختی",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(orderId),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
-            ),
-            // ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 1, child: Container()),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/success_payment.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 32, right: 32),
+                              child: DottedLine(
+                                direction: Axis.horizontal,
+                                lineLength: double.infinity,
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: MyColors.otp_underline,
+                                dashRadius: 0.0,
+                                dashGapLength: 4.0,
+                                dashGapColor: Colors.transparent,
+                                dashGapRadius: 0.0,
+                              ))),
+                      Expanded(
+                          flex: 7,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(DateTime.now().toPersianDate(
+                                        twoDigits: true,
+                                        showTime: true,
+                                        timeSeprator: ' - ')),
+                                    //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                    Spacer(),
+                                    Text(
+                                      "تاریخ و ساعت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                        "${(midTermSelected) ? fixLineInquiryResult.midTerm!.billID : fixLineInquiryResult.finalTerm!.billID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه قبض",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text((midTermSelected)
+                                        ? ((fixLineInquiryResult
+                                                    .midTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${fixLineInquiryResult.midTerm!.paymentID}"
+                                        : ((fixLineInquiryResult
+                                                    .finalTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${fixLineInquiryResult.finalTerm!.paymentID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه پرداخت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                      (midTermSelected)
+                                          ? fixLineInquiryResult
+                                                  .midTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال"
+                                          : fixLineInquiryResult
+                                                  .finalTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال",
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "مبلغ پرداختی",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(orderId),
+                                    Spacer(),
+                                    Text(
+                                      "شماره پیگیری",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          )),
+                      Expanded(flex: 4, child: Container()),
+                    ],
+                  ),
+                )),
           ),
           Expanded(
             flex: 2,
@@ -11393,45 +11489,31 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer304);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -11742,15 +11824,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-
-                            if(isSimpleInquiry){
+                            if (isSimpleInquiry) {
                               _addToMyBillsList = false;
                               pageIndex = 1;
-                            }else{
+                            } else {
                               _addToMyBillsList = false;
                               pageIndex = 35;
                             }
-
                           });
                         },
                         child: Image.asset(
@@ -11952,7 +12032,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
-                        visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: CheckboxWidget(callback: (value) {
                         setState(() {
                           _addToMyBillsList = value;
@@ -11970,7 +12050,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 children: [
                   Expanded(
                     child: Visibility(
-                      visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: SizedBox(
                         height: 50,
                         child: Visibility(
@@ -11985,13 +12065,15 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               ),
                               padding:
                                   MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(color: MyColors.otp_underline),
+                                  side:
+                                      BorderSide(color: MyColors.otp_underline),
                                 ),
                               ),
                             ),
@@ -11999,7 +12081,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               CreateBillParam createBillParam = CreateBillParam(
                                   billType: 310,
                                   billCode: _mciBillController1.text.toString(),
-                                  billTitle: _mciBillController2.text.toString());
+                                  billTitle:
+                                      _mciBillController2.text.toString());
                               BlocProvider.of<BillBloc>(context)
                                   .add(CreateBillEvent(createBillParam));
                             },
@@ -12007,7 +12090,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'افزودن به قبض های من',
-                                  style: TextStyle(color: MyColors.otp_underline),
+                                  style:
+                                      TextStyle(color: MyColors.otp_underline),
                                 )),
                           ),
                         ),
@@ -12962,146 +13046,175 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 ),
               )),
           Expanded(
-            flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+              flex: 16,
+              child: RepaintBoundary(
+                key: previewContainer305,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/hamrah_aval_icon.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )),
+                                  Expanded(flex: 1, child: Container(child: Text("قبض همراه اول"),)),
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                  "${(midTermSelected) ? mciInquiryResult.midTerm!.billID : mciInquiryResult.finalTerm!.billID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه قبض",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text((midTermSelected)
-                                  ? ((mciInquiryResult.midTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${mciInquiryResult.midTerm!.paymentID}"
-                                  : ((mciInquiryResult.finalTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${mciInquiryResult.finalTerm!.paymentID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه پرداخت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                (midTermSelected)
-                                    ? mciInquiryResult.midTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال"
-                                    : mciInquiryResult.finalTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(color: Colors.green),
+                                ],
                               ),
-                              Spacer(),
-                              Text(
-                                "مبلغ پرداختی",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(orderId),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
-            ),
-            // ),
-          ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 1, child: Container()),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/success_payment.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 32, right: 32),
+                              child: DottedLine(
+                                direction: Axis.horizontal,
+                                lineLength: double.infinity,
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: MyColors.otp_underline,
+                                dashRadius: 0.0,
+                                dashGapLength: 4.0,
+                                dashGapColor: Colors.transparent,
+                                dashGapRadius: 0.0,
+                              ))),
+                      Expanded(
+                          flex: 7,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(DateTime.now().toPersianDate(
+                                        twoDigits: true,
+                                        showTime: true,
+                                        timeSeprator: ' - ')),
+                                    //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                    Spacer(),
+                                    Text(
+                                      "تاریخ و ساعت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                        "${(midTermSelected) ? mciInquiryResult.midTerm!.billID : mciInquiryResult.finalTerm!.billID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه قبض",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text((midTermSelected)
+                                        ? ((mciInquiryResult
+                                                    .midTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${mciInquiryResult.midTerm!.paymentID}"
+                                        : ((mciInquiryResult
+                                                    .finalTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${mciInquiryResult.finalTerm!.paymentID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه پرداخت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                      (midTermSelected)
+                                          ? mciInquiryResult.midTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال"
+                                          : mciInquiryResult.finalTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال",
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "مبلغ پرداختی",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(orderId),
+                                    Spacer(),
+                                    Text(
+                                      "شماره پیگیری",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          )),
+                      Expanded(flex: 4, child: Container()),
+                    ],
+                  ),
+                ),
+              )),
           Expanded(
             flex: 2,
             child: Container(
@@ -13115,45 +13228,31 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer305);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -13464,15 +13563,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-
-                            if(isSimpleInquiry){
+                            if (isSimpleInquiry) {
                               _addToMyBillsList = false;
                               pageIndex = 1;
-                            }else{
+                            } else {
                               _addToMyBillsList = false;
                               pageIndex = 36;
                             }
-
                           });
                         },
                         child: Image.asset(
@@ -13674,7 +13771,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
-                        visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: CheckboxWidget(callback: (value) {
                         setState(() {
                           _addToMyBillsList = value;
@@ -13692,7 +13789,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 children: [
                   Expanded(
                     child: Visibility(
-                      visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: SizedBox(
                         height: 50,
                         child: Visibility(
@@ -13707,13 +13804,15 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               ),
                               padding:
                                   MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(color: MyColors.otp_underline),
+                                  side:
+                                      BorderSide(color: MyColors.otp_underline),
                                 ),
                               ),
                             ),
@@ -13721,7 +13820,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               CreateBillParam createBillParam = CreateBillParam(
                                   billType: 311,
                                   billCode: _mtnBillController1.text.toString(),
-                                  billTitle: _mtnBillController2.text.toString());
+                                  billTitle:
+                                      _mtnBillController2.text.toString());
                               BlocProvider.of<BillBloc>(context)
                                   .add(CreateBillEvent(createBillParam));
                             },
@@ -13729,7 +13829,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'افزودن به قبض های من',
-                                  style: TextStyle(color: MyColors.otp_underline),
+                                  style:
+                                      TextStyle(color: MyColors.otp_underline),
                                 )),
                           ),
                         ),
@@ -14685,144 +14786,173 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               )),
           Expanded(
             flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+            child: RepaintBoundary(
+                key: previewContainer306,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/irancell_icon.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )),
+                                  Expanded(flex: 1, child: Container(child: Text("قبض ایرانسل"),)),
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                  "${(midTermSelected) ? mtnInquiryResult.midTerm!.billID : mtnInquiryResult.finalTerm!.billID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه قبض",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text((midTermSelected)
-                                  ? ((mtnInquiryResult.midTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${mtnInquiryResult.midTerm!.paymentID}"
-                                  : ((mtnInquiryResult.finalTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${mtnInquiryResult.finalTerm!.paymentID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه پرداخت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                (midTermSelected)
-                                    ? mtnInquiryResult.midTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال"
-                                    : mtnInquiryResult.finalTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(color: Colors.green),
+                                ],
                               ),
-                              Spacer(),
-                              Text(
-                                "مبلغ پرداختی",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(orderId),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
-            ),
-            // ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 1, child: Container()),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/success_payment.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 32, right: 32),
+                              child: DottedLine(
+                                direction: Axis.horizontal,
+                                lineLength: double.infinity,
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: MyColors.otp_underline,
+                                dashRadius: 0.0,
+                                dashGapLength: 4.0,
+                                dashGapColor: Colors.transparent,
+                                dashGapRadius: 0.0,
+                              ))),
+                      Expanded(
+                          flex: 7,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(DateTime.now().toPersianDate(
+                                        twoDigits: true,
+                                        showTime: true,
+                                        timeSeprator: ' - ')),
+                                    //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                    Spacer(),
+                                    Text(
+                                      "تاریخ و ساعت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                        "${(midTermSelected) ? mtnInquiryResult.midTerm!.billID : mtnInquiryResult.finalTerm!.billID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه قبض",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text((midTermSelected)
+                                        ? ((mtnInquiryResult
+                                                    .midTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${mtnInquiryResult.midTerm!.paymentID}"
+                                        : ((mtnInquiryResult
+                                                    .finalTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${mtnInquiryResult.finalTerm!.paymentID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه پرداخت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                      (midTermSelected)
+                                          ? mtnInquiryResult.midTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال"
+                                          : mtnInquiryResult.finalTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال",
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "مبلغ پرداختی",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(orderId),
+                                    Spacer(),
+                                    Text(
+                                      "شماره پیگیری",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          )),
+                      Expanded(flex: 4, child: Container()),
+                    ],
+                  ),
+                )),
           ),
           Expanded(
             flex: 2,
@@ -14837,45 +14967,31 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer306);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -15186,16 +15302,13 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-
-
-                            if(isSimpleInquiry){
+                            if (isSimpleInquiry) {
                               _addToMyBillsList = false;
                               pageIndex = 1;
-                            }else{
+                            } else {
                               _addToMyBillsList = false;
                               pageIndex = 37;
                             }
-
                           });
                         },
                         child: Image.asset(
@@ -15397,7 +15510,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
-                      visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: CheckboxWidget(callback: (value) {
                         setState(() {
                           _addToMyBillsList = value;
@@ -15415,7 +15528,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 children: [
                   Expanded(
                     child: Visibility(
-                      visible : !isSimpleInquiry,
+                      visible: !isSimpleInquiry,
                       child: SizedBox(
                         height: 50,
                         child: Visibility(
@@ -15430,13 +15543,15 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               ),
                               padding:
                                   MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(color: MyColors.otp_underline),
+                                  side:
+                                      BorderSide(color: MyColors.otp_underline),
                                 ),
                               ),
                             ),
@@ -15454,7 +15569,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'افزودن به قبض های من',
-                                  style: TextStyle(color: MyColors.otp_underline),
+                                  style:
+                                      TextStyle(color: MyColors.otp_underline),
                                 )),
                           ),
                         ),
@@ -16420,146 +16536,175 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               )),
           Expanded(
             flex: 16,
-            // child: Screenshot(
-            //   controller: screenshotController,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 35, right: 35, top: 0, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(flex: 1, child: Container()),
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+            child: RepaintBoundary(
+                key: previewContainer307,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/rightel_icon.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )),
+                                  Expanded(flex: 1, child: Container(child: Text("قبض رایتل"),)),
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                  "${(midTermSelected) ? rightelInquiryResult.midTerm!.billID : rightelInquiryResult.finalTerm!.billID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه قبض",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text((midTermSelected)
-                                  ? ((rightelInquiryResult
-                                              .midTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${rightelInquiryResult.midTerm!.paymentID}"
-                                  : ((rightelInquiryResult
-                                              .finalTerm!.paymentID!) ==
-                                          "")
-                                      ? "پرداخت شده"
-                                      : "${rightelInquiryResult.finalTerm!.paymentID}"),
-                              Spacer(),
-                              Text(
-                                "شناسه پرداخت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                (midTermSelected)
-                                    ? rightelInquiryResult.midTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال"
-                                    : rightelInquiryResult.finalTerm!.amount!
-                                            .toString()
-                                            .seRagham() +
-                                        " ریال",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(color: Colors.green),
+                                ],
                               ),
-                              Spacer(),
-                              Text(
-                                "مبلغ پرداختی",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(orderId),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-                Expanded(flex: 4, child: Container()),
-              ],
-            ),
-            // ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 0, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 1, child: Container()),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/success_payment.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 32, right: 32),
+                              child: DottedLine(
+                                direction: Axis.horizontal,
+                                lineLength: double.infinity,
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: MyColors.otp_underline,
+                                dashRadius: 0.0,
+                                dashGapLength: 4.0,
+                                dashGapColor: Colors.transparent,
+                                dashGapRadius: 0.0,
+                              ))),
+                      Expanded(
+                          flex: 7,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(DateTime.now().toPersianDate(
+                                        twoDigits: true,
+                                        showTime: true,
+                                        timeSeprator: ' - ')),
+                                    //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                                    Spacer(),
+                                    Text(
+                                      "تاریخ و ساعت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                        "${(midTermSelected) ? rightelInquiryResult.midTerm!.billID : rightelInquiryResult.finalTerm!.billID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه قبض",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text((midTermSelected)
+                                        ? ((rightelInquiryResult
+                                                    .midTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${rightelInquiryResult.midTerm!.paymentID}"
+                                        : ((rightelInquiryResult
+                                                    .finalTerm!.paymentID!) ==
+                                                "")
+                                            ? "پرداخت شده"
+                                            : "${rightelInquiryResult.finalTerm!.paymentID}"),
+                                    Spacer(),
+                                    Text(
+                                      "شناسه پرداخت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                      (midTermSelected)
+                                          ? rightelInquiryResult
+                                                  .midTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال"
+                                          : rightelInquiryResult
+                                                  .finalTerm!.amount!
+                                                  .toString()
+                                                  .seRagham() +
+                                              " ریال",
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "مبلغ پرداختی",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(orderId),
+                                    Spacer(),
+                                    Text(
+                                      "شماره پیگیری",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          )),
+                      Expanded(flex: 4, child: Container()),
+                    ],
+                  ),
+                )),
           ),
           Expanded(
             flex: 2,
@@ -16574,45 +16719,31 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: InkWell(
+                          //   onTap: () {
+                          //     // screenshotController.capture().then((Uint8List? image) {
+                          //     //   //Capture Done
+                          //     //
+                          //     // }).catchError((onError) {
+                          //     //   print(onError);
+                          //     // });
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.only(right: 10),
+                          //     child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          //   ),
+                          // )),
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              // screenshotController.capture().then((Uint8List? image) {
-                              //   //Capture Done
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () async {
-                              // screenshotController.capture().then((Uint8List? image) async {
-                              //   //Capture Done
-                              //
-                              //   if (image != null) {
-                              //     final directory = await getApplicationDocumentsDirectory();
-                              //     final imagePath = await File('${directory.path}/image.png').create();
-                              //     await imagePath.writeAsBytes(image);
-                              //
-                              //     /// Share Plugin
-                              //     await Share.shareFiles([imagePath.path]);
-                              //   }
-                              //
-                              // }).catchError((onError) {
-                              //   print(onError);
-                              // });
+                              _captureSocialPng(previewContainer307);
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10),
@@ -17232,6 +17363,63 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontFamily: "shabnam_bold"),
               ))));
+    });
+  }
+
+  Future<void> _captureSocialPng(GlobalKey previewContainer) {
+    List<String> imagePaths = [];
+
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    return new Future.delayed(const Duration(milliseconds: 20), () async {
+      RenderRepaintBoundary? boundary = previewContainer.currentContext!
+          .findRenderObject() as RenderRepaintBoundary?;
+      setState(() {
+        shouldShowLoading = true;
+      });
+      ui.Image image = await boundary!.toImage();
+      final directory = (await getApplicationDocumentsDirectory()).path;
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      File imgFile = new File('$directory/screenshot.png');
+      imagePaths.add(imgFile.path);
+      imgFile.writeAsBytes(pngBytes).then((value) async {
+        await Share.shareFiles(imagePaths,
+                subject: 'Share',
+                sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size)
+            .then((value) {
+          setState(() {
+            shouldShowLoading = false;
+          });
+        });
+      }).catchError((onError) {
+        print(onError);
+      });
+    });
+  }
+
+  saveToGallery(GlobalKey previewContainer) {
+    List<String> imagePaths = [];
+
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    return new Future.delayed(const Duration(milliseconds: 20), () async {
+      RenderRepaintBoundary? boundary = previewContainer.currentContext!
+          .findRenderObject() as RenderRepaintBoundary?;
+      setState(() {
+        shouldShowLoading = true;
+      });
+      ui.Image image = await boundary!.toImage();
+
+      ByteData? byteData =
+          await (image.toByteData(format: ui.ImageByteFormat.png));
+      if (byteData != null) {
+        final result =
+            await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
+
+        setState(() {
+          shouldShowLoading = false;
+        });
+      }
     });
   }
 }

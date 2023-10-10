@@ -1,14 +1,20 @@
+import 'dart:io';
+
 import 'package:atba_application/core/params/show_internet_packages_param.dart';
 import 'package:atba_application/core/widgets/loading.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:share/share.dart';
 
 import '../../../../core/params/buy_internet_package_param.dart';
 import '../../../../core/utils/colors.dart';
@@ -17,6 +23,7 @@ import '../block/balance_status_cinternet.dart';
 import '../block/buy_internet_package_status.dart';
 import '../block/charge_internet_bloc.dart';
 import '../block/show_internet_packages_status.dart';
+import 'dart:ui' as ui;
 
 class InternetChargeScreenView extends StatefulWidget {
   @override
@@ -34,6 +41,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
       1; // >> 1 daily , 2 weekly , 3 monthly  , 4 threemonth  , 5 sixmonth , 6 anually , 7 other
 
   String balance = "نامشخص";
+  bool shouldShowLoading = false;
 
   final _formKey_page1 = GlobalKey<FormState>();
   bool _isButtonNextDisabled_page1 = true;
@@ -56,6 +64,8 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
   show.Other selectedOther = show.Other();
 
   int orderIdResultPayFromWallet = 0;
+
+  GlobalKey previewContainer4 = new GlobalKey();
 
   @override
   void initState() {
@@ -225,6 +235,10 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   pageIndex = 4;
                 }
                 state.buyInternetPackageStatus = BuyInternetPackageInit();
+              }
+
+              if (shouldShowLoading) {
+                return LoadingPage();
               }
 
               return Container(
@@ -1458,185 +1472,208 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   ],
                 ),
               )),
-          Expanded(
-              flex: 9,
-              child: Container(
-                padding:
-                    EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
-                color: Colors.transparent,
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                          flex: 3,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Image.asset(
-                                      (operatorSelected == 1)
-                                          ? 'assets/image_icon/rightel_icon.png'
-                                          : (operatorSelected == 2)
-                                              ? 'assets/image_icon/hamrah_aval_icon.png'
-                                              : 'assets/image_icon/irancell_icon.png',
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                  )),
-                              Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                      child: Text(_phoneController.text)))
-                            ],
-                          )),
-                      Expanded(
-                        flex: 5,
-                        child: Container(
-                            child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text((operatorSelected == 1)
-                                    ? 'رایتل'
-                                    : (operatorSelected == 2)
-                                        ? 'همراه اول'
-                                        : 'ایرانسل'),
-                                Spacer(),
-                                Text(
-                                  "نوع اپراتور",
-                                  style: TextStyle(color: Colors.grey),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 5,
-                                  child: Text(
-                                    prepareSelectedItemTitle(),
-                                    textDirection: TextDirection.rtl,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    "محصول",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "${prepareSelectedItemCost().seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                ),
-                                Spacer(),
-                                Text(
-                                  "مبلغ شارژ + مالیات",
-                                  style: TextStyle(color: Colors.grey),
-                                )
-                              ],
-                            ),
-                          ],
-                        )),
-                      ),
-                      Expanded(
-                          child: Container(
-                        child: Image.asset(
-                          'assets/image_icon/success_payment.png',
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ))
-                    ],
-                  ),
-                ),
-              )),
-          Expanded(
-              flex: 1,
-              child: Container(
-                  padding: EdgeInsets.only(left: 32, right: 32),
-                  child: DottedLine(
-                    direction: Axis.horizontal,
-                    lineLength: double.infinity,
-                    lineThickness: 1.0,
-                    dashLength: 4.0,
-                    dashColor: MyColors.otp_underline,
-                    dashRadius: 0.0,
-                    dashGapLength: 4.0,
-                    dashGapColor: Colors.transparent,
-                    dashGapRadius: 0.0,
-                  ))),
-          Expanded(
-              flex: 6,
-              child: Container(
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Text(_phoneController.text),
-                        Spacer(),
-                        Text(
-                          "شماره همراه",
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    Divider(),
-                    Row(
-                      children: [
-                        Text("${orderIdResultPayFromWallet}"),
-                        Spacer(),
-                        Text(
-                          "شماره پیگیری",
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    Divider(),
-                    Row(
-                      children: [
-                        Text(DateTime.now().toPersianDate(
-                            twoDigits: true,
-                            showTime: true,
-                            timeSeprator: ' - ')),
-                        //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
 
-                        Spacer(),
-                        Text(
-                          "تاریخ و ساعت",
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    Divider(),
-                    Row(
-                      children: [
-                        Text((payTypeSelected == 1) ? "کیف پول" : "کارت بانکی"),
-                        Spacer(),
-                        Text(
-                          "پرداخت از",
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    Divider()
-                  ],
-                ),
-              )),
+
+          Expanded(
+
+              flex: 16,
+              child:
+
+
+              RepaintBoundary(
+                key: previewContainer4,
+            child: Container(
+              color: Colors.white,
+              child: Column(children: [
+                Expanded(
+                    flex: 9,
+                    child: Container(
+                      padding:
+                      EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                                flex: 3,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          child: Image.asset(
+                                            (operatorSelected == 1)
+                                                ? 'assets/image_icon/rightel_icon.png'
+                                                : (operatorSelected == 2)
+                                                ? 'assets/image_icon/hamrah_aval_icon.png'
+                                                : 'assets/image_icon/irancell_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                            child: Text(_phoneController.text)))
+                                  ],
+                                )),
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text((operatorSelected == 1)
+                                              ? 'رایتل'
+                                              : (operatorSelected == 2)
+                                              ? 'همراه اول'
+                                              : 'ایرانسل'),
+                                          Spacer(),
+                                          Text(
+                                            "نوع اپراتور",
+                                            style: TextStyle(color: Colors.grey),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 5,
+                                            child: Text(
+                                              prepareSelectedItemTitle(),
+                                              textDirection: TextDirection.rtl,
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Text(
+                                              "محصول",
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(color: Colors.grey),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${prepareSelectedItemCost().seRagham()} ریال",
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            "مبلغ شارژ + مالیات",
+                                            style: TextStyle(color: Colors.grey),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            Expanded(
+                                child: Container(
+                                  child: Image.asset(
+                                    'assets/image_icon/success_payment.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 32, right: 32),
+                        child: DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 1.0,
+                          dashLength: 4.0,
+                          dashColor: MyColors.otp_underline,
+                          dashRadius: 0.0,
+                          dashGapLength: 4.0,
+                          dashGapColor: Colors.transparent,
+                          dashGapRadius: 0.0,
+                        ))),
+                Expanded(
+                    flex: 6,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Text(_phoneController.text),
+                              Spacer(),
+                              Text(
+                                "شماره همراه",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text("${orderIdResultPayFromWallet}"),
+                              Spacer(),
+                              Text(
+                                "شماره پیگیری",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(DateTime.now().toPersianDate(
+                                  twoDigits: true,
+                                  showTime: true,
+                                  timeSeprator: ' - ')),
+                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+
+                              Spacer(),
+                              Text(
+                                "تاریخ و ساعت",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text((payTypeSelected == 1) ? "کیف پول" : "کارت بانکی"),
+                              Spacer(),
+                              Text(
+                                "پرداخت از",
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    )),
+              ],),
+            ),
+          )
+
+
+          ),
+
+
+
+
           Expanded(
             flex: 2,
             child: Container(
@@ -1650,25 +1687,30 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Expanded(
+                          //     child: Container(
+                          //   padding: EdgeInsets.only(right: 10),
+                          //   child:  Visibility(
+                          //     visible: false,
+                          //     child: Image.asset(
+                          //       'assets/image_icon/save_in_gallery.png',
+                          //       fit: BoxFit.scaleDown,
+                          //     ),
+                          //   ),
+                          // )),
                           Expanded(
-                              child: Container(
-                            padding: EdgeInsets.only(right: 10),
-                            child:  Visibility(
-                              visible: false,
-                              child: Image.asset(
-                                'assets/image_icon/save_in_gallery.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                          )),
-                          Expanded(
-                              child: Container(
+                              child: InkWell(
+                                onTap:(){
+                                  _captureSocialPng(previewContainer4);
+    },
+                                child: Container(
                             padding: EdgeInsets.only(left: 10),
                             child: Image.asset(
-                              'assets/image_icon/share.png',
-                              fit: BoxFit.scaleDown,
+                                'assets/image_icon/share.png',
+                                fit: BoxFit.scaleDown,
                             ),
-                          )),
+                          ),
+                              )),
                         ],
                       ))
                 ],
@@ -2466,6 +2508,64 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontFamily: "shabnam_bold"),
               ))));
+    });
+  }
+
+
+  Future<void> _captureSocialPng(GlobalKey previewContainer) {
+    List<String> imagePaths = [];
+
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    return new Future.delayed(const Duration(milliseconds: 20), () async {
+      RenderRepaintBoundary? boundary = previewContainer.currentContext!
+          .findRenderObject() as RenderRepaintBoundary?;
+      setState(() {
+        shouldShowLoading = true;
+      });
+      ui.Image image = await boundary!.toImage();
+      final directory = (await getApplicationDocumentsDirectory()).path;
+      ByteData? byteData =
+      await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      File imgFile = new File('$directory/screenshot.png');
+      imagePaths.add(imgFile.path);
+      imgFile.writeAsBytes(pngBytes).then((value) async {
+        await Share.shareFiles(imagePaths,
+            subject: 'Share',
+            sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size)
+            .then((value) {
+          setState(() {
+            shouldShowLoading = false;
+          });
+        });
+      }).catchError((onError) {
+        print(onError);
+      });
+    });
+  }
+
+  saveToGallery(GlobalKey previewContainer) {
+    List<String> imagePaths = [];
+
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    return new Future.delayed(const Duration(milliseconds: 20), () async {
+      RenderRepaintBoundary? boundary = previewContainer.currentContext!
+          .findRenderObject() as RenderRepaintBoundary?;
+      setState(() {
+        shouldShowLoading = true;
+      });
+      ui.Image image = await boundary!.toImage();
+
+      ByteData? byteData =
+      await (image.toByteData(format: ui.ImageByteFormat.png));
+      if (byteData != null) {
+        final result =
+        await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
+
+        setState(() {
+          shouldShowLoading = false;
+        });
+      }
     });
   }
 }

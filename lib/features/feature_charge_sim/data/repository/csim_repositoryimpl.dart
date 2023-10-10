@@ -42,8 +42,8 @@ class ChargeSimRepositoryImpl extends ChargeSimRepository {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if (dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502) {
-            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
 
           if (dioError.response!.statusCode == 405) {
@@ -98,8 +98,8 @@ class ChargeSimRepositoryImpl extends ChargeSimRepository {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
-            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          if(dioError.response!.statusCode! >= 500){
+            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
           //
           // if(dioError.response!.statusCode == 404){

@@ -21,6 +21,12 @@ class TransactionsHistoryEvent extends WalletEvent{
 }
 
 
+class TransactionStatusEvent extends WalletEvent{
+  final String serial;
+  TransactionStatusEvent(this.serial);
+}
+
+
 class WalletChangePageIndexEvent extends WalletEvent{
   final int pageIndex;
   WalletChangePageIndexEvent(this.pageIndex);

@@ -89,4 +89,20 @@ class ApiProviderWallet {
      return response;
    }
 
+
+
+   Future<dynamic> callTransactionStatus(String serial) async {
+     _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
+
+     final queryParameters = {
+       'pageIndex': 1,
+       'itemCount': 1,
+       'serial': '${serial}',
+     };
+
+     var response = await _dio
+         ?.get(Constants.baseUrl + "/apiapp/Transaction/Search",queryParameters: queryParameters);
+     return response;
+   }
+
 }

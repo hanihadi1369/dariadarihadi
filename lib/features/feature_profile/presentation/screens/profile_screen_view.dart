@@ -371,7 +371,33 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                     ),
                     Expanded(
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+
+
+
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return BlocProvider.value(
+                                  value: locator<WalletBloc>(),
+                                  child: WalletScreenView(2),
+                                );
+
+                                // return BlocProvider(
+                                //   create: (_) =>
+                                //       locator<wallett.WalletBloc>(),
+                                //   child: WalletScreenView(),
+                                // );
+                              },
+                            ),
+                          );
+                          //     .then((value) => {
+                          //   BlocProvider.of<MainBloc>(context)
+                          //       .add(GetBalanceEvent())
+                          // });
+
+                        },
                         child: Padding(
                           padding: EdgeInsets.only(left: 32, right: 32),
                           child: Container(
@@ -572,13 +598,13 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   Expanded(
                     child: InkWell(
                       onTap: () async {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) {
                               return BlocProvider.value(
                                 value: locator<WalletBloc>(),
-                                child: WalletScreenView(),
+                                child: WalletScreenView(1),
                               );
 
                               // return BlocProvider(

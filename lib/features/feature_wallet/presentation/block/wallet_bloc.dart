@@ -4,8 +4,10 @@ import 'dart:async';
 
 import 'package:atba_application/core/params/transaction_history_param.dart';
 import 'package:atba_application/features/feature_wallet/domain/use_cases/get_balance_usecase.dart';
+import 'package:atba_application/features/feature_wallet/domain/use_cases/transaction_status_usecase.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/balance_status_wallet.dart';
 import 'package:atba_application/features/feature_wallet/presentation/block/transaction_history_status.dart';
+import 'package:atba_application/features/feature_wallet/presentation/block/transaction_status_status.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -28,19 +30,22 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
   final TransferKifBKifUseCase transferKifBKifUseCase;
   final GetBalanceUseCase getBalanceUseCase;
   final TransactionHistoryUseCase transactionHistoryUseCase;
+  final TransactionStatusUseCase transactionStatusUseCase;
 
 
   WalletBloc(
       this.chargeWalletUseCase,
       this.transferKifBKifUseCase,
       this.getBalanceUseCase,
-      this.transactionHistoryUseCase
+      this.transactionHistoryUseCase,
+      this.transactionStatusUseCase
       ) : super(WalletState(
       chargeWalletStatus: ChargeWalletInit(),
       transferKifBKifStatus: TransferKifBKifInit(),
       pageWalletIndexStatus:PageWalletIndexStatus1(),
       balanceStatus: BalanceInit(),
-      transactionsHistoryStatus: TransactionsHistoryInit()
+      transactionsHistoryStatus: TransactionsHistoryInit(),
+      transactionStatusStatus: TransactionStatusInit(),
   )) {
 
     on<ChargeWalletEvent>((event, emit) async {
@@ -105,6 +110,22 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
 
 
+
+
+    on<TransactionStatusEvent>((event, emit) async {
+
+      emit(state.copyWith(newTransactionStatusStatus: TransactionStatusLoading()));
+
+      DataState dataState = await transactionStatusUseCase(event.serial);
+
+      if(dataState is DataSuccess){
+        emit(state.copyWith(newTransactionStatusStatus: TransactionStatusCompleted(dataState.data)));
+      }
+
+      if(dataState is DataFailed){
+        emit(state.copyWith(newTransactionStatusStatus: TransactionStatusError(dataState.error!)));
+      }
+    });
 
 
 

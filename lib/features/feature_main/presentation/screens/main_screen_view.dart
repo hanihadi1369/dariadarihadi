@@ -557,7 +557,7 @@ class MainScreenViewState extends State<MainScreenView> {
                                       builder: (context) {
                                         return BlocProvider.value(
                                           value: locator<wallett.WalletBloc>(),
-                                          child: WalletScreenView(),
+                                          child: WalletScreenView(1),
                                         );
 
                                         // return BlocProvider(
@@ -882,7 +882,7 @@ class MainScreenViewState extends State<MainScreenView> {
                                       builder: (context) {
                                         return BlocProvider.value(
                                           value: locator<wallett.WalletBloc>(),
-                                          child: WalletScreenView(),
+                                          child: WalletScreenView(1),
                                         );
 
                                         // return BlocProvider(

@@ -12,25 +12,21 @@ import 'package:atba_application/features/feature_wallet/domain/entities/transfe
 import 'package:atba_application/features/feature_wallet/domain/repository/wallet_repository.dart';
 import 'package:dio/dio.dart';
 
-
-
-
 class WalletRepositoryImpl extends WalletRepository {
   ApiProviderWallet apiProviderWallet;
 
   WalletRepositoryImpl(this.apiProviderWallet);
 
-
   @override
   Future<DataState<ChargeWalletEntity>> doChargeWalletOperation(
-      int  amount,String redirectedUrl) async {
+      int amount, String redirectedUrl) async {
     try {
       Response response =
           await apiProviderWallet.callChargeWallet(amount, redirectedUrl);
 
       if (response.statusCode == 200) {
         ChargeWalletEntity chargeWalletEntity =
-        ChargeWalletModel.fromJson(response.data);
+            ChargeWalletModel.fromJson(response.data);
         return DataSuccess(chargeWalletEntity);
       } else {
         return DataFailed(
@@ -40,16 +36,14 @@ class WalletRepositoryImpl extends WalletRepository {
       if (e is DioError) {
         DioError dioError = e as DioError;
         if (dioError.response != null) {
-
-
-          if(dioError.response!.statusCode == 401){
+          if (dioError.response!.statusCode == 401) {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
-            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          if (dioError.response!.statusCode! >= 500 ) {
+            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
-          if(dioError.response!.statusCode == 404){
+          if (dioError.response!.statusCode == 404) {
             return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
           }
           if (dioError.response!.statusCode == 405) {
@@ -58,7 +52,6 @@ class WalletRepositoryImpl extends WalletRepository {
           // if(dioError.response!.statusCode == 400){
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
           // }
-
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
@@ -76,37 +69,33 @@ class WalletRepositoryImpl extends WalletRepository {
     }
   }
 
-
   @override
   Future<DataState<GetBalanceEntity>> getBalanceOperation() async {
     try {
       Response response = await apiProviderWallet.callGetBalance();
 
       if (response.statusCode == 200) {
-        GetBalanceEntity getBalanceEntity = GetBalanceModel.fromJson(
-            response.data);
+        GetBalanceEntity getBalanceEntity =
+            GetBalanceModel.fromJson(response.data);
         return DataSuccess(getBalanceEntity);
       } else {
-        return DataFailed("خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
+        return DataFailed(
+            "خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
       }
     } catch (e) {
-      if(e is DioError ){
+      if (e is DioError) {
         DioError dioError = e as DioError;
 
-
-
-
-        if(dioError.response!=null){
-
-          if(dioError.response!.statusCode == 401){
+        if (dioError.response != null) {
+          if (dioError.response!.statusCode == 401) {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
-            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
 
-          if(dioError.response!.statusCode == 404){
+          if (dioError.response!.statusCode == 404) {
             return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
           }
 
@@ -117,37 +106,32 @@ class WalletRepositoryImpl extends WalletRepository {
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
           // }
 
-
-
-          MainErrorModel mainErrorModel = MainErrorModel.fromJson(dioError.response!.data);
-          if(mainErrorModel.errors!=null  && mainErrorModel.errors?.length!=0)
+          MainErrorModel mainErrorModel =
+              MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.errors != null &&
+              mainErrorModel.errors?.length != 0)
             return DataFailed(mainErrorModel.errors![0].message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
-        }else{
+        } else {
           return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
         }
-
       }
-
-
 
       return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
     }
   }
 
-
-
   @override
   Future<DataState<TransferKifBKifEntity>> doTransferKifBKifOperation(
-      int  amount,String mobileNumber) async {
+      int amount, String mobileNumber) async {
     try {
       Response response =
-      await apiProviderWallet.callDoTransfer(amount, mobileNumber);
+          await apiProviderWallet.callDoTransfer(amount, mobileNumber);
 
       if (response.statusCode == 200) {
         TransferKifBKifEntity transferKifBKifEntity =
-        TransferKifBKifModel.fromJson(response.data);
+            TransferKifBKifModel.fromJson(response.data);
         return DataSuccess(transferKifBKifEntity);
       } else {
         return DataFailed(
@@ -157,16 +141,14 @@ class WalletRepositoryImpl extends WalletRepository {
       if (e is DioError) {
         DioError dioError = e as DioError;
         if (dioError.response != null) {
-
-
-          if(dioError.response!.statusCode == 401){
+          if (dioError.response!.statusCode == 401) {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
-            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
-          if(dioError.response!.statusCode == 404){
+          if (dioError.response!.statusCode == 404) {
             return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
           }
 
@@ -177,9 +159,8 @@ class WalletRepositoryImpl extends WalletRepository {
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
           // }
 
-
           MainErrorModel mainErrorModel =
-          MainErrorModel.fromJson(dioError.response!.data);
+              MainErrorModel.fromJson(dioError.response!.data);
           if (mainErrorModel.errors != null &&
               mainErrorModel.errors?.length != 0)
             return DataFailed(mainErrorModel.errors![0].message.toString());
@@ -196,10 +177,61 @@ class WalletRepositoryImpl extends WalletRepository {
 
   @override
   Future<DataState<TransactionsHistoryEntity>> getTransactionsHistoryOperation(
-      String  dateFrom,String dateTo) async {
+      String dateFrom, String dateTo) async {
     try {
-      Response response =
-      await apiProviderWallet.callWalletTransactionsHistory(dateFrom, dateTo);
+      Response response = await apiProviderWallet.callWalletTransactionsHistory(
+          dateFrom, dateTo);
+
+      if (response.statusCode == 200) {
+        TransactionsHistoryEntity transactionsHistoryEntity =
+            TransactionsHistoryModel.fromJson(response.data);
+        return DataSuccess(transactionsHistoryEntity);
+      } else {
+        return DataFailed(
+            "خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
+      }
+    } catch (e) {
+      if (e is DioError) {
+        DioError dioError = e as DioError;
+        if (dioError.response != null) {
+          if (dioError.response!.statusCode == 401) {
+            return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
+          }
+
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
+          if (dioError.response!.statusCode == 404) {
+            return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
+          }
+
+          if (dioError.response!.statusCode == 405) {
+            return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
+          }
+          // if(dioError.response!.statusCode == 400){
+          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
+          // }
+
+          MainErrorModel mainErrorModel =
+              MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.errors != null &&
+              mainErrorModel.errors?.length != 0)
+            return DataFailed(mainErrorModel.errors![0].message.toString());
+          else
+            return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
+        } else {
+          return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
+        }
+      }
+
+      return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
+    }
+  }
+
+  @override
+  Future<DataState<TransactionsHistoryEntity>> getTransactionStatusOperation(String serial) async {
+    try {
+      Response response = await apiProviderWallet.callTransactionStatus(serial);
 
       if (response.statusCode == 200) {
         TransactionsHistoryEntity transactionsHistoryEntity =
@@ -213,16 +245,14 @@ class WalletRepositoryImpl extends WalletRepository {
       if (e is DioError) {
         DioError dioError = e as DioError;
         if (dioError.response != null) {
-
-
-          if(dioError.response!.statusCode == 401){
+          if (dioError.response!.statusCode == 401) {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if(dioError.response!.statusCode == 500 || dioError.response!.statusCode == 501 || dioError.response!.statusCode == 502){
-            return DataFailed("عدم پاسخگویی سرور : خطای داخلی");
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
-          if(dioError.response!.statusCode == 404){
+          if (dioError.response!.statusCode == 404) {
             return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
           }
 
@@ -232,7 +262,6 @@ class WalletRepositoryImpl extends WalletRepository {
           // if(dioError.response!.statusCode == 400){
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
           // }
-
 
           MainErrorModel mainErrorModel =
           MainErrorModel.fromJson(dioError.response!.data);
@@ -249,5 +278,4 @@ class WalletRepositoryImpl extends WalletRepository {
       return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
     }
   }
-
 }
