@@ -117,6 +117,10 @@ class ValueOrDefault {
 
 
 class Statement {
+
+
+
+
   Statement({
     this.id,
     this.date,
@@ -126,6 +130,7 @@ class Statement {
     this.description,
     this.operationName,
     this.operationCode,
+    this.detailsCount,
     this.serialNumber,
     this.oprationIcon,
     this.mobile,
@@ -135,6 +140,11 @@ class Statement {
     this.currencyTitle,
     this.campainTitle,});
 
+
+
+
+
+
   Statement.fromJson(dynamic json) {
     id = json['id'];
     date = json['date'];
@@ -143,7 +153,8 @@ class Statement {
     besAmount = json['besAmount'];
     description = json['description'];
     operationName = json['operationName'];
-    operationCode = json['operationCode'];
+    operationCode = json['operationCode'].toString();
+    detailsCount = json['detailsCount'].toString();
     serialNumber = json['serialNumber'];
     oprationIcon = json['oprationIcon'];
     mobile = json['mobile'];
@@ -161,6 +172,7 @@ class Statement {
   String? description;
   String? operationName;
   String? operationCode;
+  String? detailsCount;
   int? serialNumber;
   String? oprationIcon;
   String? mobile;

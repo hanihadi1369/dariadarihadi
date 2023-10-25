@@ -10,15 +10,13 @@ import 'package:persian_number_utility/persian_number_utility.dart';
 
 import '../../core/utils/colors.dart';
 
-
-
 class KbkScreenView extends StatefulWidget {
   @override
   _KbkScreenViewState createState() => _KbkScreenViewState();
 }
 
 class _KbkScreenViewState extends State<KbkScreenView> {
-  int pageIndex = 1;
+  int pageIndex = 0;
 
   final _formKey_kart_number = GlobalKey<FormState>();
   final _formKey_amount = GlobalKey<FormState>();
@@ -27,7 +25,6 @@ class _KbkScreenViewState extends State<KbkScreenView> {
   TextEditingController _kartNumberController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
 
-
   final _formKey_cvv2 = GlobalKey<FormState>();
   final _formKey_secondPassword = GlobalKey<FormState>();
   TextEditingController _cvv2Controller = TextEditingController();
@@ -35,8 +32,7 @@ class _KbkScreenViewState extends State<KbkScreenView> {
 
   bool _isButtonNextDisabled_page2_condition1 = true; // cvv2
   bool _isButtonNextDisabled_page2_condition3 = true; //password type2
-  late Jalali selectedDate ;
-
+  late Jalali selectedDate;
 
   @override
   void initState() {
@@ -63,7 +59,6 @@ class _KbkScreenViewState extends State<KbkScreenView> {
     );
   }
 
-
   bool myLateVariableInitialized() {
     try {
       selectedDate.toString();
@@ -74,9 +69,80 @@ class _KbkScreenViewState extends State<KbkScreenView> {
   }
 
   preparePageIndex() {
+    // index 0 > comming soon
     // index 1 > kart Property 1
     // index 2 > kart Property 2
     // index 3 > result
+
+
+
+    if (pageIndex == 0) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(flex: 3, child: Container()),
+          Expanded(
+              flex: 14,
+              child: Container(
+                padding:
+                EdgeInsets.only(left: 35, right: 35, top: 20, bottom: 0),
+                color: Colors.transparent,
+                child: Container(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "صفحه در حال پیاده سازی می باشد.",
+                          textDirection: TextDirection.rtl,
+                          style: TextStyle(fontSize: 16,),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        Image.asset(
+                          'assets/image_icon/under_dev.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Text(
+                          "تماس با پشتیبانی",
+                          style: TextStyle(fontSize: 14, color: Colors.blueAccent),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
+              )),
+          Expanded(flex: 3, child: Container()),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('بازگشت'),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
 
     if (pageIndex == 1) {
       return Column(
@@ -259,7 +325,9 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                                     suffixStyle: TextStyle(fontSize: 12),
                                     filled: true,
                                     hintText: "مانند 200.000 ریال",
-                                    hintStyle: TextStyle(fontSize: 12,),
+                                    hintStyle: TextStyle(
+                                      fontSize: 12,
+                                    ),
                                     fillColor: Color(0x32E1E3E0),
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.auto,
@@ -276,7 +344,10 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                             alignment: Alignment.topCenter,
                             child: Text(
                               (_amountController.text.trim() != "")
-                                  ? _amountController.text.trim().beToman().seRagham() +
+                                  ? _amountController.text
+                                          .trim()
+                                          .beToman()
+                                          .seRagham() +
                                       " تومان"
                                   : "",
                               textDirection: TextDirection.rtl,
@@ -396,7 +467,8 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              _amountController.text.trim().seRagham() + " ریال",
+                              _amountController.text.trim().seRagham() +
+                                  " ریال",
                               textDirection: TextDirection.rtl,
                               style:
                                   TextStyle(color: Colors.black, fontSize: 12),
@@ -485,27 +557,27 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                           "اطلاعات کارت بانکی عضو شتاب خود را وارد نمایید",
                           style: TextStyle(fontSize: 12, color: Colors.black),
                         )),
-                    SizedBox(height: 20,),
-
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       children: [
                         Expanded(
                             child: InkWell(
-                              onTap: () async {
-                                Jalali? picked = await showPersianDatePicker(
-                                  context: context,
-                                  initialDate: Jalali.now(),
-                                  firstDate: Jalali(1402, 1),
-                                  lastDate: Jalali(1410, 12),
-                                );
-                                setState(() {
-                                  selectedDate  = picked!;
-                                });
-
-                              },
-                              child: Container(
-                                padding: EdgeInsets.only(right: 5),
-                                child: Column(
+                          onTap: () async {
+                            Jalali? picked = await showPersianDatePicker(
+                              context: context,
+                              initialDate: Jalali.now(),
+                              firstDate: Jalali(1402, 1),
+                              lastDate: Jalali(1410, 12),
+                            );
+                            setState(() {
+                              selectedDate = picked!;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(right: 5),
+                            child: Column(
                               children: [
                                 Align(
                                   alignment: Alignment.topRight,
@@ -524,18 +596,23 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                                       ),
                                     ),
                                     child: Center(
-                                      child: Text((myLateVariableInitialized())?((selectedDate.formatter.yyyy)+" "+(selectedDate.formatter.mN)):"**/**",
+                                      child: Text(
+                                          (myLateVariableInitialized())
+                                              ? ((selectedDate.formatter.yyyy) +
+                                                  " " +
+                                                  (selectedDate.formatter.mN))
+                                              : "**/**",
                                           style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.black)),
                                     )),
                               ],
+                            ),
                           ),
-                        ),
-                            )),
+                        )),
                         Expanded(
                             child: Container(
-                              padding: EdgeInsets.only(left: 5),
+                          padding: EdgeInsets.only(left: 5),
                           child: Column(
                             children: [
                               Align(
@@ -564,8 +641,7 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                                         onChanged: (value) {
                                           setState(() {
                                             _isButtonNextDisabled_page2_condition1 =
-                                                !_formKey_cvv2
-                                                    .currentState!
+                                                !_formKey_cvv2.currentState!
                                                     .validate();
                                           });
                                         },
@@ -595,86 +671,84 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                         )),
                       ],
                     ),
-
-
-
-                    SizedBox(height: 20,),
-
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       children: [
                         Expanded(
                             child: InkWell(
-                              onTap: (){
-
-                              },
-                              child: Container(
-                                padding: EdgeInsets.only(right: 5),
-                                child: Center(child: Text("درخواست رمز پویا",style: TextStyle(fontSize: 15,color: Colors.blueAccent),),)
-                              ),
-                            )),
+                          onTap: () {},
+                          child: Container(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Center(
+                                child: Text(
+                                  "درخواست رمز پویا",
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.blueAccent),
+                                ),
+                              )),
+                        )),
                         Expanded(
                             child: Container(
-                              padding: EdgeInsets.only(left: 5),
-                              child: Column(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: Text("رمز دوم",
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.black)),
-                                  ),
-                                  Form(
-                                    key: _formKey_secondPassword,
-                                    child: Column(
-                                      crossAxisAlignment:
+                          padding: EdgeInsets.only(left: 5),
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text("رمز دوم",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.black)),
+                              ),
+                              Form(
+                                key: _formKey_secondPassword,
+                                child: Column(
+                                  crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
-                                      children: [
-                                        Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: TextFormField(
-                                            controller: _secondPasswordController,
-                                            validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return 'مقدار وارد شده خالی است';
-                                              }
-                                              return null;
-                                            },
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _isButtonNextDisabled_page2_condition3 =
+                                  children: [
+                                    Directionality(
+                                      textDirection: TextDirection.rtl,
+                                      child: TextFormField(
+                                        controller: _secondPasswordController,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'مقدار وارد شده خالی است';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _isButtonNextDisabled_page2_condition3 =
                                                 !_formKey_secondPassword
                                                     .currentState!
                                                     .validate();
-                                              });
-                                            },
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                              enabledBorder: UnderlineInputBorder(
-                                                borderSide:
+                                          });
+                                        },
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
                                                 BorderSide(color: Colors.grey),
-                                              ),
-                                              focusedBorder: UnderlineInputBorder(
-                                                borderSide:
-                                                BorderSide(color: Colors.grey),
-                                              ),
-                                              filled: true,
-                                              fillColor: Color(0x32E1E3E0),
-                                              floatingLabelBehavior:
-                                              FloatingLabelBehavior.auto,
-                                            ),
                                           ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                          ),
+                                          filled: true,
+                                          fillColor: Color(0x32E1E3E0),
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.auto,
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            )),
+                            ],
+                          ),
+                        )),
                       ],
                     )
-
-
-
                   ],
                 ),
               )),
@@ -689,19 +763,15 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: (
-                          _isButtonNextDisabled_page2_condition1
-                              ||
-                              (!myLateVariableInitialized())
-                          ||
-                              _isButtonNextDisabled_page2_condition3
-                      )
+                      onPressed: (_isButtonNextDisabled_page2_condition1 ||
+                              (!myLateVariableInitialized()) ||
+                              _isButtonNextDisabled_page2_condition3)
                           ? null
                           : () {
-                        setState(() {
-                          pageIndex = 3;
-                        });
-                      },
+                              setState(() {
+                                pageIndex = 3;
+                              });
+                            },
                       child: Text('ادامه'),
                     ),
                   )
@@ -779,8 +849,7 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                                   )),
                               Expanded(
                                   flex: 1,
-                                  child: Container(
-                                      child: Text("هادی قدیری"))),
+                                  child: Container(child: Text("هادی قدیری"))),
                               Expanded(
                                   flex: 1,
                                   child: Container(
@@ -799,8 +868,15 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(_amountController.text.trim().seRagham() + " ریال",textDirection: TextDirection.rtl,style: TextStyle(fontSize: 17),),
-                                    SizedBox(width: 30,),
+                                    Text(
+                                      _amountController.text.trim().seRagham() +
+                                          " ریال",
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
                                     Text(
                                       "مبلغ انتقال",
                                       style: TextStyle(color: Colors.grey),

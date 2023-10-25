@@ -47,7 +47,7 @@ class ApiProviderChargeSimCard {
   Future<dynamic> callGetBalance() async {
     _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
     var response = await _dio
-        ?.get(Constants.baseUrl + "/apiapp/Wallet/GetBalances");
+        ?.get(Constants.baseUrl + "/apiapp/Wallet/Balances");
     return response;
   }
 

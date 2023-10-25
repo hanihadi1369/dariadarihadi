@@ -89,17 +89,8 @@ class GetBalanceModel extends GetBalanceEntity {
 
 class Value {
   Value({
-    this.store,
-    this.depositID,
-    this.title,
-    this.accountNumberID,
-    this.accountKind,
-    this.depositInauguration_ID,
-    this.accountNumberBranchID,
-    this.branchID,
-    this.tmpDate,
-    this.tenantID,
-    this.cardNumber,
+     this.balance,
+    this.availablebalance,
 
 
 
@@ -107,29 +98,11 @@ class Value {
   });
 
   Value.fromJson(dynamic json) {
-    store = json['store'];
-    depositID = json['depositID'];
-    title = json['title'];
-    accountNumberID = json['accountNumberID'];
-    accountKind = json['accountKind'];
-    depositInauguration_ID = json['depositInauguration_ID'];
-    accountNumberBranchID = json['accountNumberBranchID'];
-    branchID = json['branchID'];
-    tmpDate = json['tmpDate'];
-    tenantID = json['tenantID'];
-    cardNumber = json['cardNumber'];
+     balance = json['balance'];
+    availablebalance = json['availablebalance'];
   }
-  num? store;
-  num? depositID;
-  String? title;
-  num? accountNumberID;
-  num? accountKind;
-  num? depositInauguration_ID;
-  num? accountNumberBranchID;
-  num? branchID;
-  String? tmpDate;
-  num? tenantID;
-  num? cardNumber;
+ num? balance;
+  num? availablebalance;
 
 
 
@@ -139,17 +112,8 @@ class Value {
 
 class ValueOrDefault {
   ValueOrDefault({
-    this.store,
-    this.depositID,
-    this.title,
-    this.accountNumberID,
-    this.accountKind,
-    this.depositInauguration_ID,
-    this.accountNumberBranchID,
-    this.branchID,
-    this.tmpDate,
-    this.tenantID,
-    this.cardNumber,
+     this.balance,
+    this.availablebalance,
 
 
 
@@ -157,29 +121,11 @@ class ValueOrDefault {
   });
 
   ValueOrDefault.fromJson(dynamic json) {
-    store = json['store'];
-    depositID = json['depositID'];
-    title = json['title'];
-    accountNumberID = json['accountNumberID'];
-    accountKind = json['accountKind'];
-    depositInauguration_ID = json['depositInauguration_ID'];
-    accountNumberBranchID = json['accountNumberBranchID'];
-    branchID = json['branchID'];
-    tmpDate = json['tmpDate'];
-    tenantID = json['tenantID'];
-    cardNumber = json['cardNumber'];
+     balance = json['balance'];
+    availablebalance = json['availablebalance'];
   }
-  num? store;
-  num? depositID;
-  String? title;
-  num? accountNumberID;
-  num? accountKind;
-  num? depositInauguration_ID;
-  num? accountNumberBranchID;
-  num? branchID;
-  String? tmpDate;
-  num? tenantID;
-  num? cardNumber;
+ num? balance;
+  num? availablebalance;
 
 
 

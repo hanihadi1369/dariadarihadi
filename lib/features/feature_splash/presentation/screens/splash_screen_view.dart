@@ -43,16 +43,17 @@ class _SplashScreenViewState extends State<SplashScreenView> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return (token.isEmpty) ?
+                // return (token.isEmpty) ?
+                return
                 BlocProvider(
-                  create: (_)=> locator<LoginBloc>(),
+                  create: (_)=>  locator<LoginBloc>(),
                   child: LoginScreenView(),
-                )
-                    :
-                BlocProvider(
-                  create: (_)=> locator<MainBloc>(),
-                  child: MainScreenView(),
                 );
+                //     :
+                // BlocProvider(
+                //   create: (_)=> locator<MainBloc>(),
+                //   child: MainScreenView(),
+                // );
               },
             ),
           );

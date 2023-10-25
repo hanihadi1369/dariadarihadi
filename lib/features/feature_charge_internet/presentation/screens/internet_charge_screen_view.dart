@@ -216,7 +216,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                 BalanceCompleted balanceCompleted =
                     state.balanceStatus as BalanceCompleted;
                 if (balanceCompleted.getBalanceEntity.isFailed == false) {
-                  balance = balanceCompleted.getBalanceEntity.value![0].store!
+                  balance = balanceCompleted.getBalanceEntity.value![0].availablebalance!
                       .toString();
                 }
                 state.balanceStatus = BalanceInit();
@@ -465,6 +465,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                               .validate();
                                     });
                                   },
+                                  maxLength: 11,
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
                                     enabledBorder: UnderlineInputBorder(
@@ -1323,58 +1324,61 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                     SizedBox(
                       height: 10,
                     ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          payTypeSelected = 2;
-                        });
-                      },
-                      child: Container(
-                        height: 70,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: (payTypeSelected == 2)
-                                ? MyColors.otp_underline
-                                : Colors.grey,
-                            width: 2.0,
+                    Visibility(
+                      visible: false,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            payTypeSelected = 2;
+                          });
+                        },
+                        child: Container(
+                          height: 70,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: (payTypeSelected == 2)
+                                  ? MyColors.otp_underline
+                                  : Colors.grey,
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 5,
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        ("کارت بانکی"),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 1,
-                                child: Container(
-                                  foregroundDecoration: BoxDecoration(
-                                    color: (payTypeSelected == 2)
-                                        ? Colors.transparent
-                                        : Colors.grey,
-                                    backgroundBlendMode: BlendMode.saturation,
-                                  ),
-                                  child: Image.asset(
-                                    'assets/image_icon/bank_shahr_icon.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ))
-                          ],
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          ("کارت بانکی"),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    foregroundDecoration: BoxDecoration(
+                                      color: (payTypeSelected == 2)
+                                          ? Colors.transparent
+                                          : Colors.grey,
+                                      backgroundBlendMode: BlendMode.saturation,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/image_icon/bank_shahr_icon.png',
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ))
+                            ],
+                          ),
                         ),
                       ),
                     ),

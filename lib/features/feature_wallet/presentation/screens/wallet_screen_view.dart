@@ -15,6 +15,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -31,6 +32,7 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../../core/general/textformatter.dart';
 import '../../../../core/params/transaction_history_param.dart';
 import '../../../../core/utils/colors.dart';
 import '../../../../core/widgets/loading.dart';
@@ -41,9 +43,8 @@ import '../block/wallet_bloc.dart';
 import 'dart:ui' as ui;
 
 class WalletScreenView extends StatefulWidget {
+  int pageIndex;
 
-
-  int pageIndex ;
   @override
   _WalletScreenViewState createState() => _WalletScreenViewState(pageIndex);
 
@@ -51,8 +52,7 @@ class WalletScreenView extends StatefulWidget {
 }
 
 class _WalletScreenViewState extends State<WalletScreenView> {
-  int pageIndex ;
-
+  int pageIndex;
 
   _WalletScreenViewState(this.pageIndex);
 
@@ -252,7 +252,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                 BalanceCompleted balanceCompleted =
                     state.balanceStatus as BalanceCompleted;
                 if (balanceCompleted.getBalanceEntity.isFailed == false) {
-                  balance = balanceCompleted.getBalanceEntity.value![0].store!
+                  balance = balanceCompleted.getBalanceEntity.value![0].availablebalance!
                       .toString();
                 }
               }
@@ -734,7 +734,16 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             Text(
                               "ریال",
                               style: TextStyle(
-                                  color: Colors.black54, fontSize: 13),
+
+                                  color: (totalTransactionsByMonthList[selectedMonthIndex]
+                                      .statement![i]
+                                      .besAmount
+                                      .toString() ==
+                                      "0")?Colors.red:Colors.green
+
+
+
+                                  , fontSize: 13),
                             ),
                             SizedBox(
                               width: 5,
@@ -758,7 +767,22 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                       .toString()
                                       .seRagham(),
                               style: TextStyle(
-                                  color: Colors.black54, fontSize: 17),
+
+
+
+
+                                  color: (totalTransactionsByMonthList[selectedMonthIndex]
+                                      .statement![i]
+                                      .besAmount
+                                      .toString() ==
+                                      "0")?Colors.red:Colors.green
+
+
+
+
+
+
+                                  , fontSize: 17),
                             ),
                           ],
                         ),
@@ -766,8 +790,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           totalTransactionsByMonthList[selectedMonthIndex]
                               .statement![i]
                               .clock
-                              .toString()
-                              .substring(0, 5),
+                              .toString(),
+                              // .substring(0, 5),
                           style: TextStyle(color: Colors.black54, fontSize: 15),
                         ),
                       ],
@@ -780,11 +804,13 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         Container(
                           child: Align(
                             alignment: Alignment.centerRight,
+
                             child: Text(
                               totalTransactionsByMonthList[selectedMonthIndex]
                                   .statement![i]
-                                  .operationName!,
-                              style: TextStyle(fontSize: 14),
+                                  .description!,
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(fontSize: 14,),
                             ),
                           ),
                         ),
@@ -828,6 +854,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
   }
 
   preparePageIndex() {
+    // index 0 > comming soon
     // index 1 > main wallet page
     // index 2 > increase main page -- 21 increase sub1 --22 increase sub2
     // index 3 > decrease main page
@@ -835,6 +862,77 @@ class _WalletScreenViewState extends State<WalletScreenView> {
     // index 5 > kif b kif -- 51 result
     // index 6 > wallet transactions __ 61 wallet transactions chart
     // index 7 > wallet transactions details
+
+    if (pageIndex == 0) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(flex: 3, child: Container()),
+          Expanded(
+              flex: 14,
+              child: Container(
+                padding:
+                EdgeInsets.only(left: 35, right: 35, top: 20, bottom: 0),
+                color: Colors.transparent,
+                child: Container(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "صفحه در حال پیاده سازی می باشد.",
+                          textDirection: TextDirection.rtl,
+                          style: TextStyle(fontSize: 16,),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        Image.asset(
+                          'assets/image_icon/under_dev.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Text(
+                          "تماس با پشتیبانی",
+                          style: TextStyle(fontSize: 14, color: Colors.blueAccent),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
+              )),
+          Expanded(flex: 3, child: Container()),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          pageIndex = 1 ;
+                        });
+                      },
+                      child: Text('بازگشت'),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
+
 
     if (pageIndex == 1) {
       return Column(
@@ -922,54 +1020,61 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(left: 32, right: 32),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                color: MyColors.text_field_bg,
-                                border: Border.all(
-                                  color: Colors.transparent,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      foregroundDecoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        backgroundBlendMode:
-                                            BlendMode.saturation,
-                                      ),
-                                      padding: EdgeInsets.all(15),
-                                      child: Image.asset(
-                                        'assets/image_icon/back_icon.png',
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                    )),
-                                Expanded(flex: 2, child: Container()),
-                                Expanded(
-                                    flex: 7,
-                                    child: Container(
-                                      child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                "شارژ خودکار کیف پول",
-                                                style: TextStyle(fontSize: 13),
-                                              ))),
-                                    )),
-                                Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Image.asset(
-                                        'assets/image_icon/auto_wallet_charge.png',
-                                        fit: BoxFit.contain,
-                                      ),
-                                    )),
-                              ],
-                            )),
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              pageIndex = 0;
+                            });
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  color: MyColors.text_field_bg,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        foregroundDecoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          backgroundBlendMode:
+                                              BlendMode.saturation,
+                                        ),
+                                        padding: EdgeInsets.all(15),
+                                        child: Image.asset(
+                                          'assets/image_icon/back_icon.png',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      )),
+                                  Expanded(flex: 2, child: Container()),
+                                  Expanded(
+                                      flex: 7,
+                                      child: Container(
+                                        child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  "شارژ خودکار کیف پول",
+                                                  style: TextStyle(fontSize: 13),
+                                                ))),
+                                      )),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/auto_wallet_charge.png',
+                                          fit: BoxFit.contain,
+                                        ),
+                                      )),
+                                ],
+                              )),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -1137,7 +1242,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         child: InkWell(
                           onTap: () {
                             setState(() {
-                              pageIndex = 3;
+                              pageIndex = 0;
                             });
                           },
                           child: Container(
@@ -1166,7 +1271,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         child: InkWell(
                           onTap: () {
                             setState(() {
-                              pageIndex = 4;
+                              pageIndex = 0;
                             });
                           },
                           child: Container(
@@ -1305,7 +1410,13 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                         Directionality(
                                           textDirection: TextDirection.rtl,
                                           child: TextFormField(
-                                            maxLength: 8,
+                                            maxLength: 11,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.deny(
+                                                  new RegExp(
+                                                      '[\\.|\\,|\\-|\\ ]')),
+                                              ThousandsSeparatorInputFormatter(),
+                                            ],
                                             controller:
                                                 _increaseAmountController,
                                             validator: (value) {
@@ -1313,8 +1424,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                                   value.isEmpty) {
                                                 return 'مقدار وارد شده خالی است';
                                               }
-                                              int decimalValue =
-                                                  int.parse(value);
+                                              int decimalValue = int.parse(
+                                                  value.replaceAll(",", ""));
                                               if (decimalValue < 1000) {
                                                 return 'مقدار وارد شده معتبر نیست';
                                               }
@@ -1340,6 +1451,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             },
                                             keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
+                                              counterText: "",
                                               enabledBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
@@ -1364,10 +1476,14 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             ),
                                           ),
                                         ),
+
                                       ],
                                     ),
                                   ),
                                 )),
+
+                            Expanded(child: Center(child: Text((_increaseAmountController.text.trim() == "" || _increaseAmountController.text.trim().length == 1)?"":"${_increaseAmountController.text.toString().replaceAll(",", "").beToman().toWord()}  تومان",textDirection: TextDirection.rtl,style: TextStyle(color: Colors.green),)),
+                            ),
                             Expanded(
                               child: Row(
                                 children: [
@@ -1379,7 +1495,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                           setState(() {
                                             increaseAmountSelected = 3;
                                             _increaseAmountController.text =
-                                                "1000000";
+                                                "1000000".seRagham();
                                             _isButtonNextDisabled_page2_condition1 =
                                                 false;
                                           });
@@ -1415,7 +1531,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                           setState(() {
                                             increaseAmountSelected = 2;
                                             _increaseAmountController.text =
-                                                "500000";
+                                                "500000".seRagham();
                                             _isButtonNextDisabled_page2_condition1 =
                                                 false;
                                           });
@@ -1451,7 +1567,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                           setState(() {
                                             increaseAmountSelected = 1;
                                             _increaseAmountController.text =
-                                                "20000";
+                                                "20000".seRagham();
                                             _isButtonNextDisabled_page2_condition1 =
                                                 false;
                                           });
@@ -1482,7 +1598,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                 ],
                               ),
                             ),
-                            Expanded(child: Container()),
+
                           ],
                         )),
                       ),
@@ -1506,8 +1622,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           (_isButtonNextDisabled_page2_condition1 == true)
                               ? null
                               : () {
-                                  int amountInt =
-                                      int.parse(_increaseAmountController.text);
+                                  int amountInt = int.parse(
+                                      _increaseAmountController.text
+                                          .replaceAll(",", ""));
 
                                   BlocProvider.of<WalletBloc>(context)
                                       .add(ChargeWalletEvent(amountInt));
@@ -1600,7 +1717,10 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              _increaseAmountController.text.trim().seRagham() +
+                              _increaseAmountController.text
+                                      .trim()
+                                      .replaceAll(",", "")
+                                      .seRagham() +
                                   " ریال",
                               textDirection: TextDirection.rtl,
                               style:
@@ -3344,7 +3464,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                         Directionality(
                                           textDirection: TextDirection.rtl,
                                           child: TextFormField(
-                                            maxLength: 16,
+                                            maxLength: 11,
                                             controller:
                                                 _textEdit_controler_kifbkif_1,
                                             validator: (value) {
@@ -3409,7 +3529,13 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                         Directionality(
                                           textDirection: TextDirection.rtl,
                                           child: TextFormField(
-                                            maxLength: 8,
+                                            maxLength: 11,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.deny(
+                                                  new RegExp(
+                                                      '[\\.|\\,|\\-|\\ ]')),
+                                              ThousandsSeparatorInputFormatter(),
+                                            ],
                                             controller:
                                                 _textEdit_controler_kifbkif_2,
                                             validator: (value) {
@@ -3417,8 +3543,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                                   value.isEmpty) {
                                                 return 'مقدار وارد شده خالی است';
                                               }
-                                              int decimalValue =
-                                                  int.parse(value);
+                                              int decimalValue = int.parse(
+                                                  value.replaceAll(",", ""));
                                               if (decimalValue < 1000) {
                                                 return 'مقدار وارد شده معتبر نیست';
                                               }
@@ -3434,6 +3560,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             },
                                             keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
+                                              counterText: "",
                                               enabledBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
@@ -3462,7 +3589,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                     ),
                                   ),
                                 )),
-                            Expanded(child: Container()),
+                            Expanded(flex : 2 ,child:   Center(child: Text((_textEdit_controler_kifbkif_2.text.trim() == "" || _textEdit_controler_kifbkif_2.text.trim().length == 1)?"":"${_textEdit_controler_kifbkif_2.text.toString().replaceAll(",", "").beToman().toWord()}  تومان",textDirection: TextDirection.rtl,style: TextStyle(color: Colors.green),)),
+                            ),
+
                           ],
                         )),
                       ),
@@ -3550,6 +3679,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             Text(
                                               _textEdit_controler_kifbkif_2.text
                                                       .trim()
+                                                      .replaceAll(",", "")
                                                       .seRagham() +
                                                   " ریال",
                                               textDirection: TextDirection.rtl,
@@ -3670,7 +3800,10 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                                             amount: int.parse(
                                                                 _textEdit_controler_kifbkif_2
                                                                     .text
-                                                                    .trim()),
+                                                                    .trim()
+                                                                    .replaceAll(
+                                                                        ",",
+                                                                        "")),
                                                             mobileNumber:
                                                                 _textEdit_controler_kifbkif_1
                                                                     .text
@@ -3802,6 +3935,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                                 _textEdit_controler_kifbkif_2
                                                         .text
                                                         .trim()
+                                                        .replaceAll(",", "")
                                                         .seRagham() +
                                                     " ریال",
                                                 textDirection:
@@ -4496,7 +4630,11 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                               Row(
                                 children: [
                                   Text(
-                                      "${selectedTransactionDetail.date} - ${selectedTransactionDetail.clock!.substring(0, 5)}"),
+                                      "${selectedTransactionDetail.date} - ${selectedTransactionDetail.
+                                      clock!
+                                          // .substring(0, 5)
+
+                                      }"),
                                   //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
 
                                   Spacer(),

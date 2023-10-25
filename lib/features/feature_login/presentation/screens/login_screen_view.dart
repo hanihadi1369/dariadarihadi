@@ -47,7 +47,8 @@ class _LoginScreenViewState extends State<LoginScreenView> {
   bool shouldShowOnCompletedMessage = false;
 
   int seccondsForOtpTimer = 120;
-  bool _isSnackbarActive = false ;
+  bool _isSnackbarActive = false;
+
 
   @override
   void initState() {
@@ -56,140 +57,153 @@ class _LoginScreenViewState extends State<LoginScreenView> {
 
   @override
   void dispose() {
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) {
-          if (state.sendOtpStatus is SendOtpCompleted &&
-              state.pageLoginIndexStatus is PageLoginIndexStatus2) {
-            SendOtpCompleted sendOtpCompleted =
-                state.sendOtpStatus as SendOtpCompleted;
-            if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
-              shouldShowOnCompletedMessage = false;
-              seccondsForOtpTimer = 120;
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+          body: SafeArea(
+        child: BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state.sendOtpStatus is SendOtpCompleted &&
+                state.pageLoginIndexStatus is PageLoginIndexStatus2) {
+              SendOtpCompleted sendOtpCompleted =
+                  state.sendOtpStatus as SendOtpCompleted;
+              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
+                shouldShowOnCompletedMessage = false;
+                seccondsForOtpTimer = 120;
+                state.sendOtpStatus = SendOtpInit();
+              }
+            }
+
+            if (state.sendOtpStatus is SendOtpCompleted &&
+                state.pageLoginIndexStatus is PageLoginIndexStatus1) {
+              SendOtpCompleted sendOtpCompleted =
+                  state.sendOtpStatus as SendOtpCompleted;
+              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
+                shouldShowOnCompletedMessage = false;
+                seccondsForOtpTimer = 120;
+              }
+            }
+
+            if (state.verifyOtpStatus is VerifyOtpCompleted) {
+              VerifyOtpCompleted verifyOtpCompleted =
+                  state.verifyOtpStatus as VerifyOtpCompleted;
+              if (verifyOtpCompleted.verifyOtpCodeEntity.isFailed == true) {
+                _showSnackBar(verifyOtpCompleted
+                    .verifyOtpCodeEntity.errors![0].message
+                    .toString());
+              } else {
+                TokenKeeper.saveAccessToken(verifyOtpCompleted
+                        .verifyOtpCodeEntity.value!.tokens!.accesstoken!)
+                    .then(
+                  (value) => {
+                    TokenKeeper.accesstoken = verifyOtpCompleted
+                        .verifyOtpCodeEntity.value!.tokens!.accesstoken!,
+                    TokenKeeper.saveRefreshToken(verifyOtpCompleted
+                            .verifyOtpCodeEntity.value!.tokens!.refreshToken!)
+                        .then(
+                      (value) => {
+                        TokenKeeper.refreshToken = verifyOtpCompleted
+                            .verifyOtpCodeEntity.value!.tokens!.refreshToken!,
+                        TokenKeeper.saveRefreshTokenExpirationDate(
+                                verifyOtpCompleted.verifyOtpCodeEntity.value!
+                                    .tokens!.refreshTokenExpirationDate!)
+                            .then(
+                          (value) => {
+                            TokenKeeper.refreshTokenExpirationDate =
+                                verifyOtpCompleted.verifyOtpCodeEntity.value!
+                                    .tokens!.refreshTokenExpirationDate!,
+                            TokenKeeper.savePhoneNumber(
+                                    _phoneController.text.trim())
+                                .then((value) => {
+                                      TokenKeeper.phoneNumber =
+                                          _phoneController.text.trim(),
+                                      state.sendOtpStatus = SendOtpInit(),
+                                      state.verifyOtpStatus = VerifyOtpInit(),
+                                      state.pageLoginIndexStatus =PageLoginIndexStatus1(),
+                                      pageIndex = 1,
+                                      _isButtonPhoneDisabled = true,
+                                      _isButtonOTPDisabled = true,
+                                      shouldShowOnCompletedMessage = false,
+                                      seccondsForOtpTimer = 120,
+                                      _isSnackbarActive = false,
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BlocProvider(
+                                              create: (_) => locator<MainBloc>(),
+                                              child: MainScreenView(),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    }),
+                          },
+                        )
+                      },
+                    )
+                  },
+                );
+              }
+            }
+
+            if (state.sendOtpStatus is SendOtpError) {
+              SendOtpError error = state.sendOtpStatus as SendOtpError;
+              _showSnackBar(error.message);
               state.sendOtpStatus = SendOtpInit();
             }
-          }
 
-          if (state.sendOtpStatus is SendOtpCompleted &&
-              state.pageLoginIndexStatus is PageLoginIndexStatus1) {
-            SendOtpCompleted sendOtpCompleted =
-                state.sendOtpStatus as SendOtpCompleted;
-            if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
-              shouldShowOnCompletedMessage = false;
-              seccondsForOtpTimer = 120;
+            if (state.sendOtpStatus is SendOtpCompleted) {
+              SendOtpCompleted sendOtpCompleted =
+                  state.sendOtpStatus as SendOtpCompleted;
+              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == true) {
+                _showSnackBar(sendOtpCompleted
+                    .sendOtpCodeEntity.errors![0].message
+                    .toString());
+                state.sendOtpStatus = SendOtpInit();
+              }
             }
-          }
 
-          if (state.verifyOtpStatus is VerifyOtpCompleted) {
-            VerifyOtpCompleted verifyOtpCompleted =
-                state.verifyOtpStatus as VerifyOtpCompleted;
-            if (verifyOtpCompleted.verifyOtpCodeEntity.isFailed == true) {
-              _showSnackBar(verifyOtpCompleted
-                  .verifyOtpCodeEntity.errors![0].message
-                  .toString());
-            } else {
-              TokenKeeper.saveAccessToken(verifyOtpCompleted
-                      .verifyOtpCodeEntity.value!.tokens!.accesstoken!)
-                  .then(
-                (value) => {
-                  TokenKeeper.accesstoken = verifyOtpCompleted
-                      .verifyOtpCodeEntity.value!.tokens!.accesstoken!,
-                  TokenKeeper.saveRefreshToken(verifyOtpCompleted
-                          .verifyOtpCodeEntity.value!.tokens!.refreshToken!)
-                      .then(
-                    (value) => {
-                      TokenKeeper.refreshToken = verifyOtpCompleted
-                          .verifyOtpCodeEntity.value!.tokens!.refreshToken!,
-                      TokenKeeper.saveRefreshTokenExpirationDate(
-                              verifyOtpCompleted.verifyOtpCodeEntity.value!
-                                  .tokens!.refreshTokenExpirationDate!)
-                          .then(
-                        (value) => {
-                          TokenKeeper.refreshTokenExpirationDate =
-                              verifyOtpCompleted.verifyOtpCodeEntity.value!
-                                  .tokens!.refreshTokenExpirationDate!,
-                          TokenKeeper.savePhoneNumber(
-                                  _phoneController.text.trim())
-                              .then((value) => {
-                                    TokenKeeper.phoneNumber =
-                                        _phoneController.text.trim(),
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return BlocProvider(
-                                            create: (_) => locator<MainBloc>(),
-                                            child: MainScreenView(),
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  }),
-                        },
-                      )
-                    },
-                  )
-                },
-              );
+            if (state.verifyOtpStatus is VerifyOtpError) {
+              VerifyOtpError error = state.verifyOtpStatus as VerifyOtpError;
+              _showSnackBar(error.message);
+              state.verifyOtpStatus = VerifyOtpInit();
+              _isButtonOTPDisabled = true;
             }
-          }
-
-          if (state.sendOtpStatus is SendOtpError) {
-            SendOtpError error = state.sendOtpStatus as SendOtpError;
-            _showSnackBar(error.message);
-            state.sendOtpStatus = SendOtpInit();
-          }
-
-          if (state.sendOtpStatus is SendOtpCompleted) {
-            SendOtpCompleted sendOtpCompleted =
-                state.sendOtpStatus as SendOtpCompleted;
-            if (sendOtpCompleted.sendOtpCodeEntity.isFailed == true) {
-              _showSnackBar(sendOtpCompleted
-                  .sendOtpCodeEntity.errors![0].message
-                  .toString());
+          },
+          builder: (context, state) {
+            if (state.sendOtpStatus is SendOtpLoading ||
+                state.verifyOtpStatus is VerifyOtpLoading) {
+              return LoadingPage();
+            }
+            if (state.sendOtpStatus is SendOtpCompleted &&
+                state.pageLoginIndexStatus is PageLoginIndexStatus1) {
+              SendOtpCompleted sendOtpCompleted =
+                  state.sendOtpStatus as SendOtpCompleted;
+              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
+                BlocProvider.of<LoginBloc>(context)
+                    .add(LoginChangePageIndexEvent(2));
+              }
+            }
+            if (state.pageLoginIndexStatus is PageLoginIndexStatus1) {
               state.sendOtpStatus = SendOtpInit();
+              pageIndex = 1;
             }
-          }
-
-          if (state.verifyOtpStatus is VerifyOtpError) {
-            VerifyOtpError error = state.verifyOtpStatus as VerifyOtpError;
-            _showSnackBar(error.message);
-            state.verifyOtpStatus = VerifyOtpInit();
-            _isButtonOTPDisabled = true;
-          }
-        },
-        builder: (context, state) {
-          if (state.sendOtpStatus is SendOtpLoading ||
-              state.verifyOtpStatus is VerifyOtpLoading) {
-            return LoadingPage();
-          }
-          if (state.sendOtpStatus is SendOtpCompleted &&
-              state.pageLoginIndexStatus is PageLoginIndexStatus1) {
-            SendOtpCompleted sendOtpCompleted =
-                state.sendOtpStatus as SendOtpCompleted;
-            if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
-              BlocProvider.of<LoginBloc>(context)
-                  .add(LoginChangePageIndexEvent(2));
+            if (state.pageLoginIndexStatus is PageLoginIndexStatus2) {
+              pageIndex = 2;
             }
-          }
-          if (state.pageLoginIndexStatus is PageLoginIndexStatus1) {
-            state.sendOtpStatus = SendOtpInit();
-            pageIndex = 1;
-          }
-          if (state.pageLoginIndexStatus is PageLoginIndexStatus2) {
-            pageIndex = 2;
-          }
 
-          return preparePageIndex();
-        },
-      ),
-    ));
+            return preparePageIndex();
+          },
+        ),
+      )),
+    );
 
     // return Scaffold(
     //     body: SafeArea(
@@ -198,22 +212,22 @@ class _LoginScreenViewState extends State<LoginScreenView> {
   }
 
   _showSnackBar(String message) {
-    if(!_isSnackbarActive){
-      _isSnackbarActive = true ;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: Duration(seconds: 4),
-          content: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                message.trim(),
-                textDirection: TextDirection.rtl,
-                style: TextStyle(fontFamily: "shabnam_bold"),
-              ))))
-      .closed
-      .then((value) {
+    if (!_isSnackbarActive) {
+      _isSnackbarActive = true;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(
+              duration: Duration(seconds: 4),
+              content: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    message.trim(),
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(fontFamily: "shabnam_bold"),
+                  ))))
+          .closed
+          .then((value) {
         _isSnackbarActive = false;
-      })
-      ;
+      });
     }
 
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

@@ -203,7 +203,7 @@ class ApiProviderBill {
     _dio?.options.headers['Authorization'] =
         "Bearer ${TokenKeeper.accesstoken}";
     var response =
-        await _dio?.get(Constants.baseUrl + "/apiapp/Wallet/GetBalances");
+        await _dio?.get(Constants.baseUrl + "/apiapp/Wallet/Balances");
     return response;
   }
 }
