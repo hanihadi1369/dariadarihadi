@@ -194,9 +194,12 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -211,7 +214,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -331,10 +334,13 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                               BlendMode.saturation,
                                         ),
                                         padding: EdgeInsets.all(15),
-                                        child: Image.asset(
-                                          'assets/image_icon/back_icon.png',
-                                          fit: BoxFit.scaleDown,
-                                        ),
+                                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
                                       )),
                                   Expanded(flex: 2, child: Container()),
                                   Expanded(
@@ -413,10 +419,13 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                               BlendMode.saturation,
                                         ),
                                         padding: EdgeInsets.all(15),
-                                        child: Image.asset(
-                                          'assets/image_icon/back_icon.png',
-                                          fit: BoxFit.scaleDown,
-                                        ),
+                                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
                                       )),
                                   Expanded(flex: 2, child: Container()),
                                   Expanded(
@@ -697,10 +706,13 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                               pageIndex = 1;
                             });
                           },
+                          child: Container(
+                          padding: EdgeInsets.all(6),
                           child: Image.asset(
                             'assets/image_icon/back_icon.png',
                             fit: BoxFit.scaleDown,
                           ),
+                        ),
                         ),
                       ),
                       Expanded(flex: 5, child: Container()),
@@ -714,7 +726,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                       Expanded(
                         flex: 1,
                         child: Image.asset(
-                          'assets/image_icon/hint_green_icon.png',
+                          'assets/image_icon/hint_black_icon.png',
                           fit: BoxFit.scaleDown,
                         ),
                       ),

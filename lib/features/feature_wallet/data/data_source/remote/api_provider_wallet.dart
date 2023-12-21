@@ -80,14 +80,14 @@ class ApiProviderWallet {
 
      final queryParameters = {
        'pageIndex': 1,
-       'itemCount': 100,
+       'itemCount': 200,
        'IsExcel': false,
        'dateA': '${dateFrom}',
        'dateB': '${dateTo}',
      };
 
      var response = await _dio
-         ?.get(Constants.baseUrl + "/apiapp/Transaction/Search",queryParameters: queryParameters);
+         ?.get(Constants.baseUrl + "/apiapp/Transaction/Search/V2",queryParameters: queryParameters);
      return response;
    }
 
@@ -103,7 +103,7 @@ class ApiProviderWallet {
      };
 
      var response = await _dio
-         ?.get(Constants.baseUrl + "/apiapp/Transaction/Search",queryParameters: queryParameters);
+         ?.get(Constants.baseUrl + "/apiapp/Transaction/Search/V2",queryParameters: queryParameters);
      return response;
    }
 

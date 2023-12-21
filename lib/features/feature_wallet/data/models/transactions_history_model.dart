@@ -122,23 +122,16 @@ class Statement {
 
 
   Statement({
-    this.id,
     this.date,
     this.clock,
-    this.bedeAmount,
-    this.besAmount,
-    this.description,
+    this.sumBedeAmount,
+    this.sumBesAmount,
     this.operationName,
     this.operationCode,
     this.detailsCount,
     this.serialNumber,
-    this.oprationIcon,
     this.mobile,
-    this.transferStatus,
-    this.depositID,
-    this.depositTitle,
-    this.currencyTitle,
-    this.campainTitle,});
+   });
 
 
 
@@ -146,41 +139,30 @@ class Statement {
 
 
   Statement.fromJson(dynamic json) {
-    id = json['id'];
+
     date = json['date'];
     clock = json['clock'];
-    bedeAmount = json['bedeAmount'];
-    besAmount = json['besAmount'];
-    description = json['description'];
+    sumBedeAmount = json['sumBedeAmount'];
+    sumBesAmount = json['sumBesAmount'];
     operationName = json['operationName'];
-    operationCode = json['operationCode'].toString();
-    detailsCount = json['detailsCount'].toString();
+    operationCode = json['operationCode'];
+    detailsCount = json['detailsCount'];
     serialNumber = json['serialNumber'];
-    oprationIcon = json['oprationIcon'];
     mobile = json['mobile'];
-    transferStatus = json['transferStatus'];
-    depositID = json['depositID'];
-    depositTitle = json['depositTitle'];
-    currencyTitle = json['currencyTitle'];
-    campainTitle = json['campainTitle'];
+
   }
-  String? id;
+
+
   String? date;
   String? clock;
-  String? bedeAmount;
-  String? besAmount;
-  String? description;
+  String? sumBedeAmount;
+  String? sumBesAmount;
   String? operationName;
-  String? operationCode;
-  String? detailsCount;
-  int? serialNumber;
-  String? oprationIcon;
+  int? operationCode;
+  int? detailsCount;
+  num? serialNumber;
   String? mobile;
-  int? transferStatus;
-  int? depositID;
-  String? depositTitle;
-  String? currencyTitle;
-  String? campainTitle;
+
 
 }
 

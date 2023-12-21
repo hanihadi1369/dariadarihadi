@@ -289,13 +289,14 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             children: [
               Expanded(flex: 2, child: Container()),
               Expanded(
-                flex: 10,
+                flex: 11,
                 child: Container(
                   child: Column(
                     children: [
                       Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Container(
+                            padding: EdgeInsets.all(48),
                             child: Image.asset(
                                 'assets/image_icon/moba_des_icon.png'),
                           )),
@@ -421,14 +422,15 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             children: [
               Expanded(flex: 2, child: Container()),
               Expanded(
-                flex: 10,
+                flex: 11,
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Container(
+                            padding: EdgeInsets.all(32),
                             child: Image.asset(
                                 'assets/image_icon/moba_des_icon.png'),
                           )),
@@ -524,7 +526,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                                             textDirection: TextDirection.rtl,
                                             textAlign: TextAlign.right,
                                             style: TextStyle(
-                                                color: Color(0xFFFF7A00),
+                                                color: Colors.blueAccent,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),

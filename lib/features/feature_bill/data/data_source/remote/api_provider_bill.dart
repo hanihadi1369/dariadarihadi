@@ -33,7 +33,8 @@ class ApiProviderBill {
   Future<dynamic> callGetBills() async {
     _dio?.options.headers['Authorization'] =
         "Bearer ${TokenKeeper.accesstoken}";
-    var response = await _dio?.get(Constants.baseUrl + "/bill/GetBill");
+    // var response = await _dio?.get(Constants.baseUrl + "/bill/GetBill");
+    var response = await _dio?.get(Constants.baseUrl + "/WalletBill/GetBill");
     return response;
   }
 
@@ -43,7 +44,8 @@ class ApiProviderBill {
     var params = {"type": billType, "code": billCode, "title": billTitle};
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/CreateBill",
+      // Constants.baseUrl + "/bill/CreateBill",
+      Constants.baseUrl + "/WalletBill/CreateBill",
       data: body,
     );
     return response;
@@ -60,7 +62,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.put(
-      Constants.baseUrl + "/bill/UpdateBill",
+      // Constants.baseUrl + "/bill/UpdateBill",
+      Constants.baseUrl + "/WalletBill/UpdateBill",
       data: body,
     );
     return response;
@@ -75,7 +78,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.delete(
-        Constants.baseUrl + "/bill/DeleteBill",data: body
+        // Constants.baseUrl + "/bill/DeleteBill",data: body
+        Constants.baseUrl + "/WalletBill/DeleteBill",data: body
         );
     return response;
   }
@@ -89,7 +93,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/v1/ElectricityBillInquiry",
+      // Constants.baseUrl + "/bill/api/v1/ElectricityBillInquiry",
+      Constants.baseUrl + "/WalletBill/api/v1/ElectricityBillInquiry",
       data: body,
     );
     return response;
@@ -106,7 +111,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/v1/GasBillInquiry",
+      // Constants.baseUrl + "/bill/api/v1/GasBillInquiry",
+      Constants.baseUrl + "/WalletBill/api/v1/GasBillInquiry",
       data: body,
     );
     return response;
@@ -121,7 +127,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/v1/WaterBillInquiry",
+      // Constants.baseUrl + "/bill/api/v1/WaterBillInquiry",
+      Constants.baseUrl + "/WalletBill/api/v1/WaterBillInquiry",
       data: body,
     );
     return response;
@@ -136,7 +143,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/vi/FixedLineBillInquiry",
+      // Constants.baseUrl + "/bill/api/vi/FixedLineBillInquiry",
+      Constants.baseUrl + "/WalletBill/api/vi/FixedLineBillInquiry",
       data: body,
     );
     return response;
@@ -152,7 +160,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/v1/MCIMobileBillInquiry",
+      // Constants.baseUrl + "/bill/api/v1/MCIMobileBillInquiry",
+      Constants.baseUrl + "/WalletBill/api/v1/MCIMobileBillInquiry",
       data: body,
     );
     return response;
@@ -167,7 +176,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/v1/MtnMobileBillInquiry",
+      // Constants.baseUrl + "/bill/api/v1/MtnMobileBillInquiry",
+      Constants.baseUrl + "/WalletBill/api/v1/MtnMobileBillInquiry",
       data: body,
     );
     return response;
@@ -183,7 +193,8 @@ class ApiProviderBill {
     };
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/v1/RightelMobileBillInquiry",
+      // Constants.baseUrl + "/bill/api/v1/RightelMobileBillInquiry",
+      Constants.baseUrl + "/WalletBill/api/v1/RightelMobileBillInquiry",
       data: body,
     );
     return response;
@@ -193,7 +204,8 @@ class ApiProviderBill {
     _dio?.options.headers['Authorization'] =
         "Bearer ${TokenKeeper.accesstoken}";
     var response = await _dio?.post(
-      Constants.baseUrl + "/bill/api/v1/BillPaymentFromWallet",
+      // Constants.baseUrl + "/bill/api/v1/BillPaymentFromWallet",
+      Constants.baseUrl + "/WalletBill/api/v1/BillPaymentFromWallet",
       data: myRequestBody,
     );
     return response;

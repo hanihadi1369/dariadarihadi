@@ -19,7 +19,7 @@ class Bills {
   // String? gatewayID;
   String? phoneNumber;
   // String? paymentID;
-  String? operationCode;
+  int? operationCode;
   bool? isMidTerm;
 
   Map<String, dynamic> toJson() {

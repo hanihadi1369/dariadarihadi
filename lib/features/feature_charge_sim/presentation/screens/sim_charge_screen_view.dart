@@ -162,9 +162,12 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -179,7 +182,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -567,9 +570,12 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -584,7 +590,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -631,7 +637,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (chargeAmountSelected == 1)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -662,7 +668,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (chargeAmountSelected == 2)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -693,7 +699,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (chargeAmountSelected == 3)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -730,7 +736,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (chargeAmountSelected == 4)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -761,7 +767,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (chargeAmountSelected == 5)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -792,7 +798,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (chargeAmountSelected == 6)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -871,9 +877,12 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                             pageIndex = 2;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -888,7 +897,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -1189,7 +1198,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),

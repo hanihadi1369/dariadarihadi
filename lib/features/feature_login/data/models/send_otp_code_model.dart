@@ -1,12 +1,6 @@
 import '../../domain/entities/send_otp_code_entity.dart';
 
-/// isFailed : true
-/// isSuccess : true
-/// reasons : [{"message":"string","metadata":{"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}}]
-/// errors : [{"message":"string","metadata":{"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"},"reasons":["string"]}]
-/// successes : [{"message":"string","metadata":{"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}}]
-/// valueOrDefault : {"isNewUser":true}
-/// value : {"isNewUser":true}
+
 
 class SendOtpCodeModel extends SendOtpCodeEntity {
 

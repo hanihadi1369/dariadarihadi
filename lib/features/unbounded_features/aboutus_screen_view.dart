@@ -61,9 +61,12 @@ class _AboutUsScreenViewState extends State<AboutUsScreenView> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -78,7 +81,7 @@ class _AboutUsScreenViewState extends State<AboutUsScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -98,7 +101,7 @@ class _AboutUsScreenViewState extends State<AboutUsScreenView> {
                           height: 50,
                           width: 100,
                           child: Image.asset(
-                              'assets/image_icon/moba_main_icon.png')),
+                              'assets/image_icon/moba_des_icon.png')),
                       SizedBox(
                         height: 20,
                       ),

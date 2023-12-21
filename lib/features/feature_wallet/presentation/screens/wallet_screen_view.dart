@@ -252,7 +252,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                 BalanceCompleted balanceCompleted =
                     state.balanceStatus as BalanceCompleted;
                 if (balanceCompleted.getBalanceEntity.isFailed == false) {
-                  balance = balanceCompleted.getBalanceEntity.value![0].availablebalance!
+                  balance = balanceCompleted
+                      .getBalanceEntity.value![0].availablebalance!
                       .toString();
                 }
               }
@@ -282,24 +283,39 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     totalTransactionsByMonthList = [];
                     var nowJalai = DateTime.now().toJalali().withDay(1);
                     var now = nowJalai.toDateTime();
+
+
+
                     for (var i = 1; i < 13; i++) {
+                      
+                      
+
+                      
+
+
+
+                      int days = (i-1)*30;
+
+
+
+
                       TransactionsByMonth transactionsByMonth =
                           TransactionsByMonth();
                       transactionsByMonth.monthName = Jalali.fromDateTime(
-                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          now.subtract( Duration(days: days)))
                           .formatter
                           .mN;
                       transactionsByMonth.monthName2Digit = Jalali.fromDateTime(
-                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          now.subtract( Duration(days: days)))
                           .formatter
                           .mm;
                       transactionsByMonth.monthId = int.parse(
                           Jalali.fromDateTime(
-                                  Jiffy(now).subtract(months: i - 1).dateTime)
+                              now.subtract( Duration(days: days)))
                               .formatter
                               .m);
                       transactionsByMonth.yearName = Jalali.fromDateTime(
-                              Jiffy(now).subtract(months: i - 1).dateTime)
+                          now.subtract( Duration(days: days)))
                           .formatter
                           .yyyy;
                       transactionsByMonth.idOrder = (i);
@@ -361,18 +377,18 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             j++) {
                           String tBedehKar = totalTransactionsByMonthList[i]
                               .statement![j]
-                              .bedeAmount!
+                              .sumBedeAmount!
                               .replaceAll(RegExp(','), '');
                           String tBestanKar = totalTransactionsByMonthList[i]
                               .statement![j]
-                              .besAmount!
+                              .sumBesAmount!
                               .replaceAll(RegExp(','), '');
 
                           //kif pool
                           if (totalTransactionsByMonthList[i]
                                   .statement![j]
                                   .operationCode! ==
-                              "22") {
+                              22) {
                             if (double.parse(tBedehKar) == 0) {
                               totalTransactionsByMonthList[i].totalKifKifVariz =
                                   totalTransactionsByMonthList[i]
@@ -391,15 +407,15 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           if (totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "5" ||
+                                  5 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "3" ||
+                                  3 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "313") {
+                                  313) {
                             totalTransactionsByMonthList[i]
                                     .totalInternetPackageBuy =
                                 totalTransactionsByMonthList[i]
@@ -411,15 +427,15 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           if (totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "7" ||
+                              7 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "8" ||
+                                  8 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "9") {
+                                  9) {
                             totalTransactionsByMonthList[i].totalChargeSimBuy =
                                 totalTransactionsByMonthList[i]
                                         .totalChargeSimBuy +
@@ -430,31 +446,31 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           if (totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "300" ||
+                                  300 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "301" ||
+                                  301 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "302" ||
+                                  302 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "306" ||
+                                  306 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "310" ||
+                                  310 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "311" ||
+                                  311 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                                  "312") {
+                                  312) {
                             totalTransactionsByMonthList[i].totalBillsPay =
                                 totalTransactionsByMonthList[i].totalBillsPay +
                                     double.parse(tBedehKar);
@@ -464,7 +480,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           if (totalTransactionsByMonthList[i]
                                   .statement![j]
                                   .operationCode! ==
-                              "204") {
+                              204) {
                             totalTransactionsByMonthList[i].totalChargeFromWeb =
                                 totalTransactionsByMonthList[i]
                                         .totalChargeFromWeb +
@@ -734,16 +750,15 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             Text(
                               "ریال",
                               style: TextStyle(
-
-                                  color: (totalTransactionsByMonthList[selectedMonthIndex]
-                                      .statement![i]
-                                      .besAmount
-                                      .toString() ==
-                                      "0")?Colors.red:Colors.green
-
-
-
-                                  , fontSize: 13),
+                                  color: (totalTransactionsByMonthList[
+                                                  selectedMonthIndex]
+                                              .statement![i]
+                                              .sumBesAmount
+                                              .toString() ==
+                                          "0")
+                                      ? Colors.red
+                                      : Colors.green,
+                                  fontSize: 13),
                             ),
                             SizedBox(
                               width: 5,
@@ -751,38 +766,31 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             Text(
                               (totalTransactionsByMonthList[selectedMonthIndex]
                                           .statement![i]
-                                          .besAmount
+                                          .sumBesAmount
                                           .toString() ==
                                       "0")
                                   ? totalTransactionsByMonthList[
                                           selectedMonthIndex]
                                       .statement![i]
-                                      .bedeAmount
+                                      .sumBedeAmount
                                       .toString()
                                       .seRagham()
                                   : totalTransactionsByMonthList[
                                           selectedMonthIndex]
                                       .statement![i]
-                                      .besAmount
+                                      .sumBesAmount
                                       .toString()
                                       .seRagham(),
                               style: TextStyle(
-
-
-
-
-                                  color: (totalTransactionsByMonthList[selectedMonthIndex]
-                                      .statement![i]
-                                      .besAmount
-                                      .toString() ==
-                                      "0")?Colors.red:Colors.green
-
-
-
-
-
-
-                                  , fontSize: 17),
+                                  color: (totalTransactionsByMonthList[
+                                                  selectedMonthIndex]
+                                              .statement![i]
+                                              .sumBesAmount
+                                              .toString() ==
+                                          "0")
+                                      ? Colors.red
+                                      : Colors.green,
+                                  fontSize: 17),
                             ),
                           ],
                         ),
@@ -791,7 +799,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                               .statement![i]
                               .clock
                               .toString(),
-                              // .substring(0, 5),
+                          // .substring(0, 5),
                           style: TextStyle(color: Colors.black54, fontSize: 15),
                         ),
                       ],
@@ -804,13 +812,14 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         Container(
                           child: Align(
                             alignment: Alignment.centerRight,
-
                             child: Text(
                               totalTransactionsByMonthList[selectedMonthIndex]
                                   .statement![i]
-                                  .description!,
+                                  .operationName!,
                               textDirection: TextDirection.rtl,
-                              style: TextStyle(fontSize: 14,),
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
@@ -872,7 +881,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
               flex: 14,
               child: Container(
                 padding:
-                EdgeInsets.only(left: 35, right: 35, top: 20, bottom: 0),
+                    EdgeInsets.only(left: 35, right: 35, top: 20, bottom: 0),
                 color: Colors.transparent,
                 child: Container(
                   child: SingleChildScrollView(
@@ -883,7 +892,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         Text(
                           "صفحه در حال پیاده سازی می باشد.",
                           textDirection: TextDirection.rtl,
-                          style: TextStyle(fontSize: 16,),
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
                         SizedBox(
                           height: 60,
@@ -897,9 +908,9 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         ),
                         Text(
                           "تماس با پشتیبانی",
-                          style: TextStyle(fontSize: 14, color: Colors.blueAccent),
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.blueAccent),
                         ),
-
                       ],
                     ),
                   ),
@@ -919,7 +930,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     child: ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          pageIndex = 1 ;
+                          pageIndex = 1;
                         });
                       },
                       child: Text('بازگشت'),
@@ -932,7 +943,6 @@ class _WalletScreenViewState extends State<WalletScreenView> {
         ],
       );
     }
-
 
     if (pageIndex == 1) {
       return Column(
@@ -951,9 +961,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -968,7 +981,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -1021,7 +1034,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 32, right: 32),
                         child: InkWell(
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               pageIndex = 0;
                             });
@@ -1045,9 +1058,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                               BlendMode.saturation,
                                         ),
                                         padding: EdgeInsets.all(15),
-                                        child: Image.asset(
-                                          'assets/image_icon/back_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        child: Container(
+                                          padding: EdgeInsets.all(3),
+                                          child: Image.asset(
+                                            'assets/image_icon/back_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                       )),
                                   Expanded(flex: 2, child: Container()),
@@ -1060,7 +1076,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
                                                   "شارژ خودکار کیف پول",
-                                                  style: TextStyle(fontSize: 13),
+                                                  style:
+                                                      TextStyle(fontSize: 13),
                                                 ))),
                                       )),
                                   Expanded(
@@ -1113,9 +1130,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                               BlendMode.saturation,
                                         ),
                                         padding: EdgeInsets.all(15),
-                                        child: Image.asset(
-                                          'assets/image_icon/back_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        child: Container(
+                                          padding: EdgeInsets.all(3),
+                                          child: Image.asset(
+                                            'assets/image_icon/back_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                       )),
                                   Expanded(flex: 2, child: Container()),
@@ -1192,9 +1212,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                               BlendMode.saturation,
                                         ),
                                         padding: EdgeInsets.all(15),
-                                        child: Image.asset(
-                                          'assets/image_icon/back_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        child: Container(
+                                          padding: EdgeInsets.all(3),
+                                          child: Image.asset(
+                                            'assets/image_icon/back_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                       )),
                                   Expanded(flex: 2, child: Container()),
@@ -1351,9 +1374,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -1368,7 +1394,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -1476,13 +1502,23 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             ),
                                           ),
                                         ),
-
                                       ],
                                     ),
                                   ),
                                 )),
-
-                            Expanded(child: Center(child: Text((_increaseAmountController.text.trim() == "" || _increaseAmountController.text.trim().length == 1)?"":"${_increaseAmountController.text.toString().replaceAll(",", "").beToman().toWord()}  تومان",textDirection: TextDirection.rtl,style: TextStyle(color: Colors.green),)),
+                            Expanded(
+                              child: Center(
+                                  child: Text(
+                                (_increaseAmountController.text.trim() == "" ||
+                                        _increaseAmountController.text
+                                                .trim()
+                                                .length ==
+                                            1)
+                                    ? ""
+                                    : "${_increaseAmountController.text.toString().replaceAll(",", "").beToman().toWord()}  تومان",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              )),
                             ),
                             Expanded(
                               child: Row(
@@ -1505,7 +1541,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (increaseAmountSelected == 3)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -1541,7 +1577,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (increaseAmountSelected == 2)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -1577,7 +1613,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (increaseAmountSelected == 1)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -1598,7 +1634,6 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                 ],
                               ),
                             ),
-
                           ],
                         )),
                       ),
@@ -1659,9 +1694,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             pageIndex = 2;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -1676,7 +1714,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -2063,7 +2101,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -2322,9 +2360,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -2339,7 +2380,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -2501,7 +2542,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (decreaseAmountSelected == 3)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -2537,7 +2578,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (decreaseAmountSelected == 2)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -2573,7 +2614,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: (decreaseAmountSelected == 1)
-                                                ? MyColors.button_bg_enabled
+                                                ? MyColors.otp_underline2
                                                 : MyColors.text_field_bg,
                                           ),
                                           child: Center(
@@ -2650,9 +2691,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -2667,7 +2711,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -3140,7 +3184,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -3367,9 +3411,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -3384,7 +3431,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -3589,9 +3636,22 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                     ),
                                   ),
                                 )),
-                            Expanded(flex : 2 ,child:   Center(child: Text((_textEdit_controler_kifbkif_2.text.trim() == "" || _textEdit_controler_kifbkif_2.text.trim().length == 1)?"":"${_textEdit_controler_kifbkif_2.text.toString().replaceAll(",", "").beToman().toWord()}  تومان",textDirection: TextDirection.rtl,style: TextStyle(color: Colors.green),)),
+                            Expanded(
+                              flex: 2,
+                              child: Center(
+                                  child: Text(
+                                (_textEdit_controler_kifbkif_2.text.trim() ==
+                                            "" ||
+                                        _textEdit_controler_kifbkif_2.text
+                                                .trim()
+                                                .length ==
+                                            1)
+                                    ? ""
+                                    : "${_textEdit_controler_kifbkif_2.text.toString().replaceAll(",", "").beToman().toWord()}  تومان",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(color: Colors.green),
+                              )),
                             ),
-
                           ],
                         )),
                       ),
@@ -3855,7 +3915,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -4124,9 +4184,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -4141,7 +4204,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -4364,9 +4427,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                             pageIndex = 6;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -4385,7 +4451,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -4510,7 +4576,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -4574,7 +4640,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                   flex: 1,
                                   child: Container(
                                       child: Text(
-                                    "توضیحات : ${selectedTransactionDetail.description!}",
+                                    "توضیحات : ${selectedTransactionDetail.operationName!}",
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 12),
                                   )),
@@ -4630,9 +4696,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                               Row(
                                 children: [
                                   Text(
-                                      "${selectedTransactionDetail.date} - ${selectedTransactionDetail.
-                                      clock!
-                                          // .substring(0, 5)
+                                      "${selectedTransactionDetail.date} - ${selectedTransactionDetail.clock!
+                                      // .substring(0, 5)
 
                                       }"),
                                   //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
@@ -4671,7 +4736,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                               Row(
                                 children: [
                                   Text(
-                                    "${(selectedTransactionDetail.besAmount.toString() == "0") ? selectedTransactionDetail.bedeAmount.toString().seRagham() : selectedTransactionDetail.besAmount.toString().seRagham().trim().seRagham()} ریال",
+                                    "${(selectedTransactionDetail.sumBesAmount.toString() == "0") ? selectedTransactionDetail.sumBedeAmount.toString().seRagham() : selectedTransactionDetail.sumBesAmount.toString().seRagham().trim().seRagham()} ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(fontSize: 17),
                                   ),

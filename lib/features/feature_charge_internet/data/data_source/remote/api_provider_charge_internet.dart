@@ -30,50 +30,56 @@ class ApiProviderChargeInternet {
     }
   }
 
-
-
   Future<dynamic> callShowInternetPackage(operatorType, mobile) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
+        "Bearer ${TokenKeeper.accesstoken}";
     var params = {"operatorType": operatorType, "mobile": mobile};
-    var body = json.encode(params);
-    var response = await _dio?.post(
-      Constants.baseUrl + "/internet/api/v1/ShowInternetPackage",
-      data: body,
-    );
+
+    final queryParameters = {
+      'operatorType': operatorType,
+      'mobile': mobile,
+    };
+
+
+
+    // https://uat-atba.saminray.com/walletintpackage/api/v1/ShowInternetPackage?OperatorType=0&Mobile=09363593154
+
+    var response = await _dio?.get(
+        // Constants.baseUrl + "/internet/api/v1/ShowInternetPackage",
+        Constants.baseUrl + "/walletintpackage/api/v1/ShowInternetPackage",
+        queryParameters: queryParameters);
     return response;
   }
 
-
-
-
-
-  Future<dynamic> callBuyInternetPackage(bundleId, amount , cellNumber,requestId,operatorType,operationCode,type) async {
+  Future<dynamic> callBuyInternetPackage(bundleId, amount, cellNumber,
+      requestId, operatorType, operationCode, type) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
+        "Bearer ${TokenKeeper.accesstoken}";
     var params = {
       "bundleId": bundleId,
-      "amount": amount,
+      // "amount": amount,
       "cellNumber": cellNumber,
-      "requestId": requestId,
+      // "requestId": requestId,
+      "requestId": "undefined",
       "operatorType": operatorType,
-      "operationCode": operationCode,
-      "type": type,
+      // "operationCode": operationCode,
+      // "type": type,
     };
 
     var body = json.encode(params);
     var response = await _dio?.post(
-      Constants.baseUrl + "/internet/api/v1/BuyInternetPackage",
+      // Constants.baseUrl + "/internet/api/v1/BuyInternetPackage",
+      Constants.baseUrl + "/walletintpackage/api/v1/BuyInternetPackage",
       data: body,
     );
     return response;
   }
 
   Future<dynamic> callGetBalance() async {
-    _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
-    var response = await _dio
-        ?.get(Constants.baseUrl + "/apiapp/Wallet/Balances");
+    _dio?.options.headers['Authorization'] =
+        "Bearer ${TokenKeeper.accesstoken}";
+    var response =
+        await _dio?.get(Constants.baseUrl + "/apiapp/Wallet/Balances");
     return response;
   }
-
 }

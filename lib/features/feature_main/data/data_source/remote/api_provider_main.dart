@@ -45,8 +45,8 @@ class ApiProviderMain {
 
    Future<dynamic> callGetMyProfile() async {
      _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
-     var response = await _dio
-         ?.get(Constants.baseUrl + "/auth/User/MyProfile");
+     // var response = await _dio?.get(Constants.baseUrl + "/auth/User/MyProfile");
+     var response = await _dio?.get(Constants.baseUrl + "/usermanagement/User/MyProfile");
      return response;
    }
 
@@ -55,10 +55,8 @@ class ApiProviderMain {
 
      var params = {"refreshToken": refreshToken};
      var body = json.encode(params);
-     var response = await _dio?.post(
-       Constants.baseUrl + "/auth/Auth/Refresh",
-       data: body,
-     );
+     // var response = await _dio?.post(Constants.baseUrl + "/auth/Auth/Refresh",data: body,);
+     var response = await _dio?.post(Constants.baseUrl + "/usermanagement/Auth/Refresh",data: body,);
      return response;
    }
 

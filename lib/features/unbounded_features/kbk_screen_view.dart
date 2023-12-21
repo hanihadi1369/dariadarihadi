@@ -161,9 +161,12 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -178,7 +181,7 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -409,9 +412,12 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -426,7 +432,7 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -797,7 +803,7 @@ class _KbkScreenViewState extends State<KbkScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),

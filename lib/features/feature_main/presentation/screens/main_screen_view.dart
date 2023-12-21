@@ -78,18 +78,14 @@ class MainScreenViewState extends State<MainScreenView> {
             builder: (BuildContext context) {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(32.0))),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
                 contentPadding: EdgeInsets.only(top: 10.0),
                 content: Container(
-                  padding:
-                  EdgeInsets.only(left: 8, right: 8),
+                  padding: EdgeInsets.only(left: 8, right: 8),
                   width: 300.0,
                   child: Column(
-                    mainAxisAlignment:
-                    MainAxisAlignment.start,
-                    crossAxisAlignment:
-                    CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       SizedBox(
@@ -104,8 +100,7 @@ class MainScreenViewState extends State<MainScreenView> {
                         height: 40.0,
                       ),
                       Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: InkWell(
@@ -117,10 +112,8 @@ class MainScreenViewState extends State<MainScreenView> {
                                 child: Text(
                                   "خیر",
                                   style: TextStyle(
-                                      fontSize: 13.0,
-                                      color: Colors.red),
-                                  textAlign:
-                                  TextAlign.center,
+                                      fontSize: 13.0, color: Colors.red),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -134,12 +127,8 @@ class MainScreenViewState extends State<MainScreenView> {
                             child: InkWell(
                               onTap: () {
                                 //todo should disable this feature and implement logout mechanisim seperatly in ui
-                                TokenKeeper
-                                    .deleteAccessToken()
+                                TokenKeeper.deleteAccessToken()
                                     .then((value) async {
-
-
-
                                   // Navigator.pushAndRemoveUntil<dynamic>(
                                   //   context,
                                   //   MaterialPageRoute<dynamic>(
@@ -147,7 +136,6 @@ class MainScreenViewState extends State<MainScreenView> {
                                   //   ),
                                   //       (route) => false,//if you want to disable back feature set to false
                                   // );
-
 
                                   await Navigator.pushReplacement(
                                     context,
@@ -172,10 +160,8 @@ class MainScreenViewState extends State<MainScreenView> {
                                   "بله",
                                   style: TextStyle(
                                       fontSize: 13.0,
-                                      color: MyColors
-                                          .button_bg_enabled),
-                                  textAlign:
-                                  TextAlign.center,
+                                      color: MyColors.button_bg_enabled),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -268,13 +254,19 @@ class MainScreenViewState extends State<MainScreenView> {
                           TokenKeeper.refreshToken = refreshTokenCompleted
                               .refreshTokenEntity.value!.tokens!.refreshToken!,
                           TokenKeeper.saveRefreshTokenExpirationDate(
-                                  refreshTokenCompleted.refreshTokenEntity.value!
-                                      .tokens!.refreshTokenExpirationDate!)
+                                  refreshTokenCompleted
+                                      .refreshTokenEntity
+                                      .value!
+                                      .tokens!
+                                      .refreshTokenExpirationDate!)
                               .then(
                             (value) => {
                               TokenKeeper.refreshTokenExpirationDate =
-                                  refreshTokenCompleted.refreshTokenEntity.value!
-                                      .tokens!.refreshTokenExpirationDate!,
+                                  refreshTokenCompleted
+                                      .refreshTokenEntity
+                                      .value!
+                                      .tokens!
+                                      .refreshTokenExpirationDate!,
                               state.refreshTokenStatus = RefreshTokenInit(),
                               state.balanceStatus = BalanceInit(),
                               state.profileStatus = ProfileInit(),
@@ -323,7 +315,8 @@ class MainScreenViewState extends State<MainScreenView> {
                       .toString();
                   email =
                       profileCompleted.getProfileEntity.value!.email.toString();
-                  iban = profileCompleted.getProfileEntity.value!.iban.toString();
+                  iban =
+                      profileCompleted.getProfileEntity.value!.iban.toString();
 
                   if (profileCompleted.getProfileEntity.value!.image != null) {
                     avatarProfile = base64Decode(
@@ -336,12 +329,12 @@ class MainScreenViewState extends State<MainScreenView> {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xf072b864), Color(0xA6B2D2B0)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
+                    // gradient: LinearGradient(
+                    //   colors: [Color(0xf072b864), Color(0xA6B2D2B0)],
+                    //   begin: Alignment.centerLeft,
+                    //   end: Alignment.centerRight,
+                    // ),
+                    color: Colors.white),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -351,19 +344,23 @@ class MainScreenViewState extends State<MainScreenView> {
                           padding: EdgeInsets.only(left: 24, right: 24),
                           color: Colors.transparent,
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
                                 flex: 1,
-                                child: Image.asset(
-                                  'assets/image_icon/hint_icon.png',
-                                  fit: BoxFit.scaleDown,
+                                child: Container(
+                                  padding: EdgeInsets.all(4),
+                                  child: Image.asset(
+                                    'assets/image_icon/hint_black_icon.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
                                 ),
                               ),
                               Expanded(flex: 3, child: Container()),
                               Expanded(
                                 flex: 3,
                                 child: Image.asset(
-                                  'assets/image_icon/moba_white_icon.png',
+                                  'assets/image_icon/moba_des_icon.png',
                                   fit: BoxFit.scaleDown,
                                 ),
                               ),
@@ -394,7 +391,7 @@ class MainScreenViewState extends State<MainScreenView> {
                                 left: 15, right: 15, top: 15, bottom: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.white,
+                              color: Colors.black12,
                             ),
                             child: Row(
                               children: [
@@ -425,7 +422,7 @@ class MainScreenViewState extends State<MainScreenView> {
                                             textAlign: TextAlign.right,
                                             style: TextStyle(
                                                 fontSize: 14,
-                                                color: Colors.orange),
+                                                color: MyColors.otp_underline2),
                                           ),
                                         ],
                                       ),
@@ -534,9 +531,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/internet_charge_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/internet_charge_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -560,7 +561,8 @@ class MainScreenViewState extends State<MainScreenView> {
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return BlocProvider.value(
-                                            value: locator<csim.ChargeSimBloc>(),
+                                            value:
+                                                locator<csim.ChargeSimBloc>(),
                                             child: SimChargeScreenView(),
                                           );
                                         },
@@ -580,9 +582,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/simcard_charge_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/simcard_charge_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -614,9 +620,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/kbk_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/kbk_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -653,9 +663,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/pay_ghabz_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/pay_ghabz_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -679,7 +693,8 @@ class MainScreenViewState extends State<MainScreenView> {
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return BlocProvider.value(
-                                            value: locator<wallett.WalletBloc>(),
+                                            value:
+                                                locator<wallett.WalletBloc>(),
                                             child: WalletScreenView(1),
                                           );
 
@@ -698,9 +713,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/wallet_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/wallet_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -729,9 +748,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/bime_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/bime_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -797,9 +820,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/buy_ticket_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/buy_ticket_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -831,9 +858,13 @@ class MainScreenViewState extends State<MainScreenView> {
                                   child: Container(
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          'assets/image_icon/buy_ticket_main_icon.png',
-                                          fit: BoxFit.scaleDown,
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Image.asset(
+                                            'assets/image_icon/buy_ticket_main_icon.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -997,7 +1028,8 @@ class MainScreenViewState extends State<MainScreenView> {
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return BlocProvider.value(
-                                            value: locator<wallett.WalletBloc>(),
+                                            value:
+                                                locator<wallett.WalletBloc>(),
                                             child: WalletScreenView(1),
                                           );
 

@@ -216,7 +216,8 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                 BalanceCompleted balanceCompleted =
                     state.balanceStatus as BalanceCompleted;
                 if (balanceCompleted.getBalanceEntity.isFailed == false) {
-                  balance = balanceCompleted.getBalanceEntity.value![0].availablebalance!
+                  balance = balanceCompleted
+                      .getBalanceEntity.value![0].availablebalance!
                       .toString();
                 }
                 state.balanceStatus = BalanceInit();
@@ -277,9 +278,12 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -294,7 +298,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -513,178 +517,160 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                       onPressed: _isButtonNextDisabled_page1
                           ? null
                           : () {
-
-
-
-                        // should show bottom sheet dialog
-                        showMaterialModalBottomSheet(
-                          context: context,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15))),
-                          builder: (context) => Container(
-                            height: MediaQuery.of(context).size.height /
-                                (2.5),
-                            child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.stretch,
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Center(
-                                    child: Text(
-                                      "نوع سیم کارت",
-                                      style: TextStyle(
-                                          color: MyColors.otp_underline,
-                                          fontSize: 16),
-                                    )),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Center(
-                                    child: Text(
-                                      _phoneController.text,
-                                      style: TextStyle(color: Colors.grey),
-                                    )),
-                                Divider(
-                                  thickness: 1,
-                                  color: Colors.black,
-                                ),
-                                InkWell(
-                                  onTap: () {
-
-                                    setState(() {
-                                      simCardType = 1;
-                                      Navigator.pop(context);
-                                    });
-
-
-
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.only(
-                                        right: 16, top: 5, bottom: 5),
-                                    width: double.infinity,
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          "اعتباری",
-                                          style: TextStyle(
-                                              color: Colors.black),
-                                        )),
-                                  ),
-                                ),
-                                Divider(
-                                  thickness: 0.5,
-                                  color: Colors.grey,
-                                ),
-                                InkWell(
-                                  onTap: () {
-
-                                    setState(() {
-                                      simCardType = 2;
-                                      Navigator.pop(context);
-                                    });
-
-
-
-
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.only(
-                                        right: 16, top: 5, bottom: 5),
-                                    width: double.infinity,
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          "دائمی",
-                                          style: TextStyle(
-                                              color: Colors.black),
-                                        )),
-                                  ),
-                                ),
-                                Divider(
-                                  thickness: 0.5,
-                                  color: Colors.grey,
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 32, right: 32),
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                        MaterialStateProperty
-                                            .resolveWith<Color>(
-                                              (Set<MaterialState> states) {
-                                            return Colors.white;
-                                          },
-                                        ),
-                                        padding: MaterialStateProperty
-                                            .all<EdgeInsetsGeometry>(
-                                          EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 8),
-                                        ),
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                10.0),
-                                            side: BorderSide(
-                                                color: MyColors
-                                                    .otp_underline),
-                                          ),
+                              // should show bottom sheet dialog
+                              showMaterialModalBottomSheet(
+                                context: context,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15))),
+                                builder: (context) => Container(
+                                  height: MediaQuery.of(context).size.height /
+                                      (2.5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Center(
+                                          child: Text(
+                                        "نوع سیم کارت",
+                                        style: TextStyle(
+                                            color: MyColors.otp_underline,
+                                            fontSize: 16),
+                                      )),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Center(
+                                          child: Text(
+                                        _phoneController.text,
+                                        style: TextStyle(color: Colors.grey),
+                                      )),
+                                      Divider(
+                                        thickness: 1,
+                                        color: Colors.black,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            simCardType = 1;
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              right: 16, top: 5, bottom: 5),
+                                          width: double.infinity,
+                                          child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "اعتباری",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              )),
                                         ),
                                       ),
-                                      onPressed: () {
-                                        setState(() {
-                                          simCardType= 0;
-                                          Navigator.pop(context);
-                                        });
-
-                                      },
-                                      child: Text(
-                                        "انصراف",
-                                        style: TextStyle(
-                                            color:
-                                            MyColors.otp_underline),
-                                      )),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.grey,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            simCardType = 2;
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              right: 16, top: 5, bottom: 5),
+                                          width: double.infinity,
+                                          child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "دائمی",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              )),
+                                        ),
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.grey,
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 32, right: 32),
+                                        child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                                  return Colors.white;
+                                                },
+                                              ),
+                                              padding: MaterialStateProperty
+                                                  .all<EdgeInsetsGeometry>(
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 8),
+                                              ),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  side: BorderSide(
+                                                      color: MyColors
+                                                          .otp_underline),
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                simCardType = 0;
+                                                Navigator.pop(context);
+                                              });
+                                            },
+                                            child: Text(
+                                              "انصراف",
+                                              style: TextStyle(
+                                                  color:
+                                                      MyColors.otp_underline),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ).then((value) => {
-
-
-                            if(simCardType!=0){
-                              BlocProvider.of<ChargeInternetBloc>(context).add(
-                                  ShowInternetPackagesEvent(
-                                      ShowInternetPackagesParam(
-                                          mobile: _phoneController.text
-                                              .toString()
-                                              .trim(),
-                                          operatorType: (operatorSelected == 1)
-                                              ? 2
-                                              : (operatorSelected == 2)
-                                              ? 1
-                                              : 0)))
-                            }
-
-
-
-                        });
-
-
-
-
-
+                              ).then((value) => {
+                                    if (simCardType != 0)
+                                      {
+                                        BlocProvider.of<ChargeInternetBloc>(
+                                                context)
+                                            .add(ShowInternetPackagesEvent(
+                                                ShowInternetPackagesParam(
+                                                    mobile: _phoneController
+                                                        .text
+                                                        .toString()
+                                                        .trim(),
+                                                    operatorType:
+                                                        (operatorSelected == 1)
+                                                            ? 2
+                                                            : (operatorSelected ==
+                                                                    2)
+                                                                ? 1
+                                                                : 0)))
+                                      }
+                                  });
 
                               // //should show bottom sheet dialog
                               // showMaterialModalBottomSheet(
@@ -856,9 +842,12 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             pageIndex = 1;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -873,7 +862,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -904,7 +893,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: (timeTypeTabIndex == 1)
-                                  ? Colors.deepOrange
+                                  ? MyColors.otp_underline2
                                   : MyColors.button_label_disabled,
                             ),
                             child: Text(
@@ -930,7 +919,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: (timeTypeTabIndex == 2)
-                                  ? Colors.deepOrange
+                                  ? MyColors.otp_underline2
                                   : MyColors.button_label_disabled,
                             ),
                             child: Text(
@@ -956,7 +945,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: (timeTypeTabIndex == 3)
-                                  ? Colors.deepOrange
+                                  ? MyColors.otp_underline2
                                   : MyColors.button_label_disabled,
                             ),
                             child: Text(
@@ -982,7 +971,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: (timeTypeTabIndex == 4)
-                                  ? Colors.deepOrange
+                                  ? MyColors.otp_underline2
                                   : MyColors.button_label_disabled,
                             ),
                             child: Text(
@@ -1008,7 +997,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: (timeTypeTabIndex == 5)
-                                  ? Colors.deepOrange
+                                  ? MyColors.otp_underline2
                                   : MyColors.button_label_disabled,
                             ),
                             child: Text(
@@ -1034,7 +1023,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: (timeTypeTabIndex == 6)
-                                  ? Colors.deepOrange
+                                  ? MyColors.otp_underline2
                                   : MyColors.button_label_disabled,
                             ),
                             child: Text(
@@ -1060,7 +1049,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: (timeTypeTabIndex == 7)
-                                  ? Colors.deepOrange
+                                  ? MyColors.otp_underline2
                                   : MyColors.button_label_disabled,
                             ),
                             child: Text(
@@ -1111,9 +1100,12 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             pageIndex = 2;
                           });
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -1128,7 +1120,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -1353,7 +1345,8 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -1449,7 +1442,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -1476,208 +1469,205 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   ],
                 ),
               )),
-
-
           Expanded(
-
               flex: 16,
-              child:
-
-
-              RepaintBoundary(
+              child: RepaintBoundary(
                 key: previewContainer4,
-            child: Container(
-              color: Colors.white,
-              child: Column(children: [
-                Expanded(
-                    flex: 9,
-                    child: Container(
-                      padding:
-                      EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                                flex: 3,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: Image.asset(
-                                            (operatorSelected == 1)
-                                                ? 'assets/image_icon/rightel_icon.png'
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          flex: 9,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 35, right: 35, top: 10, bottom: 10),
+                            color: Colors.transparent,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                child: Image.asset(
+                                                  (operatorSelected == 1)
+                                                      ? 'assets/image_icon/rightel_icon.png'
+                                                      : (operatorSelected == 2)
+                                                          ? 'assets/image_icon/hamrah_aval_icon.png'
+                                                          : 'assets/image_icon/irancell_icon.png',
+                                                  fit: BoxFit.scaleDown,
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                  child: Text(
+                                                      _phoneController.text)))
+                                        ],
+                                      )),
+                                  Expanded(
+                                    flex: 5,
+                                    child: Container(
+                                        child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text((operatorSelected == 1)
+                                                ? 'رایتل'
                                                 : (operatorSelected == 2)
-                                                ? 'assets/image_icon/hamrah_aval_icon.png'
-                                                : 'assets/image_icon/irancell_icon.png',
-                                            fit: BoxFit.scaleDown,
-                                          ),
-                                        )),
-                                    Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                            child: Text(_phoneController.text)))
-                                  ],
-                                )),
-                            Expanded(
-                              flex: 5,
-                              child: Container(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text((operatorSelected == 1)
-                                              ? 'رایتل'
-                                              : (operatorSelected == 2)
-                                              ? 'همراه اول'
-                                              : 'ایرانسل'),
-                                          Spacer(),
-                                          Text(
-                                            "نوع اپراتور",
-                                            style: TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 5,
-                                            child: Text(
-                                              prepareSelectedItemTitle(),
+                                                    ? 'همراه اول'
+                                                    : 'ایرانسل'),
+                                            Spacer(),
+                                            Text(
+                                              "نوع اپراتور",
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 5,
+                                              child: Text(
+                                                prepareSelectedItemTitle(),
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                textAlign: TextAlign.left,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "محصول",
+                                                textAlign: TextAlign.right,
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${prepareSelectedItemCost().seRagham()} ریال",
                                               textDirection: TextDirection.rtl,
-                                              textAlign: TextAlign.left,
                                             ),
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: Text(
-                                              "محصول",
-                                              textAlign: TextAlign.right,
-                                              style: TextStyle(color: Colors.grey),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "${prepareSelectedItemCost().seRagham()} ریال",
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                          Spacer(),
-                                          Text(
-                                            "مبلغ شارژ + مالیات",
-                                            style: TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                            Expanded(
-                                child: Container(
-                                  child: Image.asset(
-                                    'assets/image_icon/success_payment.png',
-                                    fit: BoxFit.scaleDown,
+                                            Spacer(),
+                                            Text(
+                                              "مبلغ شارژ + مالیات",
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    )),
                                   ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: DottedLine(
-                          direction: Axis.horizontal,
-                          lineLength: double.infinity,
-                          lineThickness: 1.0,
-                          dashLength: 4.0,
-                          dashColor: MyColors.otp_underline,
-                          dashRadius: 0.0,
-                          dashGapLength: 4.0,
-                          dashGapColor: Colors.transparent,
-                          dashGapRadius: 0.0,
-                        ))),
-                Expanded(
-                    flex: 6,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Text(_phoneController.text),
-                              Spacer(),
-                              Text(
-                                "شماره همراه",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text("${orderIdResultPayFromWallet}"),
-                              Spacer(),
-                              Text(
-                                "شماره پیگیری",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(DateTime.now().toPersianDate(
-                                  twoDigits: true,
-                                  showTime: true,
-                                  timeSeprator: ' - ')),
-                              //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
+                                  Expanded(
+                                      child: Container(
+                                    child: Image.asset(
+                                      'assets/image_icon/success_payment.png',
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ))
+                                ],
+                              ),
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 32, right: 32),
+                              child: DottedLine(
+                                direction: Axis.horizontal,
+                                lineLength: double.infinity,
+                                lineThickness: 1.0,
+                                dashLength: 4.0,
+                                dashColor: MyColors.otp_underline,
+                                dashRadius: 0.0,
+                                dashGapLength: 4.0,
+                                dashGapColor: Colors.transparent,
+                                dashGapRadius: 0.0,
+                              ))),
+                      Expanded(
+                          flex: 6,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 32, right: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(_phoneController.text),
+                                    Spacer(),
+                                    Text(
+                                      "شماره همراه",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text("${orderIdResultPayFromWallet}"),
+                                    Spacer(),
+                                    Text(
+                                      "شماره پیگیری",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text(DateTime.now().toPersianDate(
+                                        twoDigits: true,
+                                        showTime: true,
+                                        timeSeprator: ' - ')),
+                                    //۱۳۹۹/۰۷/۰۶ - ۰۷:۳۹
 
-                              Spacer(),
-                              Text(
-                                "تاریخ و ساعت",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text((payTypeSelected == 1) ? "کیف پول" : "کارت بانکی"),
-                              Spacer(),
-                              Text(
-                                "پرداخت از",
-                                style: TextStyle(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          Divider()
-                        ],
-                      ),
-                    )),
-              ],),
-            ),
-          )
-
-
-          ),
-
-
-
-
+                                    Spacer(),
+                                    Text(
+                                      "تاریخ و ساعت",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Text((payTypeSelected == 1)
+                                        ? "کیف پول"
+                                        : "کارت بانکی"),
+                                    Spacer(),
+                                    Text(
+                                      "پرداخت از",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Divider()
+                              ],
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+              )),
           Expanded(
             flex: 2,
             child: Container(
@@ -1704,17 +1694,17 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                           // )),
                           Expanded(
                               child: InkWell(
-                                onTap:(){
-                                  _captureSocialPng(previewContainer4);
-    },
-                                child: Container(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Image.asset(
+                            onTap: () {
+                              _captureSocialPng(previewContainer4);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Image.asset(
                                 'assets/image_icon/share.png',
                                 fit: BoxFit.scaleDown,
+                              ),
                             ),
-                          ),
-                              )),
+                          )),
                         ],
                       ))
                 ],
@@ -1727,635 +1717,1344 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
   }
 
   List<Widget> prepareEPackWidgets() {
+
+
+
+
     List<Widget> widgetList = [];
     if (timeTypeTabIndex == 1) {
       for (var i = 0; i < dailyInternetPackList.length; i++) {
-        widgetList.add(
-          InkWell(
-              onTap: () {
-                BlocProvider.of<ChargeInternetBloc>(context)
-                    .add(GetBalanceEvent());
-                setState(() {
-                  selectedDaily = dailyInternetPackList[i];
-                  pageIndex = 3;
-                });
-              },
-              child: Container(
-                height: 80,
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/go_orange_ison.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${dailyInternetPackList[i].billAmount!.seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                FittedBox(
+        if(simCardType==1){
+          //etebari
+          if(dailyInternetPackList[i].type == "1" || dailyInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedDaily = dailyInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "مبلغ + مالیات",
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${dailyInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${dailyInternetPackList[i].title!.trim()}",
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${dailyInternetPackList[i].title!.trim()}",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/global_icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )),
-        );
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+
+        }else if (simCardType == 2){
+          //daemi
+
+          if(dailyInternetPackList[i].type == "2" || dailyInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedDaily = dailyInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${dailyInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${dailyInternetPackList[i].title!.trim()}",
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+        }
+
       }
     }
     if (timeTypeTabIndex == 2) {
       for (var i = 0; i < weeklyInternetPackList.length; i++) {
-        widgetList.add(
-          InkWell(
-              onTap: () {
-                BlocProvider.of<ChargeInternetBloc>(context)
-                    .add(GetBalanceEvent());
-                setState(() {
-                  selectedWeekly = weeklyInternetPackList[i];
-                  pageIndex = 3;
-                });
-              },
-              child: Container(
-                height: 80,
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/go_orange_ison.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${weeklyInternetPackList[i].billAmount!.seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                FittedBox(
+
+        if(simCardType==1){
+          //etebari
+          if(weeklyInternetPackList[i].type == "1"||weeklyInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedWeekly = weeklyInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "مبلغ + مالیات",
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${weeklyInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${weeklyInternetPackList[i].title!.trim()}",
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${weeklyInternetPackList[i].title!.trim()}",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/global_icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )),
-        );
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+
+        }else if (simCardType == 2){
+          //daemi
+
+          if(weeklyInternetPackList[i].type == "2"||weeklyInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedWeekly = weeklyInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${weeklyInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${weeklyInternetPackList[i].title!.trim()}",
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+        }
+
       }
     }
     if (timeTypeTabIndex == 3) {
       for (var i = 0; i < monthlyInternetPackList.length; i++) {
-        widgetList.add(
-          InkWell(
-              onTap: () {
-                BlocProvider.of<ChargeInternetBloc>(context)
-                    .add(GetBalanceEvent());
-                setState(() {
-                  selectedMonthly = monthlyInternetPackList[i];
-                  pageIndex = 3;
-                });
-              },
-              child: Container(
-                height: 80,
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/go_orange_ison.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${monthlyInternetPackList[i].billAmount!.seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                FittedBox(
+
+
+
+        if(simCardType==1){
+          //etebari
+
+          if(monthlyInternetPackList[i].type == "1"||monthlyInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedMonthly = monthlyInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "مبلغ + مالیات",
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${monthlyInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${monthlyInternetPackList[i].title!.trim()}",
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${monthlyInternetPackList[i].title!.trim()}",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/global_icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )),
-        );
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+
+        }else if (simCardType == 2){
+          //daemi
+
+          if(monthlyInternetPackList[i].type == "2"||monthlyInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedMonthly = monthlyInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${monthlyInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${monthlyInternetPackList[i].title!.trim()}",
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+        }
+
       }
     }
     if (timeTypeTabIndex == 4) {
       for (var i = 0; i < trimesterInternetPackList.length; i++) {
-        widgetList.add(
-          InkWell(
-              onTap: () {
-                BlocProvider.of<ChargeInternetBloc>(context)
-                    .add(GetBalanceEvent());
-                setState(() {
-                  selectedTrimester = trimesterInternetPackList[i];
-                  pageIndex = 3;
-                });
-              },
-              child: Container(
-                height: 80,
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/go_orange_ison.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${trimesterInternetPackList[i].billAmount!.seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                FittedBox(
+
+
+
+
+        if(simCardType==1){
+          //etebari
+          if(trimesterInternetPackList[i].type == "1"||trimesterInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedTrimester = trimesterInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "مبلغ + مالیات",
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${trimesterInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${trimesterInternetPackList[i].title!.trim()}",
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${trimesterInternetPackList[i].title!.trim()}",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/global_icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )),
-        );
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+
+        }else if (simCardType == 2){
+          //daemi
+          if(trimesterInternetPackList[i].type == "2" || trimesterInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedTrimester = trimesterInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${trimesterInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${trimesterInternetPackList[i].title!.trim()}",
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+        }
+
       }
     }
     if (timeTypeTabIndex == 5) {
       for (var i = 0; i < semiannualInternetPackList.length; i++) {
-        widgetList.add(
-          InkWell(
-              onTap: () {
-                BlocProvider.of<ChargeInternetBloc>(context)
-                    .add(GetBalanceEvent());
-                setState(() {
-                  selectedSemiannual = semiannualInternetPackList[i];
-                  pageIndex = 3;
-                });
-              },
-              child: Container(
-                height: 80,
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/go_orange_ison.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${semiannualInternetPackList[i].billAmount!.seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                FittedBox(
+
+
+
+        if(simCardType==1){
+          //etebari
+          if(semiannualInternetPackList[i].type == "1"||semiannualInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedSemiannual = semiannualInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "مبلغ + مالیات",
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${semiannualInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${semiannualInternetPackList[i].title!.trim()}",
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${semiannualInternetPackList[i].title!.trim()}",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/global_icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )),
-        );
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+
+        }else if (simCardType == 2){
+          //daemi
+
+          if(semiannualInternetPackList[i].type == "2"||semiannualInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedSemiannual = semiannualInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${semiannualInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${semiannualInternetPackList[i].title!.trim()}",
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+        }
+
       }
     }
     if (timeTypeTabIndex == 6) {
       for (var i = 0; i < annualInternetPackList.length; i++) {
-        widgetList.add(
-          InkWell(
-              onTap: () {
-                BlocProvider.of<ChargeInternetBloc>(context)
-                    .add(GetBalanceEvent());
-                setState(() {
-                  selectedAnnual = annualInternetPackList[i];
-                  pageIndex = 3;
-                });
-              },
-              child: Container(
-                height: 80,
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/go_orange_ison.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${annualInternetPackList[i].billAmount!.seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                FittedBox(
+
+
+
+        if(simCardType==1){
+          //etebari
+
+          if(annualInternetPackList[i].type == "1"||annualInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedAnnual = annualInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "مبلغ + مالیات",
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${annualInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${annualInternetPackList[i].title!.trim()}",
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${annualInternetPackList[i].title!.trim()}",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/global_icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )),
-        );
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+
+        }else if (simCardType == 2){
+          //daemi
+          if(annualInternetPackList[i].type == "2"||annualInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedAnnual = annualInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${annualInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${annualInternetPackList[i].title!.trim()}",
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+        }
+
       }
     }
     if (timeTypeTabIndex == 7) {
       for (var i = 0; i < otherInternetPackList.length; i++) {
-        widgetList.add(
-          InkWell(
-              onTap: () {
-                BlocProvider.of<ChargeInternetBloc>(context)
-                    .add(GetBalanceEvent());
-                setState(() {
-                  selectedOther = otherInternetPackList[i];
-                  pageIndex = 3;
-                });
-              },
-              child: Container(
-                height: 80,
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/go_orange_ison.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${otherInternetPackList[i].billAmount!.seRagham()} ریال",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                FittedBox(
+
+
+
+
+        if(simCardType==1){
+          //etebari
+
+          if(otherInternetPackList[i].type == "1"||otherInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedOther = otherInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "مبلغ + مالیات",
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${otherInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${otherInternetPackList[i].title!.trim()}",
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 7,
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${otherInternetPackList[i].title!.trim()}",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
-                    Expanded(flex: 1, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset(
-                              'assets/image_icon/global_icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )),
-        );
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+
+        }else if (simCardType == 2){
+          //daemi
+
+          if(otherInternetPackList[i].type == "2"||otherInternetPackList[i].type == "3"){
+            widgetList.add(
+              InkWell(
+                  onTap: () {
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetBalanceEvent());
+                    setState(() {
+                      selectedOther = otherInternetPackList[i];
+                      pageIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    height: 95,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/go_orange_ison.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            flex: 5,
+                            child: Center(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${otherInternetPackList[i].billAmount!.seRagham()} ریال",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "مبلغ + مالیات",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 11, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 7,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${otherInternetPackList[i].title!.trim()}",
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Container(
+                                // padding: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  'assets/image_icon/global_icon.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )),
+            );
+          }
+        }
+
       }
     }
     return widgetList;
@@ -2515,7 +3214,6 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
     });
   }
 
-
   Future<void> _captureSocialPng(GlobalKey previewContainer) {
     List<String> imagePaths = [];
 
@@ -2529,14 +3227,14 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
       ui.Image image = await boundary!.toImage();
       final directory = (await getApplicationDocumentsDirectory()).path;
       ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       File imgFile = new File('$directory/screenshot.png');
       imagePaths.add(imgFile.path);
       imgFile.writeAsBytes(pngBytes).then((value) async {
         await Share.shareFiles(imagePaths,
-            subject: 'Share',
-            sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size)
+                subject: 'Share',
+                sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size)
             .then((value) {
           setState(() {
             shouldShowLoading = false;
@@ -2561,10 +3259,10 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
       ui.Image image = await boundary!.toImage();
 
       ByteData? byteData =
-      await (image.toByteData(format: ui.ImageByteFormat.png));
+          await (image.toByteData(format: ui.ImageByteFormat.png));
       if (byteData != null) {
         final result =
-        await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
+            await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
 
         setState(() {
           shouldShowLoading = false;

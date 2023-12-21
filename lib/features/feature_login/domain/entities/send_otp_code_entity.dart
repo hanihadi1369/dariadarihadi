@@ -11,6 +11,17 @@ class SendOtpCodeEntity extends Equatable {
   final ValueOrDefault? valueOrDefault;
   final Value? value;
 
+
+
+
+  
+
+
+
+
+
+
+
   SendOtpCodeEntity(
       {this.isFailed,
       this.isSuccess,

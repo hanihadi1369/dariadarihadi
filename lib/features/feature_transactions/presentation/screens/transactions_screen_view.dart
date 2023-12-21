@@ -197,7 +197,7 @@
 //                     Expanded(
 //                       flex: 1,
 //                       child: Image.asset(
-//                         'assets/image_icon/hint_green_icon.png',
+//                         'assets/image_icon/hint_black_icon.png',
 //                         fit: BoxFit.scaleDown,
 //                       ),
 //                     ),

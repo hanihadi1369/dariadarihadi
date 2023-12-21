@@ -71,9 +71,12 @@ class _AboutConstructorScreenViewState extends State<AboutConstructorScreenView>
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/image_icon/back_icon.png',
-                          fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ),
@@ -88,7 +91,7 @@ class _AboutConstructorScreenViewState extends State<AboutConstructorScreenView>
                     Expanded(
                       flex: 1,
                       child: Image.asset(
-                        'assets/image_icon/hint_green_icon.png',
+                        'assets/image_icon/hint_black_icon.png',
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -108,11 +111,11 @@ class _AboutConstructorScreenViewState extends State<AboutConstructorScreenView>
                       height: 50,
                       width: 100,
 
-                      child: Image.asset('assets/image_icon/moba_main_icon.png')),
+                      child: Image.asset('assets/image_icon/moba_des_icon.png')),
                   SizedBox(height: 20,),
                   Padding(
                     padding: const EdgeInsets.only(left: 16,right: 16),
-                    child: Text("اپلیکیشن موبا جهت ارائه خدمات بانکی و ارزش افزوده از قبیل (کارت به کارت , شارژ , بسته اینترنت , پرداخت قبوض , بلیط مترو , خرید انواع بیمه نامه ها و بلیط سفر و هتل ) برای جامعه اتباع در نظر گرفته شده است"
+                    child: Text("اپلیکیشن داریکارت جهت ارائه خدمات بانکی و ارزش افزوده از قبیل (کارت به کارت , شارژ , بسته اینترنت , پرداخت قبوض , بلیط مترو , خرید انواع بیمه نامه ها و بلیط سفر و هتل ) برای جامعه اتباع در نظر گرفته شده است"
                     ,
                       textDirection: TextDirection.rtl,
                       textAlign: TextAlign.justify,

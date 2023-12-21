@@ -124,9 +124,12 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                   child: Container(
                       child: ImageFiltered(
                     imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                    child: Image.asset(
-                      'assets/image_icon/splash_top.png',
-                      fit: BoxFit.fill,
+                    child: Visibility(
+                      visible: false,
+                      child: Image.asset(
+                        'assets/image_icon/splash_top.png',
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   )).animate().fade(
                       delay: 2000.ms, duration: 750.ms, begin: 1.0, end: 0.0),
@@ -140,9 +143,12 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                   child: Container(
                       child: ImageFiltered(
                     imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                    child: Image.asset(
-                      'assets/image_icon/splash_down.png',
-                      fit: BoxFit.fill,
+                    child: Visibility(
+                      visible: false,
+                      child: Image.asset(
+                        'assets/image_icon/splash_down.png',
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   )).animate().fade(
                       delay: 2000.ms, duration: 750.ms, begin: 0.0, end: 1.0),
@@ -169,34 +175,38 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
+
                         child:
-                            Image.asset('assets/image_icon/moba_main_icon.png'),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 32,right: 32),
+                              child: Image.asset('assets/image_icon/moba_des_icon.png', fit: BoxFit.scaleDown,),
+                            ),
                       ).animate().move(
                           delay: 2000.ms,
                           duration: 750.ms,
                           begin: Offset(0, 400),
                           end: Offset(0, 60)),
-                      Container(
-                        child: Text(
-                          "موبایل   بانک   اتباع",
-                          style: TextStyle(
-                              fontFamily: "Snapp",
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                              fontSize: 15),
-                        ),
-                      )
-                          .animate()
-                          .move(
-                              delay: 2000.ms,
-                              duration: 750.ms,
-                              begin: Offset(0, 400),
-                              end: Offset(0, 60))
-                          .fade(
-                              delay: 2000.ms,
-                              duration: 1500.ms,
-                              begin: 0.0,
-                              end: 1.0),
+                      // Container(
+                      //   child: Text(
+                      //     "موبایل   بانک   اتباع",
+                      //     style: TextStyle(
+                      //         fontFamily: "Snapp",
+                      //         fontWeight: FontWeight.normal,
+                      //         color: Colors.black,
+                      //         fontSize: 15),
+                      //   ),
+                      // )
+                      //     .animate()
+                      //     .move(
+                      //         delay: 2000.ms,
+                      //         duration: 750.ms,
+                      //         begin: Offset(0, 400),
+                      //         end: Offset(0, 60))
+                      //     .fade(
+                      //         delay: 2000.ms,
+                      //         duration: 1500.ms,
+                      //         begin: 0.0,
+                      //         end: 1.0),
                     ],
                   ),
                 ),

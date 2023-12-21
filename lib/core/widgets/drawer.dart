@@ -38,7 +38,7 @@ class AppDrawer extends StatelessWidget {
                       flex: 2,
                       child: Container(
                         child: Image.asset(
-                          'assets/image_icon/moba_main_icon.png',
+                          'assets/image_icon/moba_des_icon.png',
                           fit: BoxFit.scaleDown,
                         ),
                       )),
