@@ -1,3 +1,4 @@
+import 'package:atba_application/core/utils/error_model2.dart';
 import 'package:atba_application/features/feature_bill/data/data_source/remote/api_provider_bill.dart';
 import 'package:atba_application/features/feature_bill/domain/repository/bill_repository.dart';
 import 'package:atba_application/features/feature_charge_sim/data/data_source/remote/api_provider_charge_sim.dart';
@@ -10,8 +11,10 @@ import '../../../../core/general/general_response_model.dart';
 import '../../../../core/resources/data_state.dart';
 import '../../../../core/utils/error_model.dart';
 import '../../domain/entities/get_balance_entity_csim.dart';
+import '../../domain/entities/get_wage_apportions_csim_entity.dart';
 import '../models/charge_sim_model.dart';
 import '../models/get_balance_model_csim.dart';
+import '../models/get_wage_apportions_csim_model.dart';
 
 class ChargeSimRepositoryImpl extends ChargeSimRepository {
   ApiProviderChargeSimCard apiProviderChargeSimCard;
@@ -43,7 +46,8 @@ class ChargeSimRepositoryImpl extends ChargeSimRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
 
           if (dioError.response!.statusCode == 405) {
@@ -57,7 +61,60 @@ class ChargeSimRepositoryImpl extends ChargeSimRepository {
           }
 
           MainErrorModel mainErrorModel =
-              MainErrorModel.fromJson(dioError.response!.data);
+          MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.message != null )
+            return DataFailed(mainErrorModel.message.toString());
+          else
+            return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
+        } else {
+          return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
+        }
+      }
+
+      return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
+    }
+  }
+
+  @override
+  Future<DataState<GetBalanceEntity>> getBalanceOperation() async {
+    try {
+      Response response = await apiProviderChargeSimCard.callGetBalance();
+
+      if (response.statusCode == 200) {
+        GetBalanceEntity getBalanceEntity =
+            GetBalanceModel.fromJson(response.data);
+        return DataSuccess(getBalanceEntity);
+      } else {
+        return DataFailed(
+            "خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
+      }
+    } catch (e) {
+      if (e is DioError) {
+        DioError dioError = e as DioError;
+
+        if (dioError.response != null) {
+          if (dioError.response!.statusCode == 401) {
+            return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
+          }
+
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
+          //
+          // if(dioError.response!.statusCode == 404){
+          //   return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
+          // }
+          //
+          // if (dioError.response!.statusCode == 405) {
+          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
+          // }
+          // if(dioError.response!.statusCode == 400){
+          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
+          // }
+
+          MainErrorModel2 mainErrorModel =
+              MainErrorModel2.fromJson(dioError.response!.data);
           if (mainErrorModel.errors != null &&
               mainErrorModel.errors?.length != 0)
             return DataFailed(mainErrorModel.errors![0].message.toString());
@@ -72,65 +129,65 @@ class ChargeSimRepositoryImpl extends ChargeSimRepository {
     }
   }
 
-
   @override
-  Future<DataState<GetBalanceEntity>> getBalanceOperation() async {
+  Future<DataState<GetWageApportionsEntity>> getWageApportionsOperation(int operationCode, int amount) async {
+
+
+
     try {
-      Response response = await apiProviderChargeSimCard.callGetBalance();
+      Response response =
+      await apiProviderChargeSimCard.callGetWageAndApportions(operationCode,amount);
 
       if (response.statusCode == 200) {
-        GetBalanceEntity getBalanceEntity = GetBalanceModel.fromJson(
-            response.data);
-        return DataSuccess(getBalanceEntity);
+        GetWageApportionsEntity getWageApportionsEntity =
+        GetWageApportionsModel.fromJson(response.data);
+        return DataSuccess(getWageApportionsEntity);
       } else {
-        return DataFailed("خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
+        return DataFailed(
+            "خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
       }
     } catch (e) {
-      if(e is DioError ){
+      if (e is DioError) {
         DioError dioError = e as DioError;
 
-
-
-
-        if(dioError.response!=null){
-
-          if(dioError.response!.statusCode == 401){
+        if (dioError.response != null) {
+          if (dioError.response!.statusCode == 401) {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if(dioError.response!.statusCode! >= 500){
-            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
-          //
-          // if(dioError.response!.statusCode == 404){
-          //   return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
-          // }
-          //
-          // if (dioError.response!.statusCode == 405) {
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
-          // }
-          // if(dioError.response!.statusCode == 400){
+
+          if (dioError.response!.statusCode == 405) {
+            return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
+          }
+          // if (dioError.response!.statusCode == 400) {
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
           // }
+          if (dioError.response!.statusCode == 404) {
+            return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
+          }
 
-
-
-          MainErrorModel mainErrorModel = MainErrorModel.fromJson(dioError.response!.data);
-          if(mainErrorModel.errors!=null  && mainErrorModel.errors?.length!=0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          MainErrorModel mainErrorModel =
+          MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
-        }else{
+        } else {
           return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
         }
-
       }
-
-
 
       return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
     }
+
+
   }
+
+
 
 
 }

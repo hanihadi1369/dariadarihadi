@@ -30,26 +30,46 @@ class ApiProviderChargeSimCard {
     }
   }
 
-
-
-  Future<dynamic> callChargeSim(totalAmount, cellNumber, operatorType , simCardType) async {
+  Future<dynamic> callChargeSim(
+      totalAmount, cellNumber, operatorType, simCardType) async {
     _dio?.options.headers['Authorization'] =
-    "Bearer ${TokenKeeper.accesstoken}";
-    var params = {"totalAmount": totalAmount, "cellNumber": cellNumber, "operatorType": operatorType  , "simCardType": simCardType};
+        "Bearer ${TokenKeeper.accesstoken}";
+    var params = {
+      "totalAmount": totalAmount,
+      "cellNumber": cellNumber,
+      "operatorType": operatorType,
+      "simCardType": simCardType
+    };
     var body = json.encode(params);
     var response = await _dio?.post(
-      // Constants.baseUrl + "/charge/api/v1/MultiTopUp",
-      Constants.baseUrl + "/walletcharge/api/v1/MultiTopUp",
+      Constants.baseUrl + "/charge/api/v1/MultiTopUp",
+      // Constants.baseUrl + "/walletcharge/api/v1/MultiTopUp",
       data: body,
     );
     return response;
   }
 
   Future<dynamic> callGetBalance() async {
-    _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
-    var response = await _dio
-        ?.get(Constants.baseUrl + "/apiapp/Wallet/Balances");
+    _dio?.options.headers['Authorization'] =
+        "Bearer ${TokenKeeper.accesstoken}";
+    var response =
+        await _dio?.get(Constants.baseUrl + "/apiapp/Wallet/Balances");
     return response;
   }
 
+  Future<dynamic> callGetWageAndApportions(OperationCode, Amount) async {
+    _dio?.options.headers['Authorization'] =
+    "Bearer ${TokenKeeper.accesstoken}";
+
+
+    final queryParameters = {
+      'OperationCode': OperationCode,
+      'Amount': Amount,
+    };
+
+    var response = await _dio?.get(
+        Constants.baseUrl + "/apiapp/Transaction/GetWageAndApportions",
+        queryParameters: queryParameters);
+    return response;
+  }
 }

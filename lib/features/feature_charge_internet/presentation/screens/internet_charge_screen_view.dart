@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atba_application/core/params/show_internet_packages_param.dart';
+import 'package:atba_application/core/utils/token_keeper.dart';
 import 'package:atba_application/core/widgets/loading.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,19 +10,24 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/params/buy_internet_package_param.dart';
+import '../../../../core/params/get_wage_approtions_param.dart';
 import '../../../../core/utils/colors.dart';
+import '../../../../core/utils/operator_finder.dart';
 import '../../data/models/show_internet_packages_model.dart' as show;
 import '../block/balance_status_cinternet.dart';
 import '../block/buy_internet_package_status.dart';
 import '../block/charge_internet_bloc.dart';
+import '../block/get_wage_approtions_cinternet_status.dart';
 import '../block/show_internet_packages_status.dart';
 import 'dart:ui' as ui;
 
@@ -32,22 +38,25 @@ class InternetChargeScreenView extends StatefulWidget {
 }
 
 class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
+  String? defaultPhoneNumberFromSharedPref;
+
   int pageIndex = 1;
 
-  int operatorSelected = 3; // >>  1 rightel ,  2 hamrah  ,3   irancell
+  int operatorSelected = 4; // >>  1 rightel ,  2 hamrah  ,3   irancell , 4 nothing
   int simCardType = 0; // >> 1 etberai  2 daemi
   int payTypeSelected = 1; // >>  1 wallet ,  2 kart
   int timeTypeTabIndex =
       1; // >> 1 daily , 2 weekly , 3 monthly  , 4 threemonth  , 5 sixmonth , 6 anually , 7 other
 
   String balance = "نامشخص";
+  String totalAmountWithkarmozd = "نامشخص";
   bool shouldShowLoading = false;
 
   final _formKey_page1 = GlobalKey<FormState>();
   bool _isButtonNextDisabled_page1 = true;
   TextEditingController _phoneController = TextEditingController();
 
-  show.Value internetPackagesResponse = show.Value();
+  show.Data internetPackagesResponse = show.Data();
   List<show.Daily> dailyInternetPackList = [];
   show.Daily selectedDaily = show.Daily();
   List<show.Weekly> weeklyInternetPackList = [];
@@ -70,6 +79,8 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
   @override
   void initState() {
     super.initState();
+    TokenKeeper.getPhoneNumber()
+        .then((value) => defaultPhoneNumberFromSharedPref = value);
   }
 
   @override
@@ -125,12 +136,20 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                 _showSnackBar(error.message);
                 state.balanceStatus = BalanceInit();
               }
+
+              if (state.getWageApprotionsStatus is GetWageApprotionsError) {
+                GetWageApprotionsError error =
+                    state.getWageApprotionsStatus as GetWageApprotionsError;
+                _showSnackBar(error.message);
+                state.getWageApprotionsStatus = GetWageApprotionsInit();
+              }
             },
             builder: (context, state) {
               if (state.showInternetPackagesStatus
                       is ShowInternetPackagesLoading ||
                   state.buyInternetPackageStatus is BuyInternetPackageLoading ||
-                  state.balanceStatus is BalanceLoading) {
+                  state.balanceStatus is BalanceLoading ||
+                  state.getWageApprotionsStatus is GetWageApprotionsLoading) {
                 return LoadingPage();
               }
 
@@ -140,13 +159,13 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                     state.showInternetPackagesStatus
                         as ShowInternetPackagesCompleted;
                 if (showInternetPackagesCompleted
-                        .showInternetPackagesEntity.isFailed ==
-                    false) {
+                        .showInternetPackagesEntity.isSuccess ==
+                    true) {
                   if (showInternetPackagesCompleted
-                          .showInternetPackagesEntity.value !=
+                          .showInternetPackagesEntity.data !=
                       null)
                     internetPackagesResponse = showInternetPackagesCompleted
-                        .showInternetPackagesEntity.value!;
+                        .showInternetPackagesEntity.data!;
 
                   if (internetPackagesResponse.bundles != null) {
                     if (internetPackagesResponse.bundles!.daily != null) {
@@ -223,16 +242,31 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                 state.balanceStatus = BalanceInit();
               }
 
+              if (state.getWageApprotionsStatus is GetWageApprotionsCompleted) {
+                GetWageApprotionsCompleted getWageApprotionsCompleted =
+                    state.getWageApprotionsStatus as GetWageApprotionsCompleted;
+                if (getWageApprotionsCompleted
+                        .getWageApportionsEntity.isSuccess ==
+                    true) {
+                  totalAmountWithkarmozd = getWageApprotionsCompleted
+                      .getWageApportionsEntity.data!.totalAmount
+                      .toString();
+                  pageIndex = 3;
+                }
+                state.getWageApprotionsStatus = GetWageApprotionsInit();
+              }
+
               if (state.buyInternetPackageStatus
                   is BuyInternetPackageCompleted) {
                 BuyInternetPackageCompleted buyInternetPackageCompleted = state
                     .buyInternetPackageStatus as BuyInternetPackageCompleted;
                 if (buyInternetPackageCompleted
-                        .buyInternetPackageEntity.isFailed ==
-                    false) {
+                        .buyInternetPackageEntity.isSuccess ==
+                    true) {
                   orderIdResultPayFromWallet = buyInternetPackageCompleted
-                      .buyInternetPackageEntity.value!.orderId!
+                      .buyInternetPackageEntity.data!.orderId!
                       .toInt();
+
                   pageIndex = 4;
                 }
                 state.buyInternetPackageStatus = BuyInternetPackageInit();
@@ -463,10 +497,31 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                     return null;
                                   },
                                   onChanged: (value) {
+                                    int resultOperator = OperatorFinder.findOperator(value);
+
+
                                     setState(() {
                                       _isButtonNextDisabled_page1 =
                                           !_formKey_page1.currentState!
                                               .validate();
+
+                                      switch(resultOperator){
+                                        case 1:
+                                          operatorSelected = 2;
+                                          break;
+                                        case 2:
+                                          operatorSelected = 3;
+                                          break;
+                                        case 3:
+                                          operatorSelected = 1;
+                                          break;
+                                        case 4:
+                                          operatorSelected = 4;
+                                          break;
+                                        case 5:
+                                          operatorSelected = 4;
+                                          break;
+                                      }
                                     });
                                   },
                                   maxLength: 11,
@@ -480,9 +535,129 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                       borderSide:
                                           BorderSide(color: Colors.grey),
                                     ),
-                                    suffixIcon: Icon(
-                                      Icons.account_box_outlined,
-                                      color: MyColors.icon_1,
+                                    suffixIcon: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            await TokenKeeper.getPhoneNumber()
+                                                .then((value) => {
+                                                      if (value != null &&
+                                                          value.isNotEmpty)
+                                                        {
+
+
+                                                          setState(() {
+                                                            _phoneController
+                                                                    .text =
+                                                                value.trim();
+
+                                                            _isButtonNextDisabled_page1 =
+                                                            !_formKey_page1.currentState!
+                                                                .validate();
+
+
+                                                            switch(OperatorFinder.findOperator(value)){
+                                                              case 1:
+                                                                operatorSelected = 2;
+                                                                break;
+                                                              case 2:
+                                                                operatorSelected = 3;
+                                                                break;
+                                                              case 3:
+                                                                operatorSelected = 1;
+                                                                break;
+                                                              case 4:
+                                                                operatorSelected = 4;
+                                                                break;
+                                                              case 5:
+                                                                operatorSelected = 4;
+                                                                break;
+                                                            }
+
+
+                                                          }),
+                                                          _showSnackBar(
+                                                              "شماره تلفن همراه شما جایگذاری شد")
+                                                        }
+                                                    });
+                                          },
+                                          child: Icon(
+                                            Icons.sim_card_outlined,
+                                            color: MyColors.icon_1,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+
+                                            final PhoneContact contact =
+                                                await FlutterContactPicker.pickPhoneContact();
+                                            if(contact!=null && (contact.phoneNumber!=null)){
+
+
+                                              String tempNumber = contact
+                                                  .phoneNumber!.number!
+                                                  .trim();
+
+                                              if(tempNumber.startsWith("+98")){
+                                                tempNumber = tempNumber.replaceFirst("+98", "0");
+                                              }
+                                              if(tempNumber.startsWith("0098")){
+                                                tempNumber = tempNumber.replaceFirst("0098", "0");
+                                              }
+
+
+
+
+
+
+                                              setState(() {
+                                                _phoneController
+                                                    .text =
+                                                    tempNumber;
+
+
+                                                _isButtonNextDisabled_page1 =
+                                                !_formKey_page1.currentState!
+                                                    .validate();
+
+
+                                                switch(OperatorFinder.findOperator(tempNumber)){
+                                                  case 1:
+                                                    operatorSelected = 2;
+                                                    break;
+                                                  case 2:
+                                                    operatorSelected = 3;
+                                                    break;
+                                                  case 3:
+                                                    operatorSelected = 1;
+                                                    break;
+                                                  case 4:
+                                                    operatorSelected = 4;
+                                                    break;
+                                                  case 5:
+                                                    operatorSelected = 4;
+                                                    break;
+                                                }
+
+
+                                              });
+                                            _showSnackBar(
+                                            "شماره تلفن  ${contact.fullName!.trim()}  جایگذاری شد");
+                                            }
+
+
+                                          },
+                                          child: Icon(
+                                            Icons.account_box_outlined,
+                                            color: MyColors.icon_1,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     filled: true,
                                     fillColor: Color(0x32E1E3E0),
@@ -514,9 +689,9 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: _isButtonNextDisabled_page1
+                      onPressed: (_isButtonNextDisabled_page1 || (operatorSelected == 4))
                           ? null
-                          : () {
+                          : () async {
                               // should show bottom sheet dialog
                               showMaterialModalBottomSheet(
                                 context: context,
@@ -651,7 +826,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                     ],
                                   ),
                                 ),
-                              ).then((value) => {
+                              ).then((value) async => {
                                     if (simCardType != 0)
                                       {
                                         BlocProvider.of<ChargeInternetBloc>(
@@ -1208,12 +1383,12 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             Row(
                               children: [
                                 Text(
-                                  "${prepareSelectedItemCost().seRagham()} ریال",
+                                  "${totalAmountWithkarmozd.seRagham()} ریال",
                                   textDirection: TextDirection.rtl,
                                 ),
                                 Spacer(),
                                 Text(
-                                  "مبلغ شارژ + مالیات",
+                                  "مبلغ شارژ + مالیات + کارمزد",
                                   style: TextStyle(color: Colors.grey),
                                 )
                               ],
@@ -1563,12 +1738,12 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                         Row(
                                           children: [
                                             Text(
-                                              "${prepareSelectedItemCost().seRagham()} ریال",
+                                              "${totalAmountWithkarmozd.seRagham()} ریال",
                                               textDirection: TextDirection.rtl,
                                             ),
                                             Spacer(),
                                             Text(
-                                              "مبلغ شارژ + مالیات",
+                                              "مبلغ شارژ + مالیات + کارمزد",
                                               style:
                                                   TextStyle(color: Colors.grey),
                                             )
@@ -1717,24 +1892,33 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
   }
 
   List<Widget> prepareEPackWidgets() {
-
-
-
-
     List<Widget> widgetList = [];
     if (timeTypeTabIndex == 1) {
       for (var i = 0; i < dailyInternetPackList.length; i++) {
-        if(simCardType==1){
+        if (simCardType == 1) {
           //etebari
-          if(dailyInternetPackList[i].type == "1" || dailyInternetPackList[i].type == "3"){
+          if (dailyInternetPackList[i].type == "1" ||
+              dailyInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                dailyInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedDaily = dailyInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -1814,19 +1998,31 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   )),
             );
           }
-
-        }else if (simCardType == 2){
+        } else if (simCardType == 2) {
           //daemi
 
-          if(dailyInternetPackList[i].type == "2" || dailyInternetPackList[i].type == "3"){
+          if (dailyInternetPackList[i].type == "2" ||
+              dailyInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                dailyInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedDaily = dailyInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -1907,23 +2103,34 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
             );
           }
         }
-
       }
     }
     if (timeTypeTabIndex == 2) {
       for (var i = 0; i < weeklyInternetPackList.length; i++) {
-
-        if(simCardType==1){
+        if (simCardType == 1) {
           //etebari
-          if(weeklyInternetPackList[i].type == "1"||weeklyInternetPackList[i].type == "3"){
+          if (weeklyInternetPackList[i].type == "1" ||
+              weeklyInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                weeklyInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedWeekly = weeklyInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2003,19 +2210,31 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   )),
             );
           }
-
-        }else if (simCardType == 2){
+        } else if (simCardType == 2) {
           //daemi
 
-          if(weeklyInternetPackList[i].type == "2"||weeklyInternetPackList[i].type == "3"){
+          if (weeklyInternetPackList[i].type == "2" ||
+              weeklyInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                weeklyInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedWeekly = weeklyInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2096,26 +2315,35 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
             );
           }
         }
-
       }
     }
     if (timeTypeTabIndex == 3) {
       for (var i = 0; i < monthlyInternetPackList.length; i++) {
-
-
-
-        if(simCardType==1){
+        if (simCardType == 1) {
           //etebari
 
-          if(monthlyInternetPackList[i].type == "1"||monthlyInternetPackList[i].type == "3"){
+          if (monthlyInternetPackList[i].type == "1" ||
+              monthlyInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                monthlyInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedMonthly = monthlyInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2195,19 +2423,31 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   )),
             );
           }
-
-        }else if (simCardType == 2){
+        } else if (simCardType == 2) {
           //daemi
 
-          if(monthlyInternetPackList[i].type == "2"||monthlyInternetPackList[i].type == "3"){
+          if (monthlyInternetPackList[i].type == "2" ||
+              monthlyInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                monthlyInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedMonthly = monthlyInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2288,26 +2528,34 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
             );
           }
         }
-
       }
     }
     if (timeTypeTabIndex == 4) {
       for (var i = 0; i < trimesterInternetPackList.length; i++) {
-
-
-
-
-        if(simCardType==1){
+        if (simCardType == 1) {
           //etebari
-          if(trimesterInternetPackList[i].type == "1"||trimesterInternetPackList[i].type == "3"){
+          if (trimesterInternetPackList[i].type == "1" ||
+              trimesterInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                trimesterInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedTrimester = trimesterInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2387,18 +2635,30 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   )),
             );
           }
-
-        }else if (simCardType == 2){
+        } else if (simCardType == 2) {
           //daemi
-          if(trimesterInternetPackList[i].type == "2" || trimesterInternetPackList[i].type == "3"){
+          if (trimesterInternetPackList[i].type == "2" ||
+              trimesterInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                trimesterInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedTrimester = trimesterInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2479,25 +2739,34 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
             );
           }
         }
-
       }
     }
     if (timeTypeTabIndex == 5) {
       for (var i = 0; i < semiannualInternetPackList.length; i++) {
-
-
-
-        if(simCardType==1){
+        if (simCardType == 1) {
           //etebari
-          if(semiannualInternetPackList[i].type == "1"||semiannualInternetPackList[i].type == "3"){
+          if (semiannualInternetPackList[i].type == "1" ||
+              semiannualInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                semiannualInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedSemiannual = semiannualInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2577,19 +2846,31 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   )),
             );
           }
-
-        }else if (simCardType == 2){
+        } else if (simCardType == 2) {
           //daemi
 
-          if(semiannualInternetPackList[i].type == "2"||semiannualInternetPackList[i].type == "3"){
+          if (semiannualInternetPackList[i].type == "2" ||
+              semiannualInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                semiannualInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedSemiannual = semiannualInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2670,26 +2951,35 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
             );
           }
         }
-
       }
     }
     if (timeTypeTabIndex == 6) {
       for (var i = 0; i < annualInternetPackList.length; i++) {
-
-
-
-        if(simCardType==1){
+        if (simCardType == 1) {
           //etebari
 
-          if(annualInternetPackList[i].type == "1"||annualInternetPackList[i].type == "3"){
+          if (annualInternetPackList[i].type == "1" ||
+              annualInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                annualInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedAnnual = annualInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2769,18 +3059,30 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   )),
             );
           }
-
-        }else if (simCardType == 2){
+        } else if (simCardType == 2) {
           //daemi
-          if(annualInternetPackList[i].type == "2"||annualInternetPackList[i].type == "3"){
+          if (annualInternetPackList[i].type == "2" ||
+              annualInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                annualInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedAnnual = annualInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2861,27 +3163,35 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
             );
           }
         }
-
       }
     }
     if (timeTypeTabIndex == 7) {
       for (var i = 0; i < otherInternetPackList.length; i++) {
-
-
-
-
-        if(simCardType==1){
+        if (simCardType == 1) {
           //etebari
 
-          if(otherInternetPackList[i].type == "1"||otherInternetPackList[i].type == "3"){
+          if (otherInternetPackList[i].type == "1" ||
+              otherInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                otherInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedOther = otherInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -2961,19 +3271,31 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   )),
             );
           }
-
-        }else if (simCardType == 2){
+        } else if (simCardType == 2) {
           //daemi
 
-          if(otherInternetPackList[i].type == "2"||otherInternetPackList[i].type == "3"){
+          if (otherInternetPackList[i].type == "2" ||
+              otherInternetPackList[i].type == "3") {
             widgetList.add(
               InkWell(
                   onTap: () {
                     BlocProvider.of<ChargeInternetBloc>(context)
                         .add(GetBalanceEvent());
+
+                    GetWageApprotionsParam getWageApprotionsParam =
+                        GetWageApprotionsParam(
+                            operationCode: (operatorSelected == 1)
+                                ? 313
+                                : (operatorSelected == 2)
+                                    ? 3
+                                    : 5,
+                            amount: int.parse(
+                                otherInternetPackList[i].billAmount!));
+                    BlocProvider.of<ChargeInternetBloc>(context)
+                        .add(GetWageApprotionsEvent(getWageApprotionsParam));
+
                     setState(() {
                       selectedOther = otherInternetPackList[i];
-                      pageIndex = 3;
                     });
                   },
                   child: Container(
@@ -3054,7 +3376,6 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
             );
           }
         }
-
       }
     }
     return widgetList;
@@ -3233,7 +3554,7 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
       imagePaths.add(imgFile.path);
       imgFile.writeAsBytes(pngBytes).then((value) async {
         await Share.shareFiles(imagePaths,
-                subject: 'Share',
+                subject: ' ',
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size)
             .then((value) {
           setState(() {

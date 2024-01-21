@@ -1,10 +1,12 @@
 import 'package:atba_application/features/feature_bill/data/data_source/remote/api_provider_bill.dart';
 import 'package:atba_application/features/feature_bill/data/models/get_balance_model_bill.dart';
 import 'package:atba_application/features/feature_bill/data/models/get_bills_model.dart';
+import 'package:atba_application/features/feature_bill/data/models/get_wage_apportions_bill_model.dart';
 import 'package:atba_application/features/feature_bill/data/models/mci_bill_inquiry_model.dart';
 import 'package:atba_application/features/feature_bill/data/models/mtn_bill_inquiry_model.dart';
 import 'package:atba_application/features/feature_bill/data/models/rightel_bill_inquiry_model.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/get_balance_entity_bill.dart';
+import 'package:atba_application/features/feature_bill/domain/entities/get_wage_apportions_bill_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/mci_bill_inquiry_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/mtn_bill_inquiry_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/rightel_bill_inquiry_entity.dart';
@@ -15,6 +17,7 @@ import '../../../../core/general/general_response_entity.dart';
 import '../../../../core/general/general_response_model.dart';
 import '../../../../core/resources/data_state.dart';
 import '../../../../core/utils/error_model.dart';
+import '../../../../core/utils/error_model2.dart';
 import '../../domain/entities/bargh_bill_inquiry_entity.dart';
 import '../../domain/entities/fixline_bill_inquiry_entity.dart';
 import '../../domain/entities/gas_bill_inquiry_entity.dart';
@@ -54,7 +57,8 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
 
           if (dioError.response!.statusCode == 405) {
@@ -69,9 +73,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -108,7 +111,8 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
 
           if (dioError.response!.statusCode == 405) {
@@ -123,9 +127,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -161,8 +164,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -177,9 +181,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -216,8 +219,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -232,9 +236,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -275,8 +278,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -290,9 +294,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -329,8 +332,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -344,9 +348,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -383,8 +386,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -398,9 +402,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -437,8 +440,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -452,9 +456,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -491,8 +494,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -506,9 +510,8 @@ class BillRepositoryImpl extends BillRepository {
 
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -520,17 +523,16 @@ class BillRepositoryImpl extends BillRepository {
     }
   }
 
-
   @override
   Future<DataState<MciBillInquiryEntity>> mciBillInquiryOperation(
       String mobileNumber, String traceNumber) async {
     try {
-      Response response =
-      await apiProviderBill.callMCIMobileBillInquiry(mobileNumber, traceNumber);
+      Response response = await apiProviderBill.callMCIMobileBillInquiry(
+          mobileNumber, traceNumber);
 
       if (response.statusCode == 200) {
         MciBillInquiryEntity mciBillInquiryEntity =
-        MciBillInquiryModel.fromJson(response.data);
+            MciBillInquiryModel.fromJson(response.data);
         return DataSuccess(mciBillInquiryEntity);
       } else {
         return DataFailed(
@@ -546,8 +548,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -560,10 +563,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           MainErrorModel mainErrorModel =
-          MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+              MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -575,17 +577,16 @@ class BillRepositoryImpl extends BillRepository {
     }
   }
 
-
   @override
   Future<DataState<MtnBillInquiryEntity>> mtnBillInquiryOperation(
       String mobileNumber, String traceNumber) async {
     try {
-      Response response =
-      await apiProviderBill.callMtnMobileBillInquiry(mobileNumber, traceNumber);
+      Response response = await apiProviderBill.callMtnMobileBillInquiry(
+          mobileNumber, traceNumber);
 
       if (response.statusCode == 200) {
         MtnBillInquiryEntity mtnBillInquiryEntity =
-        MtnBillInquiryModel.fromJson(response.data);
+            MtnBillInquiryModel.fromJson(response.data);
         return DataSuccess(mtnBillInquiryEntity);
       } else {
         return DataFailed(
@@ -601,8 +602,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -615,10 +617,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           MainErrorModel mainErrorModel =
-          MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+              MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -630,17 +631,16 @@ class BillRepositoryImpl extends BillRepository {
     }
   }
 
-
   @override
   Future<DataState<RightelBillInquiryEntity>> rightelBillInquiryOperation(
       String mobileNumber, String traceNumber) async {
     try {
-      Response response =
-      await apiProviderBill.callRightelMobileBillInquiry(mobileNumber, traceNumber);
+      Response response = await apiProviderBill.callRightelMobileBillInquiry(
+          mobileNumber, traceNumber);
 
       if (response.statusCode == 200) {
         RightelBillInquiryEntity rightelBillInquiryEntity =
-        RightelBillInquiryModel.fromJson(response.data);
+            RightelBillInquiryModel.fromJson(response.data);
         return DataSuccess(rightelBillInquiryEntity);
       } else {
         return DataFailed(
@@ -656,8 +656,9 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -670,7 +671,60 @@ class BillRepositoryImpl extends BillRepository {
           }
 
           MainErrorModel mainErrorModel =
-          MainErrorModel.fromJson(dioError.response!.data);
+              MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
+          else
+            return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
+        } else {
+          return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
+        }
+      }
+
+      return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
+    }
+  }
+
+  @override
+  Future<DataState<GetBalanceEntity>> getBalanceOperation() async {
+    try {
+      Response response = await apiProviderBill.callGetBalance();
+
+      if (response.statusCode == 200) {
+        GetBalanceEntity getBalanceEntity =
+            GetBalanceModel.fromJson(response.data);
+        return DataSuccess(getBalanceEntity);
+      } else {
+        return DataFailed(
+            "خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
+      }
+    } catch (e) {
+      if (e is DioError) {
+        DioError dioError = e as DioError;
+
+        if (dioError.response != null) {
+          if (dioError.response!.statusCode == 401) {
+            return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
+          }
+
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
+          //
+          // if(dioError.response!.statusCode == 404){
+          //   return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
+          // }
+          //
+          // if (dioError.response!.statusCode == 405) {
+          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
+          // }
+          // if(dioError.response!.statusCode == 400){
+          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
+          // }
+
+          MainErrorModel2 mainErrorModel =
+              MainErrorModel2.fromJson(dioError.response!.data);
           if (mainErrorModel.errors != null &&
               mainErrorModel.errors?.length != 0)
             return DataFailed(mainErrorModel.errors![0].message.toString());
@@ -685,66 +739,62 @@ class BillRepositoryImpl extends BillRepository {
     }
   }
 
-
-
   @override
-  Future<DataState<GetBalanceEntity>> getBalanceOperation() async {
+  Future<DataState<GetWageApportionsEntity>> getWageApportionsOperation(int operationCode, int amount) async {
+
+
+
     try {
-      Response response = await apiProviderBill.callGetBalance();
+      Response response =
+      await apiProviderBill.callGetWageAndApportions(operationCode,amount);
 
       if (response.statusCode == 200) {
-        GetBalanceEntity getBalanceEntity = GetBalanceModel.fromJson(
-            response.data);
-        return DataSuccess(getBalanceEntity);
+        GetWageApportionsEntity getWageApportionsEntity =
+        GetWageApportionsModel.fromJson(response.data);
+        return DataSuccess(getWageApportionsEntity);
       } else {
-        return DataFailed("خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
+        return DataFailed(
+            "خطای ارتباط با سرور - کد خطا : ${response.statusCode}");
       }
     } catch (e) {
-      if(e is DioError ){
+      if (e is DioError) {
         DioError dioError = e as DioError;
 
-
-
-
-        if(dioError.response!=null){
-
-          if(dioError.response!.statusCode == 401){
+        if (dioError.response != null) {
+          if (dioError.response!.statusCode == 401) {
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
 
-          if(dioError.response!.statusCode! >= 500){
-            return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          if (dioError.response!.statusCode! >= 500) {
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
-          //
-          // if(dioError.response!.statusCode == 404){
-          //   return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
-          // }
-          //
-          // if (dioError.response!.statusCode == 405) {
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
-          // }
-          // if(dioError.response!.statusCode == 400){
+
+          if (dioError.response!.statusCode == 405) {
+            return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
+          }
+          // if (dioError.response!.statusCode == 400) {
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
           // }
+          if (dioError.response!.statusCode == 404) {
+            return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
+          }
 
-
-
-          MainErrorModel mainErrorModel = MainErrorModel.fromJson(dioError.response!.data);
-          if(mainErrorModel.errors!=null  && mainErrorModel.errors?.length!=0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          MainErrorModel mainErrorModel =
+          MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.message != null)
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
-        }else{
+        } else {
           return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
         }
-
       }
-
-
 
       return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
     }
-  }
 
+
+  }
 
 }

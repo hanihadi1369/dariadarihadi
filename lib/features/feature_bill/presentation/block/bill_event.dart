@@ -67,6 +67,10 @@ class RightelBillInquiryEvent extends BillEvent{
 
 
 
+class GetWageApprotionsEvent extends BillEvent{
+  final GetWageApprotionsParam getWageApprotionsParam;
+  GetWageApprotionsEvent(this.getWageApprotionsParam);
+}
 
 
 

@@ -7,55 +7,51 @@ class GeneralResponseModel extends GeneralResponseEntity {
 
 
   GeneralResponseModel({
-    bool? isFailed,
+    int? statusCode,
     bool? isSuccess,
-    List<Reasons>? reasons,
-    List<Errors>? errors,
-    List<Successes>? successes,
+    String? message,
+    String? messageEn,
+    Data? data,
+    List<ValidationError>? validationErrors,
+    int? errorCode
 
 
   }):super(
-    isFailed : isFailed,
-    isSuccess: isSuccess,
-    reasons: reasons,
-    errors: errors,
-    successes: successes,
+      statusCode: statusCode,
+      isSuccess: isSuccess,
+      message: message,
+      messageEn: messageEn,
+      data: data,
+      validationErrors: validationErrors,
+      errorCode: errorCode
 
 
   );
 
   factory GeneralResponseModel.fromJson(dynamic json) {
-    List<Reasons> reasons = [];
-    if (json['reasons'] != null) {
-      json['reasons'].forEach((v) {
-        reasons?.add(Reasons.fromJson(v));
+     List<ValidationError> validationErrors = [];
+    if (json['validationErrors'] != null) {
+      json['validationErrors'].forEach((v) {
+        validationErrors?.add(ValidationError.fromJson(v));
       });
     }
 
-    List<Errors> errors = [];
-    if (json['errors'] != null) {
-      json['errors'].forEach((v) {
-        errors?.add(Errors.fromJson(v));
-      });
-    }
 
-    List<Successes> successes = [];
-    if (json['successes'] != null) {
-      json['successes'].forEach((v) {
-        successes?.add(Successes.fromJson(v));
-      });
-    }
+
+
 
 
 
 
 
     return GeneralResponseModel(
-      isFailed: json['isFailed'],
+      statusCode: json['statusCode'],
       isSuccess: json['isSuccess'],
-      reasons: reasons,
-      errors: errors,
-      successes: successes,
+      message: json['message'],
+      messageEn: json['messageEn'],
+      data: json['data'] != null ? Data.fromJson(json['data']) : null,
+      validationErrors: validationErrors,
+      errorCode: json['errorCode'],
 
     );
   }
@@ -65,122 +61,52 @@ class GeneralResponseModel extends GeneralResponseEntity {
 }
 
 
-
-class Successes {
-  Successes({
-    this.message,
-    this.metadata,
+class ValidationError {
+  ValidationError({
+    this.propertyName,
+    this.errors,
   });
 
-  Successes.fromJson(dynamic json) {
-    message = json['message'];
-    metadata =
-        json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
+  ValidationError.fromJson(dynamic json) {
+    propertyName = json['propertyName'];
+    errors = json['errors'] != null ? json['errors'].cast<String>() : [];
   }
 
-  String? message;
-  Metadata? metadata;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['message'] = message;
-    if (metadata != null) {
-      map['metadata'] = metadata?.toJson();
-    }
-    return map;
-  }
+  String? propertyName;
+  List<String>? errors;
 }
 
-/// additionalProp1 : "string"
-/// additionalProp2 : "string"
-/// additionalProp3 : "string"
-
-class Metadata {
-  Metadata({
-    this.additionalProp1,
-    this.additionalProp2,
-    this.additionalProp3,
+class Data {
+  Data({
+    this.isNewUser,
   });
 
-  Metadata.fromJson(dynamic json) {
-    additionalProp1 = json['additionalProp1'];
-    additionalProp2 = json['additionalProp2'];
-    additionalProp3 = json['additionalProp3'];
+  Data.fromJson(dynamic json) {
+    isNewUser = json['isNewUser'];
   }
 
-  String? additionalProp1;
-  String? additionalProp2;
-  String? additionalProp3;
+  bool? isNewUser;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['additionalProp1'] = additionalProp1;
-    map['additionalProp2'] = additionalProp2;
-    map['additionalProp3'] = additionalProp3;
-    return map;
-  }
-}
-
-/// message : "string"
-/// metadata : {"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}
-/// reasons : ["string"]
-
-class Errors {
-  Errors({
-    this.message,
-    this.metadata,
-    this.reasons,
-  });
-
-  Errors.fromJson(dynamic json) {
-    message = json['message'];
-    metadata =
-        json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
-    reasons = json['reasons'] != null ? json['reasons'].cast<String>() : [];
-  }
-
-  String? message;
-  Metadata? metadata;
-  List<String>? reasons;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['message'] = message;
-    if (metadata != null) {
-      map['metadata'] = metadata?.toJson();
-    }
-    map['reasons'] = reasons;
+    map['isNewUser'] = isNewUser;
     return map;
   }
 }
 
 
-/// message : "string"
-/// metadata : {"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}
 
-class Reasons {
-  Reasons({
-    this.message,
-    this.metadata,
-  });
 
-  Reasons.fromJson(dynamic json) {
-    message = json['message'];
-    metadata =
-        json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
-  }
 
-  String? message;
-  Metadata? metadata;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['message'] = message;
-    if (metadata != null) {
-      map['metadata'] = metadata?.toJson();
-    }
-    return map;
-  }
-}
+
+
+
+
+
+
+
+
+
 
 

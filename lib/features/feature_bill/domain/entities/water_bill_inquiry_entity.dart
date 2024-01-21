@@ -4,31 +4,31 @@ import 'package:atba_application/features/feature_bill/data/models/water_bill_in
 
 
 class WaterBillInquiryEntity extends Equatable {
-  final bool? isFailed;
+      final int? statusCode;
   final bool? isSuccess;
-  final List<Reasons>? reasons;
-  final List<Errors>? errors;
-  final List<Successes>? successes;
-  final ValueOrDefault? valueOrDefault;
-  final Value? value;
+  final String? message;
+  final String? messageEn;
+  final Data? data;
+  final List<ValidationError>? validationErrors;
+  final int? errorCode;
 
   WaterBillInquiryEntity(
-      {this.isFailed,
+      {this.statusCode,
       this.isSuccess,
-      this.reasons,
-      this.errors,
-      this.successes,
-      this.valueOrDefault,
-      this.value});
+      this.message,
+      this.messageEn,
+      this.data,
+      this.validationErrors,
+      this.errorCode});
 
   @override
   List<Object?> get props => [
-        isFailed,
+       statusCode,
         isSuccess,
-        reasons,
-        errors,
-        successes,
-        valueOrDefault,
-        value,
+        message,
+        messageEn,
+        data,
+        validationErrors,
+        errorCode,
       ];
 }

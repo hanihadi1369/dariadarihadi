@@ -40,13 +40,9 @@ class ApiProviderChargeInternet {
       'mobile': mobile,
     };
 
-
-
-    // https://uat-atba.saminray.com/walletintpackage/api/v1/ShowInternetPackage?OperatorType=0&Mobile=09363593154
-
     var response = await _dio?.get(
-        // Constants.baseUrl + "/internet/api/v1/ShowInternetPackage",
-        Constants.baseUrl + "/walletintpackage/api/v1/ShowInternetPackage",
+        Constants.baseUrl + "/internet/api/v1/ShowInternetPackage",
+        // Constants.baseUrl + "/walletintpackage/api/v1/ShowInternetPackage",
         queryParameters: queryParameters);
     return response;
   }
@@ -68,8 +64,8 @@ class ApiProviderChargeInternet {
 
     var body = json.encode(params);
     var response = await _dio?.post(
-      // Constants.baseUrl + "/internet/api/v1/BuyInternetPackage",
-      Constants.baseUrl + "/walletintpackage/api/v1/BuyInternetPackage",
+      Constants.baseUrl + "/internet/api/v1/BuyInternetPackage",
+      // Constants.baseUrl + "/walletintpackage/api/v1/BuyInternetPackage",
       data: body,
     );
     return response;
@@ -82,4 +78,24 @@ class ApiProviderChargeInternet {
         await _dio?.get(Constants.baseUrl + "/apiapp/Wallet/Balances");
     return response;
   }
+
+
+
+  Future<dynamic> callGetWageAndApportions(OperationCode, Amount) async {
+    _dio?.options.headers['Authorization'] =
+    "Bearer ${TokenKeeper.accesstoken}";
+
+
+    final queryParameters = {
+      'OperationCode': OperationCode,
+      'Amount': Amount,
+    };
+
+    var response = await _dio?.get(
+        Constants.baseUrl + "/apiapp/Transaction/GetWageAndApportions",
+        queryParameters: queryParameters);
+    return response;
+  }
+
+
 }

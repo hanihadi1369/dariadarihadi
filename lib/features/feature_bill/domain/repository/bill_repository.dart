@@ -3,6 +3,7 @@ import 'package:atba_application/core/general/general_response_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/fixline_bill_inquiry_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/gas_bill_inquiry_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/get_balance_entity_bill.dart';
+import 'package:atba_application/features/feature_bill/domain/entities/get_wage_apportions_bill_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/mci_bill_inquiry_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/mtn_bill_inquiry_entity.dart';
 import 'package:atba_application/features/feature_bill/domain/entities/rightel_bill_inquiry_entity.dart';
@@ -35,6 +36,9 @@ abstract class BillRepository{
 
   Future<DataState<PaymentFromWalletEntity>> paymentFromWalletOperation(String myRequestBody);
   Future<DataState<GetBalanceEntity>> getBalanceOperation();
+
+
+  Future<DataState<GetWageApportionsEntity>> getWageApportionsOperation(int operationCode, int  amount);
 
 
 }

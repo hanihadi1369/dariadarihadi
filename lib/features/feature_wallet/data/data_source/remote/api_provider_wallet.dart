@@ -93,13 +93,15 @@ class ApiProviderWallet {
 
 
 
-   Future<dynamic> callTransactionStatus(String serial) async {
+   Future<dynamic> callTransactionStatus(String serial,String dateFrom,String dateTo) async {
      _dio?.options.headers['Authorization'] = "Bearer ${TokenKeeper.accesstoken}";
 
      final queryParameters = {
        'pageIndex': 1,
        'itemCount': 1,
        'serial': '${serial}',
+       'dateA': '${dateFrom}',
+       'dateB': '${dateTo}',
      };
 
      var response = await _dio

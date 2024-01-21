@@ -33,22 +33,18 @@ class ApiProviderLogin {
     var params = {"phoneNo": phoneNumber};
     var body = json.encode(params);
 
+
+    var response = await _dio?.post(Constants.baseUrl + "/auth/Auth/SendCode", data: body);
     // var response = await _dio?.post(Constants.baseUrl + "/usermanagement/Auth/SendCode", data: body);
-    // var response = await _dio?.post(Constants.baseUrl + "/auth/Auth/SendCode", data: body);
-    var response = await _dio
-        ?.post(Constants.baseUrl + "/usermanagement/Auth/SendCode", data: body);
     return response;
   }
 
   Future<dynamic> callVerifyOtpCode(phoneNumber, otpCode) async {
     var params = {"phoneNo": phoneNumber, "loginCode": otpCode};
     var body = json.encode(params);
-    // var response = await _dio?.post(Constants.baseUrl + "/usermanagement/Auth/Login",data: body,);
-    // var response = await _dio?.post(Constants.baseUrl + "/auth/Auth/Login",data: body,);
-    var response = await _dio?.post(
-      Constants.baseUrl + "/usermanagement/Auth/Login",
-      data: body,
-    );
+
+    var response = await _dio?.post(Constants.baseUrl + "/auth/Auth/Login",data: body,);
+    // var response = await _dio?.post( Constants.baseUrl + "/usermanagement/Auth/Login", data: body,);
     return response;
   }
 }

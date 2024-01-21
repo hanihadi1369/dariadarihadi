@@ -297,9 +297,7 @@ class Successes {
   }
 }
 
-/// additionalProp1 : "string"
-/// additionalProp2 : "string"
-/// additionalProp3 : "string"
+
 
 class Metadata {
   Metadata({
@@ -327,9 +325,8 @@ class Metadata {
   }
 }
 
-/// message : "string"
-/// metadata : {"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}
-/// reasons : ["string"]
+
+
 
 class Errors {
   Errors({
@@ -361,8 +358,7 @@ class Errors {
 }
 
 
-/// message : "string"
-/// metadata : {"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}
+
 
 class Reasons {
   Reasons({

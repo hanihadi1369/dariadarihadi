@@ -1,5 +1,5 @@
 // App
-const String appTitle = 'Flutter Clean Architecture';
+const String appTitle = 'داریکارت';
 
 // Networking and APIs
 const String baseUrl = 'https://newsapi.org/v2';

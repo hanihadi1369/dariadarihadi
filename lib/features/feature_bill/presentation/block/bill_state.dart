@@ -17,95 +17,84 @@ class BillState extends Equatable {
 
   PaymentFromWalletStatus paymentFromWalletStatus;
   BalanceStatus balanceStatus;
+  GetWageApprotionsStatus getWageApprotionsStatus;
 
-  BillState({
-    required this.billsStatus,
-    required this.pageBillIndexStatus,
-    required this.createBillStatus,
-    required this.updateBillStatus,
-    required this.deleteBillStatus,
-    required this.barghBillInquiryStatus,
-    required this.waterBillInquiryStatus,
-    required this.gasBillInquiryStatus,
-    required this.fixLineBillInquiryStatus,
-
-    required this.mciBillInquiryStatus,
-    required this.mtnBillInquiryStatus,
-    required this.rightelBillInquiryStatus,
-
-
-
-
-    required this.paymentFromWalletStatus,
-    required this.balanceStatus
-  });
-
+  BillState(
+      {required this.billsStatus,
+      required this.pageBillIndexStatus,
+      required this.createBillStatus,
+      required this.updateBillStatus,
+      required this.deleteBillStatus,
+      required this.barghBillInquiryStatus,
+      required this.waterBillInquiryStatus,
+      required this.gasBillInquiryStatus,
+      required this.fixLineBillInquiryStatus,
+      required this.mciBillInquiryStatus,
+      required this.mtnBillInquiryStatus,
+      required this.rightelBillInquiryStatus,
+      required this.paymentFromWalletStatus,
+      required this.balanceStatus,
+      required this.getWageApprotionsStatus});
 
   @override
   List<Object?> get props => [
-   billsStatus,
-   pageBillIndexStatus,
-   createBillStatus,
-   updateBillStatus,
-   deleteBillStatus,
-   barghBillInquiryStatus,
-   waterBillInquiryStatus,
-   gasBillInquiryStatus,
-   fixLineBillInquiryStatus,
+        billsStatus,
+        pageBillIndexStatus,
+        createBillStatus,
+        updateBillStatus,
+        deleteBillStatus,
+        barghBillInquiryStatus,
+        waterBillInquiryStatus,
+        gasBillInquiryStatus,
+        fixLineBillInquiryStatus,
+        mciBillInquiryStatus,
+        mtnBillInquiryStatus,
+        rightelBillInquiryStatus,
+        paymentFromWalletStatus,
+        balanceStatus,
+        getWageApprotionsStatus
+      ];
 
-   mciBillInquiryStatus,
-   mtnBillInquiryStatus,
-   rightelBillInquiryStatus,
-
-   paymentFromWalletStatus,
-   balanceStatus,
-  ];
-
-  BillState copyWith({
-    BillsStatus? newBillsStatus,
-    PageBillIndexStatus? newPageBillIndexStatus,
-    CreateBillStatus? newCreateBillStatus,
-    UpdateBillStatus? newUpdateBillStatus,
-    DeleteBillStatus? newDeleteBillStatus,
-    BarghBillInquiryStatus? newBarghBillInquiryStatus,
-    WaterBillInquiryStatus? newWaterBillInquiryStatus,
-    GasBillInquiryStatus? newGasBillInquiryStatus,
-    FixLineBillInquiryStatus? newFixLineBillInquiryStatus,
-
-
-    MciBillInquiryStatus? newMciBillInquiryStatus,
-    MtnBillInquiryStatus? newMtnBillInquiryStatus,
-    RightelBillInquiryStatus? newRightelBillInquiryStatus,
-
-
-
-
-
-    PaymentFromWalletStatus? newPaymentFromWalletStatus,
-    BalanceStatus? newBalanceStatus
-  }) {
+  BillState copyWith(
+      {BillsStatus? newBillsStatus,
+      PageBillIndexStatus? newPageBillIndexStatus,
+      CreateBillStatus? newCreateBillStatus,
+      UpdateBillStatus? newUpdateBillStatus,
+      DeleteBillStatus? newDeleteBillStatus,
+      BarghBillInquiryStatus? newBarghBillInquiryStatus,
+      WaterBillInquiryStatus? newWaterBillInquiryStatus,
+      GasBillInquiryStatus? newGasBillInquiryStatus,
+      FixLineBillInquiryStatus? newFixLineBillInquiryStatus,
+      MciBillInquiryStatus? newMciBillInquiryStatus,
+      MtnBillInquiryStatus? newMtnBillInquiryStatus,
+      RightelBillInquiryStatus? newRightelBillInquiryStatus,
+      PaymentFromWalletStatus? newPaymentFromWalletStatus,
+      BalanceStatus? newBalanceStatus,
+      GetWageApprotionsStatus? newGetWageApprotionsStatus}) {
     return BillState(
-      billsStatus: newBillsStatus ?? this.billsStatus,
-      balanceStatus: newBalanceStatus ?? this.balanceStatus,
-      pageBillIndexStatus: newPageBillIndexStatus ?? this.pageBillIndexStatus,
-      createBillStatus: newCreateBillStatus ?? this.createBillStatus,
-      updateBillStatus: newUpdateBillStatus ?? this.updateBillStatus,
-      deleteBillStatus: newDeleteBillStatus ?? this.deleteBillStatus,
-      barghBillInquiryStatus: newBarghBillInquiryStatus ?? this.barghBillInquiryStatus,
-      waterBillInquiryStatus:
-          newWaterBillInquiryStatus ?? this.waterBillInquiryStatus,
-      gasBillInquiryStatus:
-          newGasBillInquiryStatus ?? this.gasBillInquiryStatus,
-      fixLineBillInquiryStatus: newFixLineBillInquiryStatus ?? this.fixLineBillInquiryStatus,
-
-      mciBillInquiryStatus: newMciBillInquiryStatus ?? this.mciBillInquiryStatus,
-      mtnBillInquiryStatus: newMtnBillInquiryStatus ?? this.mtnBillInquiryStatus,
-      rightelBillInquiryStatus: newRightelBillInquiryStatus ?? this.rightelBillInquiryStatus,
-
-
-
-      paymentFromWalletStatus:
-          newPaymentFromWalletStatus ?? this.paymentFromWalletStatus,
-    );
+        billsStatus: newBillsStatus ?? this.billsStatus,
+        balanceStatus: newBalanceStatus ?? this.balanceStatus,
+        pageBillIndexStatus: newPageBillIndexStatus ?? this.pageBillIndexStatus,
+        createBillStatus: newCreateBillStatus ?? this.createBillStatus,
+        updateBillStatus: newUpdateBillStatus ?? this.updateBillStatus,
+        deleteBillStatus: newDeleteBillStatus ?? this.deleteBillStatus,
+        barghBillInquiryStatus:
+            newBarghBillInquiryStatus ?? this.barghBillInquiryStatus,
+        waterBillInquiryStatus:
+            newWaterBillInquiryStatus ?? this.waterBillInquiryStatus,
+        gasBillInquiryStatus:
+            newGasBillInquiryStatus ?? this.gasBillInquiryStatus,
+        fixLineBillInquiryStatus:
+            newFixLineBillInquiryStatus ?? this.fixLineBillInquiryStatus,
+        mciBillInquiryStatus:
+            newMciBillInquiryStatus ?? this.mciBillInquiryStatus,
+        mtnBillInquiryStatus:
+            newMtnBillInquiryStatus ?? this.mtnBillInquiryStatus,
+        rightelBillInquiryStatus:
+            newRightelBillInquiryStatus ?? this.rightelBillInquiryStatus,
+        paymentFromWalletStatus:
+            newPaymentFromWalletStatus ?? this.paymentFromWalletStatus,
+        getWageApprotionsStatus:
+            newGetWageApprotionsStatus ?? this.getWageApprotionsStatus);
   }
 }

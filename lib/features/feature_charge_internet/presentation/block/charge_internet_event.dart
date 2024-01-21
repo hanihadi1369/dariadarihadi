@@ -26,3 +26,10 @@ class BuyInternetPackagesEvent extends ChargeInternetEvent{
 class GetBalanceEvent extends ChargeInternetEvent{
  GetBalanceEvent();
 }
+
+
+class GetWageApprotionsEvent extends ChargeInternetEvent{
+ final GetWageApprotionsParam getWageApprotionsParam;
+ GetWageApprotionsEvent(this.getWageApprotionsParam);
+}
+

@@ -32,33 +32,22 @@ class LoginRepositoryImpl extends LoginRepository {
       if (e is DioError) {
         DioError dioError = e as DioError;
         if (dioError.response != null) {
-
-
           if(dioError.response!.statusCode == 401){
             return DataFailed("عدم پاسخگویی سرور : شناسه نامعتبر");
           }
-
           if(dioError.response!.statusCode! >= 500){
             return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
           }
-          // if(dioError.response!.statusCode == 400){
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
-          // }
           if(dioError.response!.statusCode == 404){
             return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
           }
-
-
-
-
           MainErrorModel mainErrorModel =
               MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          if (mainErrorModel.message != null )
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {
@@ -102,20 +91,14 @@ class LoginRepositoryImpl extends LoginRepository {
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
           }
-          // if(dioError.response!.statusCode == 400){
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
-          // }
           if(dioError.response!.statusCode == 404){
             return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
           }
 
-
-
           MainErrorModel mainErrorModel =
-              MainErrorModel.fromJson(dioError.response!.data);
-          if (mainErrorModel.errors != null &&
-              mainErrorModel.errors?.length != 0)
-            return DataFailed(mainErrorModel.errors![0].message.toString());
+          MainErrorModel.fromJson(dioError.response!.data);
+          if (mainErrorModel.message != null )
+            return DataFailed(mainErrorModel.message.toString());
           else
             return DataFailed("خطای ناشناخته ، لطفاً دوباره تلاش کنید");
         } else {

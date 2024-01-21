@@ -6,6 +6,7 @@
 import '../../../../core/resources/data_state.dart';
 import '../entities/buy_internet_package_entity.dart';
 import '../entities/get_balance_entity_cinternet.dart';
+import '../entities/get_wage_apportions_cinternet_entity.dart';
 import '../entities/show_internet_packages_entity.dart';
 
 
@@ -28,5 +29,8 @@ abstract class ChargeInternetRepository{
 
       );
   Future<DataState<GetBalanceEntity>> getBalanceOperation();
+
+
+  Future<DataState<GetWageApportionsEntity>> getWageApportionsOperation(int operationCode, int  amount);
 
 }

@@ -4,27 +4,33 @@ import 'package:atba_application/core/general/general_response_model.dart';
 
 
 class GeneralResponseEntity extends Equatable {
-  final bool? isFailed;
+  final int? statusCode;
   final bool? isSuccess;
-  final List<Reasons>? reasons;
-  final List<Errors>? errors;
-  final List<Successes>? successes;
+  final String? message;
+  final String? messageEn;
+  final Data? data;
+  final List<ValidationError>? validationErrors;
+  final int? errorCode;
 
 
   GeneralResponseEntity(
-      {this.isFailed,
-      this.isSuccess,
-      this.reasons,
-      this.errors,
-      this.successes,
+      {this.statusCode,
+        this.isSuccess,
+        this.message,
+        this.messageEn,
+        this.data,
+        this.validationErrors,
+        this.errorCode
       });
 
   @override
   List<Object?> get props => [
-        isFailed,
-        isSuccess,
-        reasons,
-        errors,
-        successes,
+    statusCode,
+    isSuccess,
+    message,
+    messageEn,
+    data,
+    validationErrors,
+    errorCode,
       ];
 }

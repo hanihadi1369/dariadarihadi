@@ -204,11 +204,11 @@ class _WalletScreenViewState extends State<WalletScreenView> {
 
                 state.chargeWalletStatus = ChargeWalletInit();
 
-                if (chargeWalletCompleted.chargeWalletEntity.isFailed ==
-                    false) {
+                if (chargeWalletCompleted.chargeWalletEntity.isSuccess ==
+                    true) {
                   try {
                     await launchUrlString(
-                        chargeWalletCompleted.chargeWalletEntity.value!.url!,
+                        chargeWalletCompleted.chargeWalletEntity.data!.url!,
                         mode: LaunchMode.externalApplication);
                   } catch (e) {}
                 }
@@ -228,14 +228,14 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                 TransactionStatusCompleted transactionStatusCompleted =
                     state.transactionStatusStatus as TransactionStatusCompleted;
                 if (transactionStatusCompleted
-                        .transactionsHistoryEntity.isFailed ==
-                    false) {
+                        .transactionsHistoryEntity.isSuccess ==
+                    true) {
                   pageIndex = 22;
                   if (transactionStatusCompleted
-                              .transactionsHistoryEntity.value ==
+                              .transactionsHistoryEntity.data ==
                           null ||
                       transactionStatusCompleted.transactionsHistoryEntity
-                              .value!.statement!.length ==
+                              .data!.statement!.length ==
                           0) {
                     //failed transaction
                     statusChargeWalletFromUrl = "false";
@@ -261,11 +261,19 @@ class _WalletScreenViewState extends State<WalletScreenView> {
               if (state.transferKifBKifStatus is TransferKifBKifCompleted) {
                 TransferKifBKifCompleted transferKifBKifCompleted =
                     state.transferKifBKifStatus as TransferKifBKifCompleted;
-                if (transferKifBKifCompleted.transferKifBKifEntity.isFailed ==
-                    false) {
-                  transferKifBKifRecepit = transferKifBKifCompleted
-                      .transferKifBKifEntity.value!.receiptID!
-                      .toString();
+                if (transferKifBKifCompleted.transferKifBKifEntity.isSuccess ==
+                    true) {
+
+                 try{
+                   transferKifBKifRecepit = transferKifBKifCompleted
+                       .transferKifBKifEntity.data!.receiptID!
+                       .toString();
+                 }catch(e){
+                   transferKifBKifRecepit = "***";
+                 }
+
+
+
                   pageIndex = 51;
                   state.transferKifBKifStatus = TransferKifBKifInit();
                 }
@@ -277,8 +285,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     state.transactionsHistoryStatus
                         as TransactionsHistoryCompleted;
                 if (transactionsHistoryCompleted
-                        .transactionsHistoryEntity.isFailed ==
-                    false) {
+                        .transactionsHistoryEntity.isSuccess ==
+                    true) {
                   try {
                     totalTransactionsByMonthList = [];
                     var nowJalai = DateTime.now().toJalali().withDay(1);
@@ -327,15 +335,15 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                         i <
                             transactionsHistoryCompleted
                                 .transactionsHistoryEntity
-                                .value!
+                                .data!
                                 .statement!
                                 .length;
                         i++) {
                       String tYearName = transactionsHistoryCompleted
-                          .transactionsHistoryEntity.value!.statement![i].date!
+                          .transactionsHistoryEntity.data!.statement![i].date!
                           .substring(0, 4);
                       String tMonth2Digit = transactionsHistoryCompleted
-                          .transactionsHistoryEntity.value!.statement![i].date!
+                          .transactionsHistoryEntity.data!.statement![i].date!
                           .substring(5, 7);
                       for (var j = 0;
                           j < totalTransactionsByMonthList.length;
@@ -347,7 +355,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           totalTransactionsByMonthList[j].statement!.add(
                               transactionsHistoryCompleted
                                   .transactionsHistoryEntity
-                                  .value!
+                                  .data!
                                   .statement![i]);
                         }
                       }
@@ -1031,66 +1039,69 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              pageIndex = 0;
-                            });
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: MyColors.text_field_bg,
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        foregroundDecoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          backgroundBlendMode:
-                                              BlendMode.saturation,
-                                        ),
-                                        padding: EdgeInsets.all(15),
+                      child: Visibility(
+                        visible: false,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 32, right: 32),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                pageIndex = 0;
+                              });
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: MyColors.text_field_bg,
+                                    border: Border.all(
+                                      color: Colors.transparent,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 2,
                                         child: Container(
-                                          padding: EdgeInsets.all(3),
-                                          child: Image.asset(
-                                            'assets/image_icon/back_icon.png',
-                                            fit: BoxFit.scaleDown,
+                                          foregroundDecoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            backgroundBlendMode:
+                                                BlendMode.saturation,
                                           ),
-                                        ),
-                                      )),
-                                  Expanded(flex: 2, child: Container()),
-                                  Expanded(
-                                      flex: 7,
-                                      child: Container(
-                                        child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  "شارژ خودکار کیف پول",
-                                                  style:
-                                                      TextStyle(fontSize: 13),
-                                                ))),
-                                      )),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        child: Image.asset(
-                                          'assets/image_icon/auto_wallet_charge.png',
-                                          fit: BoxFit.contain,
-                                        ),
-                                      )),
-                                ],
-                              )),
+                                          padding: EdgeInsets.all(15),
+                                          child: Container(
+                                            padding: EdgeInsets.all(3),
+                                            child: Image.asset(
+                                              'assets/image_icon/back_icon.png',
+                                              fit: BoxFit.scaleDown,
+                                            ),
+                                          ),
+                                        )),
+                                    Expanded(flex: 2, child: Container()),
+                                    Expanded(
+                                        flex: 7,
+                                        child: Container(
+                                          child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    "شارژ خودکار کیف پول",
+                                                    style:
+                                                        TextStyle(fontSize: 13),
+                                                  ))),
+                                        )),
+                                    Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          padding: EdgeInsets.all(5),
+                                          child: Image.asset(
+                                            'assets/image_icon/auto_wallet_charge.png',
+                                            fit: BoxFit.contain,
+                                          ),
+                                        )),
+                                  ],
+                                )),
+                          ),
                         ),
                       ),
                     ),
@@ -1262,62 +1273,37 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     Expanded(flex: 1, child: Container()),
                     Expanded(
                         flex: 2,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              pageIndex = 0;
-                            });
-                          },
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Image.asset(
-                                        'assets/image_icon/decrement_icon.png',
-                                        fit: BoxFit.contain,
-                                      ),
-                                    )),
-                                Expanded(
-                                    child: Container(
-                                  child: Text("برداشت"),
-                                ))
-                              ],
+                        child: Visibility(
+                          visible: false,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                pageIndex = 0;
+                              });
+                            },
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/decrement_icon.png',
+                                          fit: BoxFit.contain,
+                                        ),
+                                      )),
+                                  Expanded(
+                                      child: Container(
+                                    child: Text("برداشت"),
+                                  ))
+                                ],
+                              ),
                             ),
                           ),
                         )),
                     Expanded(flex: 2, child: Container()),
-                    Expanded(
-                        flex: 2,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              pageIndex = 0;
-                            });
-                          },
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Image.asset(
-                                        'assets/image_icon/transfer_icon.png',
-                                        fit: BoxFit.contain,
-                                      ),
-                                    )),
-                                Expanded(
-                                    child: Container(
-                                  child: Text("انتقال"),
-                                ))
-                              ],
-                            ),
-                          ),
-                        )),
-                    Expanded(flex: 2, child: Container()),
+
                     Expanded(
                         flex: 2,
                         child: InkWell(
@@ -1340,9 +1326,42 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                     )),
                                 Expanded(
                                     child: Container(
-                                  child: Text("افزایش"),
-                                ))
+                                      child: Text("افزایش"),
+                                    ))
                               ],
+                            ),
+                          ),
+                        )),
+
+                    Expanded(flex: 2, child: Container()),
+                    Expanded(
+                        flex: 2,
+                        child: Visibility(
+                          visible: false,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                pageIndex = 0;
+                              });
+                            },
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Image.asset(
+                                          'assets/image_icon/transfer_icon.png',
+                                          fit: BoxFit.contain,
+                                        ),
+                                      )),
+                                  Expanded(
+                                      child: Container(
+                                        child: Text("انتقال"),
+                                      ))
+                                ],
+                              ),
                             ),
                           ),
                         )),
@@ -5039,7 +5058,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
       imagePaths.add(imgFile.path);
       imgFile.writeAsBytes(pngBytes).then((value) async {
         await Share.shareFiles(imagePaths,
-                subject: 'Share',
+                subject: ' ',
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size)
             .then((value) {
           setState(() {

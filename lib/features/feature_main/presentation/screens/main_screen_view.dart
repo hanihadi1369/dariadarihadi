@@ -40,11 +40,21 @@ import '../../../feature_profile/presentation/bloc/profile_bloc.dart';
 import '../bloc/refresh_token_status.dart';
 
 class MainScreenView extends StatefulWidget {
+
+
   @override
   MainScreenViewState createState() => MainScreenViewState();
 }
 
 class MainScreenViewState extends State<MainScreenView> {
+
+
+
+
+
+
+
+
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   static String balance = "***";
@@ -226,7 +236,8 @@ class MainScreenViewState extends State<MainScreenView> {
               if (state.refreshTokenStatus is RefreshTokenCompleted) {
                 RefreshTokenCompleted refreshTokenCompleted =
                     state.refreshTokenStatus as RefreshTokenCompleted;
-                if (refreshTokenCompleted.refreshTokenEntity.isFailed == true) {
+                if (refreshTokenCompleted.refreshTokenEntity.isSuccess ==
+                    false) {
                   TokenKeeper.deleteAccessToken().then((value) {
                     Navigator.pushReplacement(
                       context,
@@ -242,31 +253,25 @@ class MainScreenViewState extends State<MainScreenView> {
                   });
                 } else {
                   TokenKeeper.saveAccessToken(refreshTokenCompleted
-                          .refreshTokenEntity.value!.tokens!.accesstoken!)
+                          .refreshTokenEntity.data!.tokens!.accesstoken!)
                       .then(
                     (value) => {
                       TokenKeeper.accesstoken = refreshTokenCompleted
-                          .refreshTokenEntity.value!.tokens!.accesstoken!,
+                          .refreshTokenEntity.data!.tokens!.accesstoken!,
                       TokenKeeper.saveRefreshToken(refreshTokenCompleted
-                              .refreshTokenEntity.value!.tokens!.refreshToken!)
+                              .refreshTokenEntity.data!.tokens!.refreshToken!)
                           .then(
                         (value) => {
                           TokenKeeper.refreshToken = refreshTokenCompleted
-                              .refreshTokenEntity.value!.tokens!.refreshToken!,
+                              .refreshTokenEntity.data!.tokens!.refreshToken!,
                           TokenKeeper.saveRefreshTokenExpirationDate(
-                                  refreshTokenCompleted
-                                      .refreshTokenEntity
-                                      .value!
-                                      .tokens!
-                                      .refreshTokenExpirationDate!)
+                                  refreshTokenCompleted.refreshTokenEntity.data!
+                                      .tokens!.refreshTokenExpirationDate!)
                               .then(
                             (value) => {
                               TokenKeeper.refreshTokenExpirationDate =
-                                  refreshTokenCompleted
-                                      .refreshTokenEntity
-                                      .value!
-                                      .tokens!
-                                      .refreshTokenExpirationDate!,
+                                  refreshTokenCompleted.refreshTokenEntity.data!
+                                      .tokens!.refreshTokenExpirationDate!,
                               state.refreshTokenStatus = RefreshTokenInit(),
                               state.balanceStatus = BalanceInit(),
                               state.profileStatus = ProfileInit(),
@@ -1201,4 +1206,6 @@ class MainScreenViewState extends State<MainScreenView> {
     //           ))));
     // });
   }
+
+
 }

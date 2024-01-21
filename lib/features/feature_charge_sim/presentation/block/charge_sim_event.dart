@@ -19,3 +19,9 @@ class ChargeEvent extends ChargeSimEvent{
 class GetBalanceEvent extends ChargeSimEvent{
  GetBalanceEvent();
 }
+
+
+class GetWageApprotionsEvent extends ChargeSimEvent{
+ final GetWageApprotionsParam getWageApprotionsParam;
+ GetWageApprotionsEvent(this.getWageApprotionsParam);
+}

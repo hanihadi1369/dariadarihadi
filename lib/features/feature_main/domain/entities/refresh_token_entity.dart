@@ -1,33 +1,43 @@
 
 import 'package:equatable/equatable.dart';
-
-import '../../../../core/general/general_response_model.dart';
 import 'package:atba_application/features/feature_main/data/models/refresh_token_model.dart';
 
 
 class RefreshTokenEntity extends Equatable{
 
-  bool? isFailed;
-  bool? isSuccess;
-  List<Reasons>? reasons;
-  List<Errors>? errors;
-  List<Successes>? successes;
-  ValueOrDefault? valueOrDefault;
-  Value? value;
+  final int? statusCode;
+  final bool? isSuccess;
+  final String? message;
+  final String? messageEn;
+  final Data? data;
+  final List<ValidationError>? validationErrors;
+  final int? errorCode;
 
 
-  RefreshTokenEntity({this.isFailed, this.isSuccess, this.reasons, this.errors,
-    this.successes, this.valueOrDefault, this.value});
+  RefreshTokenEntity({
+
+    this.statusCode,
+    this.isSuccess,
+    this.message,
+    this.messageEn,
+    this.data,
+    this.validationErrors,
+    this.errorCode
+
+
+
+
+  });
 
   @override
   List<Object?> get props =>[
-    isFailed,
+    statusCode,
     isSuccess,
-    reasons,
-    errors,
-    successes,
-    valueOrDefault,
-    value,
+    message,
+    messageEn,
+    data,
+    validationErrors,
+    errorCode,
   ];
 
 }

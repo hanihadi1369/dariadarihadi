@@ -17,6 +17,7 @@ import '../../features/feature_splash/presentation/screens/splash_screen_view.da
 import '../../features/unbounded_features/aboutus_screen_view.dart';
 
 import '../utils/colors.dart';
+import '../utils/constants.dart';
 import '../utils/slide_right_transition.dart';
 import '../utils/token_keeper.dart';
 
@@ -119,12 +120,14 @@ class AppDrawer extends StatelessWidget {
                                     Spacer(),
                                     Text(
                                       "فعالیت های من",
-                                      style: TextStyle(fontSize: 17, color: Colors.black38),
+                                      style: TextStyle(
+                                          fontSize: 17, color: Colors.black38),
                                     ),
                                     Container(
                                       foregroundDecoration: BoxDecoration(
-                                        color:  Color(0xa39c9c9c),
-                                        backgroundBlendMode: BlendMode.saturation,
+                                        color: Color(0xa39c9c9c),
+                                        backgroundBlendMode:
+                                            BlendMode.saturation,
                                       ),
                                       child: SizedBox(
                                         width: 40,
@@ -150,12 +153,14 @@ class AppDrawer extends StatelessWidget {
                                     Spacer(),
                                     Text(
                                       "سایت اتباع",
-                                      style: TextStyle(fontSize: 17, color: Colors.black38),
+                                      style: TextStyle(
+                                          fontSize: 17, color: Colors.black38),
                                     ),
                                     Container(
                                       foregroundDecoration: BoxDecoration(
-                                        color:  Color(0xa39c9c9c),
-                                        backgroundBlendMode: BlendMode.saturation,
+                                        color: Color(0xa39c9c9c),
+                                        backgroundBlendMode:
+                                            BlendMode.saturation,
                                       ),
                                       child: SizedBox(
                                         width: 40,
@@ -181,12 +186,14 @@ class AppDrawer extends StatelessWidget {
                                     Spacer(),
                                     Text(
                                       "خبرنامه اتباع",
-                                      style: TextStyle(fontSize: 17, color: Colors.black38),
+                                      style: TextStyle(
+                                          fontSize: 17, color: Colors.black38),
                                     ),
                                     Container(
                                       foregroundDecoration: BoxDecoration(
-                                        color:  Color(0xa39c9c9c),
-                                        backgroundBlendMode: BlendMode.saturation,
+                                        color: Color(0xa39c9c9c),
+                                        backgroundBlendMode:
+                                            BlendMode.saturation,
                                       ),
                                       child: SizedBox(
                                         width: 40,
@@ -414,7 +421,9 @@ class AppDrawer extends StatelessWidget {
                           ],
                         ),
                       )),
-                  Expanded(flex: 6, child: Container()),
+                  Expanded(flex: 4, child: Container()),
+                  Expanded(flex: 1, child: Container(child:Text("نسخه ${Constants.versionName}"))),
+                  Expanded(flex: 1, child: Container()),
                 ],
               ),
             ),

@@ -5,10 +5,12 @@ import 'package:atba_application/core/params/bargh_bill_inquiry_param.dart';
 import 'package:atba_application/core/params/fixline_bill_inquiry_param.dart';
 import 'package:atba_application/core/params/fixmobile_bill_inquiry_param.dart';
 import 'package:atba_application/core/params/gas_bill_inquiry_param.dart';
+import 'package:atba_application/core/params/get_wage_approtions_param.dart';
 import 'package:atba_application/core/params/water_bill_inquiry_param.dart';
 import 'package:atba_application/features/feature_bill/domain/use_cases/fixline_bill_inquiry_usecase.dart';
 import 'package:atba_application/features/feature_bill/domain/use_cases/gas_bill_inquiry_usecase.dart';
 import 'package:atba_application/features/feature_bill/domain/use_cases/get_balance_usecase.dart';
+import 'package:atba_application/features/feature_bill/domain/use_cases/get_wage_approtions_usecase.dart';
 import 'package:atba_application/features/feature_bill/domain/use_cases/mci_bill_inquiry_usecase.dart';
 import 'package:atba_application/features/feature_bill/domain/use_cases/rightel_bill_inquiry_usecase.dart';
 import 'package:atba_application/features/feature_bill/domain/use_cases/water_bill_inquiry_usecase.dart';
@@ -17,6 +19,7 @@ import 'package:atba_application/features/feature_bill/presentation/block/status
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/bills_status.dart';
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/fixline_bill_inquiry_status.dart';
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/gas_bill_inquiry_status.dart';
+import 'package:atba_application/features/feature_bill/presentation/block/statuses/get_wage_approtions_bill_status.dart';
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/mci_bill_inquiry_status.dart';
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/mtn_bill_inquiry_status.dart';
 import 'package:atba_application/features/feature_bill/presentation/block/statuses/rightel_bill_inquiry_status.dart';
@@ -68,6 +71,8 @@ class BillBloc extends Bloc<BillEvent, BillState> {
   final PaymentFromWalletBillUseCase paymentFromWalletBillUseCase;
   final GetBalanceUseCase getBalanceUseCase;
 
+  final GetWageApprotionsUseCase getWageApprotionsUseCase;
+
 
 
   BillBloc(
@@ -89,6 +94,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
 
       this.paymentFromWalletBillUseCase,
       this.getBalanceUseCase,
+      this.getWageApprotionsUseCase
       ) : super(
       BillState(
           billsStatus: BillsInit(),
@@ -107,7 +113,8 @@ class BillBloc extends Bloc<BillEvent, BillState> {
           rightelBillInquiryStatus: RightelBillInquiryInit(),
 
           paymentFromWalletStatus: PaymentFromWalletInit(),
-          balanceStatus: BalanceInit()
+          balanceStatus: BalanceInit(),
+          getWageApprotionsStatus: GetWageApprotionsInit()
       )) {
 
     on<GetBillsEvent>((event, emit) async {
@@ -140,6 +147,23 @@ class BillBloc extends Bloc<BillEvent, BillState> {
         emit(state.copyWith(newBalanceStatus: BalanceError(dataState.error!)));
       }
     });
+
+    on<GetWageApprotionsEvent>((event, emit) async {
+
+      emit(state.copyWith(newGetWageApprotionsStatus: GetWageApprotionsLoading()));
+
+      DataState dataState = await getWageApprotionsUseCase(event.getWageApprotionsParam);
+
+      if(dataState is DataSuccess){
+        emit(state.copyWith(newGetWageApprotionsStatus:
+        GetWageApprotionsCompleted(dataState.data)));
+      }
+
+      if(dataState is DataFailed){
+        emit(state.copyWith(newGetWageApprotionsStatus: GetWageApprotionsError(dataState.error!)));
+      }
+    });
+
 
 
 

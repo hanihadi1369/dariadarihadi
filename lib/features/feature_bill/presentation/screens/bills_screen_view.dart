@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:atba_application/core/params/BillPaymentFromWalletParam.dart';
 import 'package:atba_application/core/params/Bills.dart';
 import 'package:atba_application/core/params/fixmobile_bill_inquiry_param.dart';
+import 'package:atba_application/core/params/get_wage_approtions_param.dart';
 import 'package:atba_application/core/utils/colors.dart';
 import 'package:atba_application/core/utils/token_keeper.dart';
 import 'package:atba_application/core/widgets/loading.dart';
@@ -40,6 +41,7 @@ import '../block/statuses/create_bill_status.dart';
 import '../block/statuses/delete_bill_status.dart';
 import '../block/statuses/fixline_bill_inquiry_status.dart';
 import '../block/statuses/gas_bill_inquiry_status.dart';
+import '../block/statuses/get_wage_approtions_bill_status.dart';
 import '../block/statuses/payment_from_wallet_status.dart';
 import '../block/statuses/water_bill_inquiry_status.dart';
 
@@ -71,33 +73,33 @@ class BillsScreenView extends StatefulWidget {
 }
 
 class _BillsScreenViewState extends State<BillsScreenView> {
-  List<Value> myBillsList = [];
-  List<Value> waterBillsList = [];
-  List<Value> barghBillsList = [];
-  List<Value> gasBillsList = [];
-  List<Value> phoneBillsList = [];
-  List<Value> mciBillsList = [];
-  List<Value> mtnBillsList = [];
-  List<Value> rightelBillsList = [];
+  List<Data> myBillsList = [];
+  List<Data> waterBillsList = [];
+  List<Data> barghBillsList = [];
+  List<Data> gasBillsList = [];
+  List<Data> phoneBillsList = [];
+  List<Data> mciBillsList = [];
+  List<Data> mtnBillsList = [];
+  List<Data> rightelBillsList = [];
 
   String balance = "***";
+  String totalWithKarmozd = "نامشخص";
   String phoneNumber = "***";
   int payTypeSelected = 1;
 
-  Value selectedBillForUpdate = Value();
+  Data selectedBillForUpdate = Data();
   bool isSimpleInquiry = true;
 
-  barghIM.Value barghInquiryResult = barghIM.Value();
-  waterIM.Value waterInquiryResult = waterIM.Value();
-  gasIM.Value gasInquiryResult = gasIM.Value();
-  fixLineIM.Value fixLineInquiryResult = fixLineIM.Value();
+  barghIM.Data barghInquiryResult = barghIM.Data();
+  waterIM.Data waterInquiryResult = waterIM.Data();
+  gasIM.Data gasInquiryResult = gasIM.Data();
+  fixLineIM.Data fixLineInquiryResult = fixLineIM.Data();
 
-  mciIM.Value mciInquiryResult = mciIM.Value();
-  mtnIM.Value mtnInquiryResult = mtnIM.Value();
-  rightelIM.Value rightelInquiryResult = rightelIM.Value();
+  mciIM.Data mciInquiryResult = mciIM.Data();
+  mtnIM.Data mtnInquiryResult = mtnIM.Data();
+  rightelIM.Data rightelInquiryResult = rightelIM.Data();
 
-  paymentFromWalletIM.Value paymentFromWalletResult =
-      paymentFromWalletIM.Value();
+  paymentFromWalletIM.Data paymentFromWalletResult = paymentFromWalletIM.Data();
 
   int pageIndex = 1;
 
@@ -515,6 +517,12 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 _showSnackBar(error.message);
                 state.balanceStatus = BalanceInit();
               }
+              if (state.getWageApprotionsStatus is GetWageApprotionsError) {
+                GetWageApprotionsError error =
+                    state.getWageApprotionsStatus as GetWageApprotionsError;
+                _showSnackBar(error.message);
+                state.getWageApprotionsStatus = GetWageApprotionsInit();
+              }
             },
             builder: (context, state) {
               if (state.billsStatus is BillsLoading ||
@@ -529,15 +537,16 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                   state.mtnBillInquiryStatus is MtnBillInquiryLoading ||
                   state.rightelBillInquiryStatus is RightelBillInquiryLoading ||
                   state.paymentFromWalletStatus is PaymentFromWalletLoading ||
-                  state.balanceStatus is BalanceLoading) {
+                  state.balanceStatus is BalanceLoading ||
+                  state.getWageApprotionsStatus is GetWageApprotionsLoading) {
                 return LoadingPage();
               }
 
               if (state.billsStatus is BillsCompleted) {
                 BillsCompleted billsCompleted =
                     state.billsStatus as BillsCompleted;
-                if (billsCompleted.getBillsEntity.isFailed == false) {
-                  myBillsList = billsCompleted.getBillsEntity.value!;
+                if (billsCompleted.getBillsEntity.isSuccess == true) {
+                  myBillsList = billsCompleted.getBillsEntity.data!;
                   waterBillsList = [];
                   barghBillsList = [];
                   gasBillsList = [];
@@ -576,8 +585,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.createBillStatus is CreateBillCompleted) {
                 CreateBillCompleted createBillCompleted =
                     state.createBillStatus as CreateBillCompleted;
-                if (createBillCompleted.generalResponseEntity.isFailed ==
-                    false) {
+                if (createBillCompleted.generalResponseEntity.isSuccess ==
+                    true) {
                   _showSnackBarPost("قبض با موفقیت اضافه شد");
                   state.createBillStatus = CreateBillInit();
                   if (!_addToMyBillsList) {
@@ -591,8 +600,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.deleteBillStatus is DeleteBillCompleted) {
                 DeleteBillCompleted deleteBillCompleted =
                     state.deleteBillStatus as DeleteBillCompleted;
-                if (deleteBillCompleted.generalResponseEntity.isFailed ==
-                    false) {
+                if (deleteBillCompleted.generalResponseEntity.isSuccess ==
+                    true) {
                   _showSnackBarPost("قبض با موفقیت حذف شد");
                   state.deleteBillStatus = DeleteBillInit();
                   BlocProvider.of<BillBloc>(context).add(GetBillsEvent());
@@ -602,8 +611,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.updateBillStatus is UpdateBillCompleted) {
                 UpdateBillCompleted updateBillCompleted =
                     state.updateBillStatus as UpdateBillCompleted;
-                if (updateBillCompleted.generalResponseEntity.isFailed ==
-                    false) {
+                if (updateBillCompleted.generalResponseEntity.isSuccess ==
+                    true) {
                   _showSnackBarPost("قبض با موفقیت ویرایش شد");
                   state.updateBillStatus = UpdateBillInit();
                   pageIndex = 1;
@@ -614,10 +623,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.barghBillInquiryStatus is BarghBillInquiryCompleted) {
                 BarghBillInquiryCompleted barghBillInquiryCompleted =
                     state.barghBillInquiryStatus as BarghBillInquiryCompleted;
-                if (barghBillInquiryCompleted.barghBillInquiryEntity.isFailed ==
-                    false) {
+                if (barghBillInquiryCompleted
+                        .barghBillInquiryEntity.isSuccess ==
+                    true) {
                   barghInquiryResult =
-                      barghBillInquiryCompleted.barghBillInquiryEntity.value!;
+                      barghBillInquiryCompleted.barghBillInquiryEntity.data!;
                   pageIndex = 322;
                 }
                 state.barghBillInquiryStatus = BarghBillInquiryInit();
@@ -626,10 +636,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.waterBillInquiryStatus is WaterBillInquiryCompleted) {
                 WaterBillInquiryCompleted waterBillInquiryCompleted =
                     state.waterBillInquiryStatus as WaterBillInquiryCompleted;
-                if (waterBillInquiryCompleted.waterBillInquiryEntity.isFailed ==
-                    false) {
+                if (waterBillInquiryCompleted
+                        .waterBillInquiryEntity.isSuccess ==
+                    true) {
                   waterInquiryResult =
-                      waterBillInquiryCompleted.waterBillInquiryEntity.value!;
+                      waterBillInquiryCompleted.waterBillInquiryEntity.data!;
                   pageIndex = 311;
                 }
                 state.waterBillInquiryStatus = WaterBillInquiryInit();
@@ -638,10 +649,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.gasBillInquiryStatus is GasBillInquiryCompleted) {
                 GasBillInquiryCompleted gasBillInquiryCompleted =
                     state.gasBillInquiryStatus as GasBillInquiryCompleted;
-                if (gasBillInquiryCompleted.gasBillInquiryEntity.isFailed ==
-                    false) {
+                if (gasBillInquiryCompleted.gasBillInquiryEntity.isSuccess ==
+                    true) {
                   gasInquiryResult =
-                      gasBillInquiryCompleted.gasBillInquiryEntity.value!;
+                      gasBillInquiryCompleted.gasBillInquiryEntity.data!;
                   pageIndex = 333;
                 }
                 state.gasBillInquiryStatus = GasBillInquiryInit();
@@ -652,10 +663,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 FixLineBillInquiryCompleted fixLineBillInquiryCompleted = state
                     .fixLineBillInquiryStatus as FixLineBillInquiryCompleted;
                 if (fixLineBillInquiryCompleted
-                        .fixLineBillInquiryEntity.isFailed ==
-                    false) {
+                        .fixLineBillInquiryEntity.isSuccess ==
+                    true) {
                   fixLineInquiryResult = fixLineBillInquiryCompleted
-                      .fixLineBillInquiryEntity.value!;
+                      .fixLineBillInquiryEntity.data!;
                   pageIndex = 344;
                 }
                 state.fixLineBillInquiryStatus = FixLineBillInquiryInit();
@@ -664,10 +675,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.mciBillInquiryStatus is MciBillInquiryCompleted) {
                 MciBillInquiryCompleted mciBillInquiryCompleted =
                     state.mciBillInquiryStatus as MciBillInquiryCompleted;
-                if (mciBillInquiryCompleted.mciBillInquiryEntity.isFailed ==
-                    false) {
+                if (mciBillInquiryCompleted.mciBillInquiryEntity.isSuccess ==
+                    true) {
                   mciInquiryResult =
-                      mciBillInquiryCompleted.mciBillInquiryEntity.value!;
+                      mciBillInquiryCompleted.mciBillInquiryEntity.data!;
                   pageIndex = 355;
                 }
                 state.mciBillInquiryStatus = MciBillInquiryInit();
@@ -676,10 +687,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
               if (state.mtnBillInquiryStatus is MtnBillInquiryCompleted) {
                 MtnBillInquiryCompleted mtnBillInquiryCompleted =
                     state.mtnBillInquiryStatus as MtnBillInquiryCompleted;
-                if (mtnBillInquiryCompleted.mtnBillInquiryEntity.isFailed ==
-                    false) {
+                if (mtnBillInquiryCompleted.mtnBillInquiryEntity.isSuccess ==
+                    true) {
                   mtnInquiryResult =
-                      mtnBillInquiryCompleted.mtnBillInquiryEntity.value!;
+                      mtnBillInquiryCompleted.mtnBillInquiryEntity.data!;
                   pageIndex = 366;
                 }
                 state.mtnBillInquiryStatus = MtnBillInquiryInit();
@@ -690,10 +701,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 RightelBillInquiryCompleted rightelBillInquiryCompleted = state
                     .rightelBillInquiryStatus as RightelBillInquiryCompleted;
                 if (rightelBillInquiryCompleted
-                        .rightelBillInquiryEntity.isFailed ==
-                    false) {
+                        .rightelBillInquiryEntity.isSuccess ==
+                    true) {
                   rightelInquiryResult = rightelBillInquiryCompleted
-                      .rightelBillInquiryEntity.value!;
+                      .rightelBillInquiryEntity.data!;
                   pageIndex = 377;
                 }
                 state.rightelBillInquiryStatus = RightelBillInquiryInit();
@@ -703,10 +714,10 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 PaymentFromWalletCompleted paymentFromWalletCompleted =
                     state.paymentFromWalletStatus as PaymentFromWalletCompleted;
                 if (paymentFromWalletCompleted
-                        .paymentFromWalletEntity.isFailed ==
-                    false) {
+                        .paymentFromWalletEntity.isSuccess ==
+                    true) {
                   orderId = paymentFromWalletCompleted
-                      .paymentFromWalletEntity.value!.orderId!
+                      .paymentFromWalletEntity.data!.orderId!
                       .toInt()
                       .toString();
                   if (pageIndex == 3111) {
@@ -738,10 +749,48 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                 BalanceCompleted balanceCompleted =
                     state.balanceStatus as BalanceCompleted;
                 if (balanceCompleted.getBalanceEntity.isFailed == false) {
-                  balance = balanceCompleted.getBalanceEntity.value![0].availablebalance!
+                  balance = balanceCompleted
+                      .getBalanceEntity.value![0].availablebalance!
                       .toString();
                 }
                 state.balanceStatus = BalanceInit();
+              }
+
+              if (state.getWageApprotionsStatus is GetWageApprotionsCompleted) {
+                GetWageApprotionsCompleted getWageApprotionsCompleted =
+                    state.getWageApprotionsStatus as GetWageApprotionsCompleted;
+                if (getWageApprotionsCompleted
+                        .getWageApportionsEntity.isSuccess ==
+                    true) {
+                  totalWithKarmozd = getWageApprotionsCompleted
+                      .getWageApportionsEntity.data!.totalAmount
+                      .toString();
+
+                  switch (pageIndex) {
+                    case 311:
+                      pageIndex = 3111;
+                      break;
+                    case 322:
+                      pageIndex = 3222;
+                      break;
+                    case 333:
+                      pageIndex = 3333;
+                      break;
+                    case 344:
+                      pageIndex = 3444;
+                      break;
+                    case 355:
+                      pageIndex = 3555;
+                      break;
+                    case 366:
+                      pageIndex = 3666;
+                      break;
+                    case 377:
+                      pageIndex = 3777;
+                      break;
+                  }
+                }
+                state.getWageApprotionsStatus = GetWageApprotionsInit();
               }
 
               if (shouldShowLoading) {
@@ -5523,6 +5572,18 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             : () {
                                 BlocProvider.of<BillBloc>(context)
                                     .add(GetBalanceEvent());
+
+                                GetWageApprotionsParam getWageApprotionsParam =
+                                    GetWageApprotionsParam(
+                                        operationCode: 300,
+                                        amount: int.parse(waterInquiryResult
+                                            .amount
+                                            .toString()));
+
+                                BlocProvider.of<BillBloc>(context).add(
+                                    GetWageApprotionsEvent(
+                                        getWageApprotionsParam));
+
                                 if (_addToMyBillsList) {
                                   CreateBillParam createBillParam =
                                       CreateBillParam(
@@ -5535,10 +5596,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                   BlocProvider.of<BillBloc>(context)
                                       .add(CreateBillEvent(createBillParam));
                                 }
-
-                                setState(() {
-                                  pageIndex = 3111;
-                                });
                               },
                         child: Text('پرداخت'),
                       ),
@@ -5676,9 +5733,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    waterInquiryResult.amount!
-                                            .trim()
-                                            .seRagham() +
+                                    totalWithKarmozd.trim().seRagham() +
                                         " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
@@ -5688,7 +5743,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                "مبلغ",
+                                "مبلغ + کارمزد",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -5811,7 +5866,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -6393,8 +6449,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                         fit: BoxFit.scaleDown,
                                       ),
                                     )),
-                                Expanded(flex: 1, child: Container(child: Text("قبض آب"),)),
-
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      child: Text("قبض آب"),
+                                    )),
                               ],
                             ),
                           ),
@@ -6488,9 +6547,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               Row(
                                 children: [
                                   Text(
-                                    waterInquiryResult.amount!
-                                            .trim()
-                                            .seRagham() +
+                                    totalWithKarmozd.trim().seRagham() +
                                         " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
@@ -7144,6 +7201,17 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 BlocProvider.of<BillBloc>(context)
                                     .add(GetBalanceEvent());
 
+                                GetWageApprotionsParam getWageApprotionsParam =
+                                    GetWageApprotionsParam(
+                                        operationCode: 301,
+                                        amount: int.parse(barghInquiryResult
+                                            .amount
+                                            .toString()));
+
+                                BlocProvider.of<BillBloc>(context).add(
+                                    GetWageApprotionsEvent(
+                                        getWageApprotionsParam));
+
                                 if (_addToMyBillsList) {
                                   CreateBillParam createBillParam =
                                       CreateBillParam(
@@ -7156,9 +7224,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                   BlocProvider.of<BillBloc>(context)
                                       .add(CreateBillEvent(createBillParam));
                                 }
-                                setState(() {
-                                  pageIndex = 3222;
-                                });
                               },
                         child: Text('پرداخت'),
                       ),
@@ -7297,9 +7362,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    barghInquiryResult.amount!
-                                            .toString()
-                                            .seRagham() +
+                                    totalWithKarmozd.toString().seRagham() +
                                         " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
@@ -7309,7 +7372,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                "مبلغ",
+                                "مبلغ + کارمزد",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -7432,7 +7495,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -8015,8 +8079,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                         fit: BoxFit.scaleDown,
                                       ),
                                     )),
-                                Expanded(flex: 1, child: Container(child: Text("قبض برق"),)),
-
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      child: Text("قبض برق"),
+                                    )),
                               ],
                             ),
                           ),
@@ -8110,8 +8177,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               Row(
                                 children: [
                                   Text(
-                                    barghInquiryResult.amount!
-                                            .toInt()
+                                    totalWithKarmozd
                                             .toString()
                                             .trim()
                                             .seRagham() +
@@ -8763,6 +8829,18 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             : () {
                                 BlocProvider.of<BillBloc>(context)
                                     .add(GetBalanceEvent());
+
+                                GetWageApprotionsParam getWageApprotionsParam =
+                                    GetWageApprotionsParam(
+                                        operationCode: 306,
+                                        amount: int.parse(gasInquiryResult
+                                            .amount
+                                            .toString()));
+
+                                BlocProvider.of<BillBloc>(context).add(
+                                    GetWageApprotionsEvent(
+                                        getWageApprotionsParam));
+
                                 if (_addToMyBillsList) {
                                   CreateBillParam createBillParam =
                                       CreateBillParam(
@@ -8775,9 +8853,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                   BlocProvider.of<BillBloc>(context)
                                       .add(CreateBillEvent(createBillParam));
                                 }
-                                setState(() {
-                                  pageIndex = 3333;
-                                });
                               },
                         child: Text('پرداخت'),
                       ),
@@ -8915,9 +8990,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    gasInquiryResult.amount!
-                                            .toString()
-                                            .seRagham() +
+                                    totalWithKarmozd.toString().seRagham() +
                                         " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
@@ -8927,7 +9000,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                "مبلغ",
+                                "مبلغ + کارمزد",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -9050,7 +9123,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -9632,8 +9706,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                           fit: BoxFit.scaleDown,
                                         ),
                                       )),
-                                  Expanded(flex: 1, child: Container(child: Text("قبض گاز"),)),
-
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Text("قبض گاز"),
+                                      )),
                                 ],
                               ),
                             ),
@@ -9727,9 +9804,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 Row(
                                   children: [
                                     Text(
-                                      gasInquiryResult.amount!
-                                              .trim()
-                                              .seRagham() +
+                                      totalWithKarmozd.trim().seRagham() +
                                           " ریال",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(color: Colors.green),
@@ -10413,6 +10488,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 302,
+                                            amount: (midTermSelected)
+                                                ? int.parse(fixLineInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(fixLineInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -10426,10 +10517,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-
-                                    setState(() {
-                                      pageIndex = 3444;
-                                    });
                                   }
                             : (fixLineInquiryResult.finalTerm!.paymentID ==
                                         null ||
@@ -10441,6 +10528,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 302,
+                                            amount: (midTermSelected)
+                                                ? int.parse(fixLineInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(fixLineInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -10454,9 +10557,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-                                    setState(() {
-                                      pageIndex = 3444;
-                                    });
                                   },
                         child: Text('پرداخت'),
                       ),
@@ -10622,16 +10722,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    (midTermSelected)
-                                        ? fixLineInquiryResult.midTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال"
-                                        : fixLineInquiryResult
-                                                .finalTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال",
+                                    totalWithKarmozd.toString().seRagham() +
+                                        " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
                                   ))),
@@ -10640,7 +10732,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                "مبلغ",
+                                "مبلغ + کارمزد",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -10763,7 +10855,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -11382,8 +11475,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                           fit: BoxFit.scaleDown,
                                         ),
                                       )),
-                                  Expanded(flex: 1, child: Container(child: Text("قبض تلفن ثابت"),)),
-
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Text("قبض تلفن ثابت"),
+                                      )),
                                 ],
                               ),
                             ),
@@ -11486,17 +11582,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 Row(
                                   children: [
                                     Text(
-                                      (midTermSelected)
-                                          ? fixLineInquiryResult
-                                                  .midTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال"
-                                          : fixLineInquiryResult
-                                                  .finalTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال",
+                                      totalWithKarmozd.toString().seRagham() +
+                                          " ریال",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(color: Colors.green),
                                     ),
@@ -12169,6 +12256,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 310,
+                                            amount: (midTermSelected)
+                                                ? int.parse(mciInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(mciInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -12181,10 +12284,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-
-                                    setState(() {
-                                      pageIndex = 3555;
-                                    });
                                   }
                             : (mciInquiryResult.finalTerm!.paymentID == null ||
                                     mciInquiryResult.finalTerm!.paymentID!
@@ -12195,6 +12294,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 310,
+                                            amount: (midTermSelected)
+                                                ? int.parse(mciInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(mciInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -12207,9 +12322,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-                                    setState(() {
-                                      pageIndex = 3555;
-                                    });
                                   },
                         child: Text('پرداخت'),
                       ),
@@ -12373,15 +12485,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    (midTermSelected)
-                                        ? mciInquiryResult.midTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال"
-                                        : mciInquiryResult.finalTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال",
+                                    totalWithKarmozd.toString().seRagham() +
+                                        " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
                                   ))),
@@ -12390,7 +12495,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                "مبلغ",
+                                "مبلغ + کارمزد",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -12485,7 +12590,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                       height: 10,
                     ),
                     Visibility(
-                        visible: false,
+                      visible: false,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -12513,7 +12618,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -13129,8 +13235,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                           fit: BoxFit.scaleDown,
                                         ),
                                       )),
-                                  Expanded(flex: 1, child: Container(child: Text("قبض همراه اول"),)),
-
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Text("قبض همراه اول"),
+                                      )),
                                 ],
                               ),
                             ),
@@ -13233,15 +13342,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 Row(
                                   children: [
                                     Text(
-                                      (midTermSelected)
-                                          ? mciInquiryResult.midTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال"
-                                          : mciInquiryResult.finalTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال",
+                                      totalWithKarmozd.toString().seRagham() +
+                                          " ریال",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(color: Colors.green),
                                     ),
@@ -13914,6 +14016,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 311,
+                                            amount: (midTermSelected)
+                                                ? int.parse(mtnInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(mtnInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -13926,10 +14044,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-
-                                    setState(() {
-                                      pageIndex = 3666;
-                                    });
                                   }
                             : (mtnInquiryResult.finalTerm!.paymentID == null ||
                                     mtnInquiryResult.finalTerm!.paymentID!
@@ -13940,6 +14054,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 311,
+                                            amount: (midTermSelected)
+                                                ? int.parse(mtnInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(mtnInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -13952,9 +14082,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-                                    setState(() {
-                                      pageIndex = 3666;
-                                    });
                                   },
                         child: Text('پرداخت'),
                       ),
@@ -14118,15 +14245,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    (midTermSelected)
-                                        ? mtnInquiryResult.midTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال"
-                                        : mtnInquiryResult.finalTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال",
+                                    totalWithKarmozd.toString().seRagham() +
+                                        " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
                                   ))),
@@ -14135,7 +14255,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                "مبلغ",
+                                "مبلغ + کارمزد",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -14258,7 +14378,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -14874,8 +14995,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                           fit: BoxFit.scaleDown,
                                         ),
                                       )),
-                                  Expanded(flex: 1, child: Container(child: Text("قبض ایرانسل"),)),
-
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Text("قبض ایرانسل"),
+                                      )),
                                 ],
                               ),
                             ),
@@ -14978,15 +15102,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 Row(
                                   children: [
                                     Text(
-                                      (midTermSelected)
-                                          ? mtnInquiryResult.midTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال"
-                                          : mtnInquiryResult.finalTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال",
+                                      totalWithKarmozd.toString().seRagham() +
+                                          " ریال",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(color: Colors.green),
                                     ),
@@ -15661,6 +15778,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 312,
+                                            amount: (midTermSelected)
+                                                ? int.parse(rightelInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(rightelInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -15674,10 +15807,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-
-                                    setState(() {
-                                      pageIndex = 3777;
-                                    });
                                   }
                             : (rightelInquiryResult.finalTerm!.paymentID ==
                                         null ||
@@ -15689,6 +15818,22 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     BlocProvider.of<BillBloc>(context)
                                         .add(GetBalanceEvent());
 
+                                    GetWageApprotionsParam
+                                        getWageApprotionsParam =
+                                        GetWageApprotionsParam(
+                                            operationCode: 312,
+                                            amount: (midTermSelected)
+                                                ? int.parse(rightelInquiryResult
+                                                    .midTerm!.amount!
+                                                    .toString())
+                                                : int.parse(rightelInquiryResult
+                                                    .finalTerm!.amount!
+                                                    .toString()));
+
+                                    BlocProvider.of<BillBloc>(context).add(
+                                        GetWageApprotionsEvent(
+                                            getWageApprotionsParam));
+
                                     if (_addToMyBillsList) {
                                       CreateBillParam createBillParam =
                                           CreateBillParam(
@@ -15702,9 +15847,6 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                       BlocProvider.of<BillBloc>(context).add(
                                           CreateBillEvent(createBillParam));
                                     }
-                                    setState(() {
-                                      pageIndex = 3777;
-                                    });
                                   },
                         child: Text('پرداخت'),
                       ),
@@ -15870,16 +16012,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                               child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    (midTermSelected)
-                                        ? rightelInquiryResult.midTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال"
-                                        : rightelInquiryResult
-                                                .finalTerm!.amount!
-                                                .toString()
-                                                .seRagham() +
-                                            " ریال",
+                                    totalWithKarmozd.toString().seRagham() +
+                                        " ریال",
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(color: Colors.green),
                                   ))),
@@ -15888,7 +16022,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                "مبلغ",
+                                "مبلغ + کارمزد",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -16011,7 +16145,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           ("کارت بانکی"),
@@ -16630,8 +16765,11 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                           fit: BoxFit.scaleDown,
                                         ),
                                       )),
-                                  Expanded(flex: 1, child: Container(child: Text("قبض رایتل"),)),
-
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Text("قبض رایتل"),
+                                      )),
                                 ],
                               ),
                             ),
@@ -16734,17 +16872,8 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                                 Row(
                                   children: [
                                     Text(
-                                      (midTermSelected)
-                                          ? rightelInquiryResult
-                                                  .midTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال"
-                                          : rightelInquiryResult
-                                                  .finalTerm!.amount!
-                                                  .toString()
-                                                  .seRagham() +
-                                              " ریال",
+                                      totalWithKarmozd.toString().seRagham() +
+                                          " ریال",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(color: Colors.green),
                                     ),
@@ -16986,7 +17115,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
     }
   }
 
-  createMyBillsItems(List<Value> bills) {
+  createMyBillsItems(List<Data> bills) {
     List<Widget> items = [];
 
     for (var i = 0; i < bills.length; i++) {
@@ -17457,7 +17586,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
       imagePaths.add(imgFile.path);
       imgFile.writeAsBytes(pngBytes).then((value) async {
         await Share.shareFiles(imagePaths,
-                subject: 'Share',
+                subject: ' ',
                 sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size)
             .then((value) {
           setState(() {

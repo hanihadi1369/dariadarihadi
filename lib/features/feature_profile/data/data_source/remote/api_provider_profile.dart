@@ -50,8 +50,8 @@ class ApiProviderProfile {
 
      };
      var body = json.encode(params);
-     var response = await _dio
-         ?.put(Constants.baseUrl + "/auth/User/MyProfile",data: body);
+     // var response = await _dio?.put(Constants.baseUrl + "/usermanagement/User/MyProfile",data: body);
+     var response = await _dio?.put(Constants.baseUrl + "/auth/User/MyProfile",data: body);
      return response;
    }
 

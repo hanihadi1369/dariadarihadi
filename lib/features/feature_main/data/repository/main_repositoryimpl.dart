@@ -1,3 +1,4 @@
+import 'package:atba_application/core/utils/error_model2.dart';
 import 'package:atba_application/features/feature_main/data/models/get_profile_model.dart';
 import 'package:atba_application/features/feature_main/domain/entities/refresh_token_entity.dart';
 import 'package:atba_application/features/feature_main/domain/repository/main_repository.dart';
@@ -41,19 +42,9 @@ class MainRepositoryImpl extends MainRepository {
           if(dioError.response!.statusCode! >= 500){
             return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
-          //
-          // if(dioError.response!.statusCode == 400){
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
-          // }
-          // if (dioError.response!.statusCode == 405) {
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
-          // }
-          // if(dioError.response!.statusCode == 404){
-          //   return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
-          // }
 
-          MainErrorModel mainErrorModel =
-              MainErrorModel.fromJson(dioError.response!.data);
+          MainErrorModel2 mainErrorModel =
+              MainErrorModel2.fromJson(dioError.response!.data);
           if (mainErrorModel.errors != null &&
               mainErrorModel.errors?.length != 0)
             return DataFailed(mainErrorModel.errors![0].message.toString());
@@ -93,19 +84,9 @@ class MainRepositoryImpl extends MainRepository {
           if(dioError.response!.statusCode! >= 500){
             return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
           }
-          //
-          // if(dioError.response!.statusCode == 400){
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
-          // }
-          // if (dioError.response!.statusCode == 405) {
-          //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
-          // }
-          // if(dioError.response!.statusCode == 404){
-          //   return DataFailed("عدم پاسخگویی سرور : شناسه یافت نشد");
-          // }
 
-          MainErrorModel mainErrorModel =
-              MainErrorModel.fromJson(dioError.response!.data);
+          MainErrorModel2 mainErrorModel =
+              MainErrorModel2.fromJson(dioError.response!.data);
           if (mainErrorModel.errors != null &&
               mainErrorModel.errors?.length != 0)
             return DataFailed(mainErrorModel.errors![0].message.toString());

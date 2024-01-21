@@ -1,89 +1,70 @@
-
-
-
 import 'package:atba_application/features/feature_main/domain/entities/refresh_token_entity.dart';
 
-import '../../../../core/general/general_response_model.dart';
-
-/// isFailed : true
-/// isSuccess : true
-/// reasons : [{"message":"string","metadata":{"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}}]
-/// errors : [{"message":"string","metadata":{"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"},"reasons":["string"]}]
-/// successes : [{"message":"string","metadata":{"additionalProp1":"string","additionalProp2":"string","additionalProp3":"string"}}]
-/// valueOrDefault : {"tokens":{"accesstoken":"string","refreshToken":"string","refreshTokenExpirationDate":"2023-07-29T11:41:53.234Z"},"user":{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","createAt":"2023-07-29T11:41:53.234Z","firstName":"string","lastName":"string","username":"string","phoneNo":"string","businessKey":"3fa85f64-5717-4562-b3fc-2c963f66afa6","parentId":"3fa85f64-5717-4562-b3fc-2c963f66afa6","sex":0,"referrer":"string","image":"string","nationalCode":"string","birthDate":"2023-07-29T11:41:53.234Z","email":"string","city":"3fa85f64-5717-4562-b3fc-2c963f66afa6","iban":"string","status":0,"address":"string","latitude":0,"longitude":0,"isAuthenticated":true,"authenticateDate":"string","userAuthenticated":"3fa85f64-5717-4562-b3fc-2c963f66afa6","nationalCodeSerial":"string"},"roles":[{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","name":"string","pName":"string","priority":0,"description":"string","isAdmin":true}]}
-/// value : {"tokens":{"accesstoken":"string","refreshToken":"string","refreshTokenExpirationDate":"2023-07-29T11:41:53.234Z"},"user":{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","createAt":"2023-07-29T11:41:53.234Z","firstName":"string","lastName":"string","username":"string","phoneNo":"string","businessKey":"3fa85f64-5717-4562-b3fc-2c963f66afa6","parentId":"3fa85f64-5717-4562-b3fc-2c963f66afa6","sex":0,"referrer":"string","image":"string","nationalCode":"string","birthDate":"2023-07-29T11:41:53.234Z","email":"string","city":"3fa85f64-5717-4562-b3fc-2c963f66afa6","iban":"string","status":0,"address":"string","latitude":0,"longitude":0,"isAuthenticated":true,"authenticateDate":"string","userAuthenticated":"3fa85f64-5717-4562-b3fc-2c963f66afa6","nationalCodeSerial":"string"},"roles":[{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","name":"string","pName":"string","priority":0,"description":"string","isAdmin":true}]}
-
 class RefreshTokenModel extends RefreshTokenEntity {
-  RefreshTokenModel({
-    bool? isFailed,
-    bool? isSuccess,
-    List<Reasons>? reasons,
-    List<Errors>? errors,
-    List<Successes>? successes,
-    ValueOrDefault? valueOrDefault,
-    Value? value,
-  }):super(
-    isFailed: isFailed,
-    isSuccess: isSuccess,
-    reasons: reasons,
-    errors: errors,
-    successes: successes,
-    valueOrDefault: valueOrDefault,
-    value: value
-  );
+  RefreshTokenModel(
+      {int? statusCode,
+      bool? isSuccess,
+      String? message,
+      String? messageEn,
+      Data? data,
+      List<ValidationError>? validationErrors,
+      int? errorCode})
+      : super(
+      statusCode: statusCode,
+      isSuccess: isSuccess,
+      message: message,
+      messageEn: messageEn,
+      data: data,
+      validationErrors: validationErrors,
+      errorCode: errorCode);
 
   factory RefreshTokenModel.fromJson(dynamic json) {
-    List<Reasons> reasons = [];
-    if (json['reasons'] != null) {
-      json['reasons'].forEach((v) {
-        reasons?.add(Reasons.fromJson(v));
+    List<ValidationError> validationErrors = [];
+    if (json['validationErrors'] != null) {
+      json['validationErrors'].forEach((v) {
+        validationErrors?.add(ValidationError.fromJson(v));
       });
     }
-
-    List<Errors> errors = [];
-    if (json['errors'] != null) {
-      json['errors'].forEach((v) {
-        errors?.add(Errors.fromJson(v));
-      });
-    }
-
-    List<Successes> successes = [];
-    if (json['successes'] != null) {
-      json['successes'].forEach((v) {
-        successes?.add(Successes.fromJson(v));
-      });
-    }
-
-
 
     return RefreshTokenModel(
-      isFailed: json['isFailed'],
+      statusCode: json['statusCode'],
       isSuccess: json['isSuccess'],
-      reasons: reasons,
-      errors: errors,
-      successes: successes,
-      value: json['value'] != null ? Value.fromJson(json['value']) : null,
-      valueOrDefault: json['valueOrDefault'] != null ? ValueOrDefault.fromJson(json['valueOrDefault']): null,
+      message: json['message'],
+      messageEn: json['messageEn'],
+      data: json['data'] != null ? Data.fromJson(json['data']) : null,
+      validationErrors: validationErrors,
+      errorCode: json['errorCode'],
     );
-
-
   }
-
-
 }
 
 /// tokens : {"accesstoken":"string","refreshToken":"string","refreshTokenExpirationDate":"2023-07-29T11:41:53.234Z"}
 /// user : {"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","createAt":"2023-07-29T11:41:53.234Z","firstName":"string","lastName":"string","username":"string","phoneNo":"string","businessKey":"3fa85f64-5717-4562-b3fc-2c963f66afa6","parentId":"3fa85f64-5717-4562-b3fc-2c963f66afa6","sex":0,"referrer":"string","image":"string","nationalCode":"string","birthDate":"2023-07-29T11:41:53.234Z","email":"string","city":"3fa85f64-5717-4562-b3fc-2c963f66afa6","iban":"string","status":0,"address":"string","latitude":0,"longitude":0,"isAuthenticated":true,"authenticateDate":"string","userAuthenticated":"3fa85f64-5717-4562-b3fc-2c963f66afa6","nationalCodeSerial":"string"}
 /// roles : [{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","name":"string","pName":"string","priority":0,"description":"string","isAdmin":true}]
 
-class Value {
-  Value({
+class ValidationError {
+  ValidationError({
+    this.propertyName,
+    this.errors,
+  });
+
+  ValidationError.fromJson(dynamic json) {
+    propertyName = json['propertyName'];
+    errors = json['errors'] != null ? json['errors'].cast<String>() : [];
+  }
+
+  String? propertyName;
+  List<String>? errors;
+}
+
+class Data {
+  Data({
     this.tokens,
     this.user,
     this.roles,
   });
 
-  Value.fromJson(dynamic json) {
+  Data.fromJson(dynamic json) {
     tokens = json['tokens'] != null ? Tokens.fromJson(json['tokens']) : null;
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     if (json['roles'] != null) {
@@ -326,28 +307,3 @@ class Tokens {
 /// tokens : {"accesstoken":"string","refreshToken":"string","refreshTokenExpirationDate":"2023-07-29T11:41:53.234Z"}
 /// user : {"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","createAt":"2023-07-29T11:41:53.234Z","firstName":"string","lastName":"string","username":"string","phoneNo":"string","businessKey":"3fa85f64-5717-4562-b3fc-2c963f66afa6","parentId":"3fa85f64-5717-4562-b3fc-2c963f66afa6","sex":0,"referrer":"string","image":"string","nationalCode":"string","birthDate":"2023-07-29T11:41:53.234Z","email":"string","city":"3fa85f64-5717-4562-b3fc-2c963f66afa6","iban":"string","status":0,"address":"string","latitude":0,"longitude":0,"isAuthenticated":true,"authenticateDate":"string","userAuthenticated":"3fa85f64-5717-4562-b3fc-2c963f66afa6","nationalCodeSerial":"string"}
 /// roles : [{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","name":"string","pName":"string","priority":0,"description":"string","isAdmin":true}]
-
-class ValueOrDefault {
-  ValueOrDefault({
-    this.tokens,
-    this.user,
-    this.roles,
-  });
-
-  ValueOrDefault.fromJson(dynamic json) {
-    tokens = json['tokens'] != null ? Tokens.fromJson(json['tokens']) : null;
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    if (json['roles'] != null) {
-      roles = [];
-      json['roles'].forEach((v) {
-        roles?.add(Roles.fromJson(v));
-      });
-    }
-  }
-
-  Tokens? tokens;
-  User? user;
-  List<Roles>? roles;
-
-
-}

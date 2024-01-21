@@ -73,7 +73,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                 state.pageLoginIndexStatus is PageLoginIndexStatus2) {
               SendOtpCompleted sendOtpCompleted =
                   state.sendOtpStatus as SendOtpCompleted;
-              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
+              if (sendOtpCompleted.sendOtpCodeEntity.isSuccess == true) {
                 shouldShowOnCompletedMessage = false;
                 seccondsForOtpTimer = 120;
                 state.sendOtpStatus = SendOtpInit();
@@ -84,7 +84,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                 state.pageLoginIndexStatus is PageLoginIndexStatus1) {
               SendOtpCompleted sendOtpCompleted =
                   state.sendOtpStatus as SendOtpCompleted;
-              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
+              if (sendOtpCompleted.sendOtpCodeEntity.isSuccess == true) {
                 shouldShowOnCompletedMessage = false;
                 seccondsForOtpTimer = 120;
               }
@@ -93,30 +93,30 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             if (state.verifyOtpStatus is VerifyOtpCompleted) {
               VerifyOtpCompleted verifyOtpCompleted =
                   state.verifyOtpStatus as VerifyOtpCompleted;
-              if (verifyOtpCompleted.verifyOtpCodeEntity.isFailed == true) {
+              if (verifyOtpCompleted.verifyOtpCodeEntity.isSuccess == false) {
                 _showSnackBar(verifyOtpCompleted
-                    .verifyOtpCodeEntity.errors![0].message
+                    .verifyOtpCodeEntity.message
                     .toString());
               } else {
                 TokenKeeper.saveAccessToken(verifyOtpCompleted
-                        .verifyOtpCodeEntity.value!.tokens!.accesstoken!)
+                        .verifyOtpCodeEntity.data!.tokens!.accesstoken!)
                     .then(
                   (value) => {
                     TokenKeeper.accesstoken = verifyOtpCompleted
-                        .verifyOtpCodeEntity.value!.tokens!.accesstoken!,
+                        .verifyOtpCodeEntity.data!.tokens!.accesstoken!,
                     TokenKeeper.saveRefreshToken(verifyOtpCompleted
-                            .verifyOtpCodeEntity.value!.tokens!.refreshToken!)
+                            .verifyOtpCodeEntity.data!.tokens!.refreshToken!)
                         .then(
                       (value) => {
                         TokenKeeper.refreshToken = verifyOtpCompleted
-                            .verifyOtpCodeEntity.value!.tokens!.refreshToken!,
+                            .verifyOtpCodeEntity.data!.tokens!.refreshToken!,
                         TokenKeeper.saveRefreshTokenExpirationDate(
-                                verifyOtpCompleted.verifyOtpCodeEntity.value!
+                                verifyOtpCompleted.verifyOtpCodeEntity.data!
                                     .tokens!.refreshTokenExpirationDate!)
                             .then(
                           (value) => {
                             TokenKeeper.refreshTokenExpirationDate =
-                                verifyOtpCompleted.verifyOtpCodeEntity.value!
+                                verifyOtpCompleted.verifyOtpCodeEntity.data!
                                     .tokens!.refreshTokenExpirationDate!,
                             TokenKeeper.savePhoneNumber(
                                     _phoneController.text.trim())
@@ -162,9 +162,9 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             if (state.sendOtpStatus is SendOtpCompleted) {
               SendOtpCompleted sendOtpCompleted =
                   state.sendOtpStatus as SendOtpCompleted;
-              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == true) {
+              if (sendOtpCompleted.sendOtpCodeEntity.isSuccess == false) {
                 _showSnackBar(sendOtpCompleted
-                    .sendOtpCodeEntity.errors![0].message
+                    .sendOtpCodeEntity.message
                     .toString());
                 state.sendOtpStatus = SendOtpInit();
               }
@@ -186,7 +186,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                 state.pageLoginIndexStatus is PageLoginIndexStatus1) {
               SendOtpCompleted sendOtpCompleted =
                   state.sendOtpStatus as SendOtpCompleted;
-              if (sendOtpCompleted.sendOtpCodeEntity.isFailed == false) {
+              if (sendOtpCompleted.sendOtpCodeEntity.isSuccess == true) {
                 BlocProvider.of<LoginBloc>(context)
                     .add(LoginChangePageIndexEvent(2));
               }

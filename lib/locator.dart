@@ -45,6 +45,9 @@ import 'features/feature_bill/domain/use_cases/payment_from_wallet_bill_usecase.
 import 'features/feature_bill/domain/use_cases/rightel_bill_inquiry_usecase.dart';
 import 'features/feature_bill/domain/use_cases/update_bill_usecase.dart';
 import 'features/feature_bill/domain/use_cases/water_bill_inquiry_usecase.dart';
+import 'features/feature_charge_internet/domain/use_cases/get_wage_approtions_usecase.dart' as cin;
+import 'features/feature_charge_sim/domain/use_cases/get_wage_approtions_usecase.dart' as csim;
+import 'features/feature_bill/domain/use_cases/get_wage_approtions_usecase.dart' as cbill;
 import 'features/feature_charge_sim/data/data_source/remote/api_provider_charge_sim.dart';
 import 'features/feature_charge_sim/data/repository/csim_repositoryimpl.dart';
 import 'features/feature_charge_sim/domain/repository/charge_sim_repository.dart';
@@ -114,22 +117,25 @@ setup(){
   locator.registerSingleton<RightelBillInquiryUseCase>(RightelBillInquiryUseCase(locator()));
   locator.registerSingleton<PaymentFromWalletBillUseCase>(PaymentFromWalletBillUseCase(locator()));
   locator.registerSingleton<bill.GetBalanceUseCase>(bill.GetBalanceUseCase(locator()));
-  locator.registerSingleton<BillBloc>(BillBloc(locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator()));
+  locator.registerSingleton<cbill.GetWageApprotionsUseCase>(cbill.GetWageApprotionsUseCase(locator()));
+  locator.registerSingleton<BillBloc>(BillBloc(locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator(),locator()));
 
 
   locator.registerSingleton<ApiProviderChargeInternet>(ApiProviderChargeInternet());
   locator.registerSingleton<ChargeInternetRepository>(ChargeInternetRepositoryImpl(locator()));
   locator.registerSingleton<ShowInternetPackagesUseCase>(ShowInternetPackagesUseCase(locator()));
   locator.registerSingleton<BuyInternetPackageUseCase>(BuyInternetPackageUseCase(locator()));
+  locator.registerSingleton<cin.GetWageApprotionsUseCase>(cin.GetWageApprotionsUseCase(locator()));
   locator.registerSingleton<ceeee.GetBalanceUseCase>(ceeee.GetBalanceUseCase(locator()));
-  locator.registerSingleton<ChargeInternetBloc>(ChargeInternetBloc(locator(),locator(),locator()));
+  locator.registerSingleton<ChargeInternetBloc>(ChargeInternetBloc(locator(),locator(),locator(),locator()));
 
 
   locator.registerSingleton<ApiProviderChargeSimCard>(ApiProviderChargeSimCard());
   locator.registerSingleton<ChargeSimRepository>(ChargeSimRepositoryImpl(locator()));
   locator.registerSingleton<ChargeSimUseCase>(ChargeSimUseCase(locator()));
   locator.registerSingleton<cssss.GetBalanceUseCase>(cssss.GetBalanceUseCase(locator()));
-  locator.registerSingleton<ChargeSimBloc>(ChargeSimBloc(locator(),locator()));
+  locator.registerSingleton<csim.GetWageApprotionsUseCase>(csim.GetWageApprotionsUseCase(locator()));
+  locator.registerSingleton<ChargeSimBloc>(ChargeSimBloc(locator(),locator(),locator()));
 
 
 

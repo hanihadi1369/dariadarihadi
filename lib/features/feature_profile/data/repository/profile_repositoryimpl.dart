@@ -1,5 +1,6 @@
 import 'package:atba_application/core/resources/data_state.dart';
 import 'package:atba_application/core/utils/error_model.dart';
+import 'package:atba_application/core/utils/error_model2.dart';
 import 'package:atba_application/features/feature_profile/data/data_source/remote/api_provider_profile.dart';
 import 'package:atba_application/features/feature_profile/domain/entities/update_profile_entity.dart';
 import 'package:atba_application/features/feature_profile/domain/repository/profile_repository.dart';
@@ -14,22 +15,19 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
   @override
   Future<DataState<UpdateProfileEntity>> updateProfileOperation(
-       String firstName,
-      String lastName,
-      String nationalCode,
-      String email,
-      String shaba,
-
-
-
-
-      ) async {
+    String firstName,
+    String lastName,
+    String nationalCode,
+    String email,
+    String shaba,
+  ) async {
     try {
-      Response response = await apiProviderProfile.callUpdateMyProfile(firstName,lastName,nationalCode,email,shaba);
+      Response response = await apiProviderProfile.callUpdateMyProfile(
+          firstName, lastName, nationalCode, email, shaba);
 
       if (response.statusCode == 200) {
         UpdateProfileEntity updateProfileEntity =
-        UpdateProfileModel.fromJson(response.data);
+            UpdateProfileModel.fromJson(response.data);
         return DataSuccess(updateProfileEntity);
       } else {
         return DataFailed(
@@ -45,8 +43,9 @@ class ProfileRepositoryImpl extends ProfileRepository {
           }
 
           if (dioError.response!.statusCode! >= 500) {
-                    return DataFailed("عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
-               }
+            return DataFailed(
+                "عدم پاسخگویی سرور : خطای ${dioError.response!.statusCode!.toString()}");
+          }
 
           if (dioError.response!.statusCode == 405) {
             return DataFailed("عدم پاسخگویی سرور : خطای شماره 405");
@@ -59,8 +58,8 @@ class ProfileRepositoryImpl extends ProfileRepository {
           //   return DataFailed("عدم پاسخگویی سرور : خطای شماره 400");
           // }
 
-          MainErrorModel mainErrorModel =
-              MainErrorModel.fromJson(dioError.response!.data);
+          MainErrorModel2 mainErrorModel =
+              MainErrorModel2.fromJson(dioError.response!.data);
           if (mainErrorModel.errors != null &&
               mainErrorModel.errors?.length != 0)
             return DataFailed(mainErrorModel.errors![0].message.toString());
@@ -74,5 +73,4 @@ class ProfileRepositoryImpl extends ProfileRepository {
       return DataFailed("لطفاً اتصال اینترنت خود را بررسی نمایید");
     }
   }
-
 }
