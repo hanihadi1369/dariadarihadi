@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:atba_application/core/params/show_internet_packages_param.dart';
 import 'package:atba_application/core/utils/token_keeper.dart';
 import 'package:atba_application/core/widgets/loading.dart';
+import 'package:atba_application/features/feature_charge_internet/data/models/internet_package_transaction.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:hive/hive.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -42,7 +44,8 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
 
   int pageIndex = 1;
 
-  int operatorSelected = 4; // >>  1 rightel ,  2 hamrah  ,3   irancell , 4 nothing
+  int operatorSelected =
+      4; // >>  1 rightel ,  2 hamrah  ,3   irancell , 4 nothing
   int simCardType = 0; // >> 1 etberai  2 daemi
   int payTypeSelected = 1; // >>  1 wallet ,  2 kart
   int timeTypeTabIndex =
@@ -76,9 +79,36 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
 
   GlobalKey previewContainer4 = new GlobalKey();
 
+  String previousSelectedTransactionBundleId = "";
+  String previousSelectedTransactionBundleName = "";
+  String previousSelectedTransactionBundleType = "";
+  String previousSelectedTransactionRequestId = "";
+  int previousSelectedTransactionAmount = (-1);
+
+  late Box<InternetPackageTransaction> internetPackageTransactionBox;
+  late List<InternetPackageTransaction> internetPackageTransactionsList;
+
   @override
   void initState() {
     super.initState();
+
+    internetPackageTransactionBox =
+        Hive.box<InternetPackageTransaction>('internet_package_transaction');
+
+    if (internetPackageTransactionBox.length > 3) {
+      internetPackageTransactionBox.deleteAt(0);
+    }
+
+    internetPackageTransactionsList = internetPackageTransactionBox.values
+        .toList()
+        .reversed
+        .toList(); //reversed so as to keep the new data to the top;
+    if (internetPackageTransactionsList != null) {
+      print("xeagle691313 ${internetPackageTransactionsList.length}");
+    } else {
+      print("xeagle691313 internetPackageTransactionsList is null");
+    }
+
     TokenKeeper.getPhoneNumber()
         .then((value) => defaultPhoneNumberFromSharedPref = value);
   }
@@ -95,19 +125,36 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
         if (pageIndex == 1) {
           Navigator.of(context).pop();
         }
-
         if (pageIndex == 4) {
           Navigator.of(context).pop();
         }
         if (pageIndex == 2) {
           setState(() {
-            pageIndex = 1;
+            if (previousSelectedTransactionBundleId == "") {
+              pageIndex = 1;
+            } else {
+              previousSelectedTransactionBundleId = "";
+              _phoneController.text = "";
+              operatorSelected = 4;
+              _isButtonNextDisabled_page1 = true;
+              pageIndex = 1;
+            }
           });
         }
         if (pageIndex == 3) {
-          setState(() {
-            pageIndex = 2;
-          });
+          if (previousSelectedTransactionBundleId == "") {
+            setState(() {
+              pageIndex = 2;
+            });
+          } else {
+            setState(() {
+              previousSelectedTransactionBundleId = "";
+              _phoneController.text = "";
+              operatorSelected = 4;
+              _isButtonNextDisabled_page1 = true;
+              pageIndex = 1;
+            });
+          }
         }
 
         return Future.value(false);
@@ -167,66 +214,193 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                     internetPackagesResponse = showInternetPackagesCompleted
                         .showInternetPackagesEntity.data!;
 
-                  if (internetPackagesResponse.bundles != null) {
-                    if (internetPackagesResponse.bundles!.daily != null) {
-                      dailyInternetPackList =
-                          internetPackagesResponse.bundles!.daily!;
+                  if (previousSelectedTransactionBundleId == "") {
+                    if (internetPackagesResponse.bundles != null) {
+                      if (internetPackagesResponse.bundles!.daily != null) {
+                        dailyInternetPackList =
+                            internetPackagesResponse.bundles!.daily!;
+                      } else {
+                        dailyInternetPackList = [];
+                      }
+
+                      if (internetPackagesResponse.bundles!.weekly != null) {
+                        weeklyInternetPackList =
+                            internetPackagesResponse.bundles!.weekly!;
+                      } else {
+                        weeklyInternetPackList = [];
+                      }
+
+                      if (internetPackagesResponse.bundles!.monthly != null) {
+                        monthlyInternetPackList =
+                            internetPackagesResponse.bundles!.monthly!;
+                      } else {
+                        monthlyInternetPackList = [];
+                      }
+
+                      if (internetPackagesResponse.bundles!.trimester != null) {
+                        trimesterInternetPackList =
+                            internetPackagesResponse.bundles!.trimester!;
+                      } else {
+                        trimesterInternetPackList = [];
+                      }
+
+                      if (internetPackagesResponse.bundles!.semiannual !=
+                          null) {
+                        semiannualInternetPackList =
+                            internetPackagesResponse.bundles!.semiannual!;
+                      } else {
+                        semiannualInternetPackList = [];
+                      }
+
+                      if (internetPackagesResponse.bundles!.annual != null) {
+                        annualInternetPackList =
+                            internetPackagesResponse.bundles!.annual!;
+                      } else {
+                        annualInternetPackList = [];
+                      }
+
+                      if (internetPackagesResponse.bundles!.other != null) {
+                        otherInternetPackList =
+                            internetPackagesResponse.bundles!.other!;
+                      } else {
+                        otherInternetPackList = [];
+                      }
                     } else {
                       dailyInternetPackList = [];
-                    }
-
-                    if (internetPackagesResponse.bundles!.weekly != null) {
-                      weeklyInternetPackList =
-                          internetPackagesResponse.bundles!.weekly!;
-                    } else {
                       weeklyInternetPackList = [];
-                    }
-
-                    if (internetPackagesResponse.bundles!.monthly != null) {
-                      monthlyInternetPackList =
-                          internetPackagesResponse.bundles!.monthly!;
-                    } else {
                       monthlyInternetPackList = [];
-                    }
-
-                    if (internetPackagesResponse.bundles!.trimester != null) {
-                      trimesterInternetPackList =
-                          internetPackagesResponse.bundles!.trimester!;
-                    } else {
                       trimesterInternetPackList = [];
-                    }
-
-                    if (internetPackagesResponse.bundles!.semiannual != null) {
-                      semiannualInternetPackList =
-                          internetPackagesResponse.bundles!.semiannual!;
-                    } else {
                       semiannualInternetPackList = [];
-                    }
-
-                    if (internetPackagesResponse.bundles!.annual != null) {
-                      annualInternetPackList =
-                          internetPackagesResponse.bundles!.annual!;
-                    } else {
                       annualInternetPackList = [];
-                    }
-
-                    if (internetPackagesResponse.bundles!.other != null) {
-                      otherInternetPackList =
-                          internetPackagesResponse.bundles!.other!;
-                    } else {
                       otherInternetPackList = [];
                     }
+                    pageIndex = 2;
                   } else {
-                    dailyInternetPackList = [];
-                    weeklyInternetPackList = [];
-                    monthlyInternetPackList = [];
-                    trimesterInternetPackList = [];
-                    semiannualInternetPackList = [];
-                    annualInternetPackList = [];
-                    otherInternetPackList = [];
-                  }
+                    previousSelectedTransactionAmount = (-1);
 
-                  pageIndex = 2;
+                    if (internetPackagesResponse.bundles != null) {
+                      if (internetPackagesResponse.bundles!.daily != null) {
+                        internetPackagesResponse.bundles!.daily!
+                            .forEach((element) {
+                          if (element.id ==
+                              previousSelectedTransactionBundleId) {
+                            previousSelectedTransactionAmount =
+                                int.parse(element.billAmount!);
+                            previousSelectedTransactionBundleType =
+                                element.type!;
+                          }
+                        });
+                      }
+
+                      if (internetPackagesResponse.bundles!.weekly != null) {
+                        internetPackagesResponse.bundles!.weekly!
+                            .forEach((element) {
+                          if (element.id ==
+                              previousSelectedTransactionBundleId) {
+                            previousSelectedTransactionAmount =
+                                int.parse(element.billAmount!);
+                            previousSelectedTransactionBundleType =
+                                element.type!;
+                          }
+                        });
+                      }
+
+                      if (internetPackagesResponse.bundles!.monthly != null) {
+                        internetPackagesResponse.bundles!.monthly!
+                            .forEach((element) {
+                          if (element.id ==
+                              previousSelectedTransactionBundleId) {
+                            previousSelectedTransactionAmount =
+                                int.parse(element.billAmount!);
+                            previousSelectedTransactionBundleType =
+                                element.type!;
+                          }
+                        });
+                      }
+
+                      if (internetPackagesResponse.bundles!.trimester != null) {
+                        internetPackagesResponse.bundles!.trimester!
+                            .forEach((element) {
+                          if (element.id ==
+                              previousSelectedTransactionBundleId) {
+                            previousSelectedTransactionAmount =
+                                int.parse(element.billAmount!);
+                            previousSelectedTransactionBundleType =
+                                element.type!;
+                          }
+                        });
+                      }
+
+                      if (internetPackagesResponse.bundles!.semiannual !=
+                          null) {
+                        internetPackagesResponse.bundles!.semiannual!
+                            .forEach((element) {
+                          if (element.id ==
+                              previousSelectedTransactionBundleId) {
+                            previousSelectedTransactionAmount =
+                                int.parse(element.billAmount!);
+                            previousSelectedTransactionBundleType =
+                                element.type!;
+                          }
+                        });
+                      }
+
+                      if (internetPackagesResponse.bundles!.annual != null) {
+                        internetPackagesResponse.bundles!.annual!
+                            .forEach((element) {
+                          if (element.id ==
+                              previousSelectedTransactionBundleId) {
+                            previousSelectedTransactionAmount =
+                                int.parse(element.billAmount!);
+                            previousSelectedTransactionBundleType =
+                                element.type!;
+                          }
+                        });
+                      }
+
+                      if (internetPackagesResponse.bundles!.other != null) {
+                        internetPackagesResponse.bundles!.other!
+                            .forEach((element) {
+                          if (element.id ==
+                              previousSelectedTransactionBundleId) {
+                            previousSelectedTransactionAmount =
+                                int.parse(element.billAmount!);
+                            previousSelectedTransactionBundleType =
+                                element.type!;
+                          }
+                        });
+                      }
+                    }
+
+                    if (previousSelectedTransactionAmount == (-1) ||
+                        previousSelectedTransactionAmount == null) {
+                      previousSelectedTransactionAmount = (-1);
+                      operatorSelected = 4;
+                      _phoneController.text = "";
+                      previousSelectedTransactionBundleId = "";
+                      payTypeSelected = 1;
+
+                      _showSnackBarPost("بسته مورد نظر دیگر وجود ندارد");
+                    } else {
+                      if (internetPackagesResponse.requestId != null) {
+                        previousSelectedTransactionRequestId =
+                            internetPackagesResponse.requestId!;
+                      }
+
+                      BlocProvider.of<ChargeInternetBloc>(context)
+                          .add(GetBalanceEvent());
+                      GetWageApprotionsParam getWageApprotionsParam =
+                          GetWageApprotionsParam(
+                              operationCode: (operatorSelected == 1)
+                                  ? 313
+                                  : (operatorSelected == 2)
+                                      ? 3
+                                      : 5,
+                              amount: previousSelectedTransactionAmount);
+                      BlocProvider.of<ChargeInternetBloc>(context)
+                          .add(GetWageApprotionsEvent(getWageApprotionsParam));
+                    }
+                  }
                 }
                 state.showInternetPackagesStatus = ShowInternetPackagesInit();
               }
@@ -268,6 +442,43 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                       .toInt();
 
                   pageIndex = 4;
+
+                  //add to hive previous transactions
+                  List<InternetPackageTransaction> tempList =
+                      internetPackageTransactionBox.values
+                          .toList()
+                          .reversed
+                          .toList();
+
+                  final newInternetTransaction = InternetPackageTransaction(
+                      phoneNumber: _phoneController.text.trim(),
+                      operatorType: operatorSelected,
+                      bundleID: (previousSelectedTransactionBundleId != "")
+                          ? previousSelectedTransactionBundleId
+                          : prepareSelectedItemBundelId(),
+                      bundleName: (previousSelectedTransactionBundleId != "")
+                          ? previousSelectedTransactionBundleName
+                          : prepareSelectedItemTitle(),
+                      simCardType: simCardType,
+                      paymentType: payTypeSelected);
+
+                  if (tempList.length == 0) {
+                    internetPackageTransactionBox.add(newInternetTransaction);
+                  } else {
+                    bool shouldAdd = true;
+                    tempList.forEach((element) {
+                      if (element.phoneNumber!.trim() ==
+                              newInternetTransaction.phoneNumber!.trim() &&
+                          element.operatorType ==
+                              newInternetTransaction.operatorType &&
+                          element.bundleID == newInternetTransaction.bundleID) {
+                        shouldAdd = false;
+                      }
+                    });
+                    if (shouldAdd) {
+                      internetPackageTransactionBox.add(newInternetTransaction);
+                    }
+                  }
                 }
                 state.buyInternetPackageStatus = BuyInternetPackageInit();
               }
@@ -497,15 +708,15 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                     return null;
                                   },
                                   onChanged: (value) {
-                                    int resultOperator = OperatorFinder.findOperator(value);
-
+                                    int resultOperator =
+                                        OperatorFinder.findOperator(value);
 
                                     setState(() {
                                       _isButtonNextDisabled_page1 =
                                           !_formKey_page1.currentState!
                                               .validate();
 
-                                      switch(resultOperator){
+                                      switch (resultOperator) {
                                         case 1:
                                           operatorSelected = 2;
                                           break;
@@ -546,37 +757,40 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                                       if (value != null &&
                                                           value.isNotEmpty)
                                                         {
-
-
                                                           setState(() {
                                                             _phoneController
                                                                     .text =
                                                                 value.trim();
 
                                                             _isButtonNextDisabled_page1 =
-                                                            !_formKey_page1.currentState!
-                                                                .validate();
+                                                                !_formKey_page1
+                                                                    .currentState!
+                                                                    .validate();
 
-
-                                                            switch(OperatorFinder.findOperator(value)){
+                                                            switch (OperatorFinder
+                                                                .findOperator(
+                                                                    value)) {
                                                               case 1:
-                                                                operatorSelected = 2;
+                                                                operatorSelected =
+                                                                    2;
                                                                 break;
                                                               case 2:
-                                                                operatorSelected = 3;
+                                                                operatorSelected =
+                                                                    3;
                                                                 break;
                                                               case 3:
-                                                                operatorSelected = 1;
+                                                                operatorSelected =
+                                                                    1;
                                                                 break;
                                                               case 4:
-                                                                operatorSelected = 4;
+                                                                operatorSelected =
+                                                                    4;
                                                                 break;
                                                               case 5:
-                                                                operatorSelected = 4;
+                                                                operatorSelected =
+                                                                    4;
                                                                 break;
                                                             }
-
-
                                                           }),
                                                           _showSnackBar(
                                                               "شماره تلفن همراه شما جایگذاری شد")
@@ -593,40 +807,41 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                         ),
                                         InkWell(
                                           onTap: () async {
-
                                             final PhoneContact contact =
-                                                await FlutterContactPicker.pickPhoneContact();
-                                            if(contact!=null && (contact.phoneNumber!=null)){
-
-
+                                                await FlutterContactPicker
+                                                    .pickPhoneContact();
+                                            if (contact != null &&
+                                                (contact.phoneNumber != null)) {
                                               String tempNumber = contact
                                                   .phoneNumber!.number!
                                                   .trim();
 
-                                              if(tempNumber.startsWith("+98")){
-                                                tempNumber = tempNumber.replaceFirst("+98", "0");
+                                              tempNumber = tempNumber
+                                                  .replaceAll(" ", "");
+
+                                              if (tempNumber
+                                                  .startsWith("+98")) {
+                                                tempNumber = tempNumber
+                                                    .replaceFirst("+98", "0");
                                               }
-                                              if(tempNumber.startsWith("0098")){
-                                                tempNumber = tempNumber.replaceFirst("0098", "0");
+                                              if (tempNumber
+                                                  .startsWith("0098")) {
+                                                tempNumber = tempNumber
+                                                    .replaceFirst("0098", "0");
                                               }
-
-
-
-
-
 
                                               setState(() {
-                                                _phoneController
-                                                    .text =
+                                                _phoneController.text =
                                                     tempNumber;
 
-
                                                 _isButtonNextDisabled_page1 =
-                                                !_formKey_page1.currentState!
-                                                    .validate();
+                                                    !_formKey_page1
+                                                        .currentState!
+                                                        .validate();
 
-
-                                                switch(OperatorFinder.findOperator(tempNumber)){
+                                                switch (
+                                                    OperatorFinder.findOperator(
+                                                        tempNumber)) {
                                                   case 1:
                                                     operatorSelected = 2;
                                                     break;
@@ -643,14 +858,10 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                                     operatorSelected = 4;
                                                     break;
                                                 }
-
-
                                               });
-                                            _showSnackBar(
-                                            "شماره تلفن  ${contact.fullName!.trim()}  جایگذاری شد");
+                                              _showSnackBar(
+                                                  "شماره تلفن  ${contact.fullName!.trim()}  جایگذاری شد");
                                             }
-
-
                                           },
                                           child: Icon(
                                             Icons.account_box_outlined,
@@ -673,6 +884,39 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                             ],
                           ),
                         ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        // Visibility(
+                        //     visible:
+                        //         (internetPackageTransactionsList.length > 0)
+                        //             ? true
+                        //             : false,
+                        //     child: Divider(
+                        //       thickness: 1,
+                        //     )),
+                        Visibility(
+                          visible: (internetPackageTransactionsList.length > 0)
+                              ? true
+                              : false,
+                          child: Align(
+                              alignment: Alignment.topRight,
+                              child: Text(
+                                "خرید های قبلی",
+                                style: TextStyle(color: MyColors.otp_underline),
+                              )),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Visibility(
+                            visible:
+                                (internetPackageTransactionsList.length > 0)
+                                    ? true
+                                    : false,
+                            child: Row(
+                              children: prepareListOfLastTransactions(),
+                            ))
                       ],
                     ),
                   ),
@@ -689,7 +933,8 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: (_isButtonNextDisabled_page1 || (operatorSelected == 4))
+                      onPressed: (_isButtonNextDisabled_page1 ||
+                              (operatorSelected == 4))
                           ? null
                           : () async {
                               // should show bottom sheet dialog
@@ -1014,7 +1259,15 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            pageIndex = 1;
+                            if (previousSelectedTransactionBundleId == "") {
+                              pageIndex = 1;
+                            } else {
+                              previousSelectedTransactionBundleId = "";
+                              _phoneController.text = "";
+                              operatorSelected = 4;
+                              _isButtonNextDisabled_page1 = true;
+                              pageIndex = 1;
+                            }
                           });
                         },
                         child: Container(
@@ -1271,9 +1524,19 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                       flex: 1,
                       child: InkWell(
                         onTap: () {
-                          setState(() {
-                            pageIndex = 2;
-                          });
+                          if (previousSelectedTransactionBundleId == "") {
+                            setState(() {
+                              pageIndex = 2;
+                            });
+                          } else {
+                            setState(() {
+                              previousSelectedTransactionBundleId = "";
+                              _phoneController.text = "";
+                              _isButtonNextDisabled_page1 = true;
+                              operatorSelected = 4;
+                              pageIndex = 1;
+                            });
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.all(6),
@@ -1362,7 +1625,9 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                 Expanded(
                                   flex: 5,
                                   child: Text(
-                                    prepareSelectedItemTitle(),
+                                    (previousSelectedTransactionBundleId != "")
+                                        ? previousSelectedTransactionBundleName
+                                        : prepareSelectedItemTitle(),
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.left,
                                   ),
@@ -1568,8 +1833,13 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                         if (payTypeSelected == 1) {
                           BuyInternetPackageParam buyInternetPackageParam =
                               BuyInternetPackageParam(
-                            bundleId: prepareSelectedItemBundelId(),
-                            amount: prepareSelectedItemCost(),
+                            bundleId:
+                                (previousSelectedTransactionBundleId != "")
+                                    ? previousSelectedTransactionBundleId
+                                    : prepareSelectedItemBundelId(),
+                            amount: (previousSelectedTransactionBundleId != "")
+                                ? previousSelectedTransactionAmount.toString()
+                                : prepareSelectedItemCost(),
                             cellNumber: _phoneController.text.trim(),
                             requestId: (operatorSelected == 1)
                                 ? "${internetPackagesResponse.requestId}"
@@ -1584,7 +1854,10 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
                                 : (operatorSelected == 2)
                                     ? 3
                                     : 5,
-                            type: int.parse(prepareSelectedItemType()),
+                            type: (previousSelectedTransactionBundleId != "")
+                                ? int.parse(
+                                    previousSelectedTransactionBundleType)
+                                : int.parse(prepareSelectedItemType()),
                           );
 
                           BlocProvider.of<ChargeInternetBloc>(context).add(
@@ -3590,5 +3863,400 @@ class _InternetChargeScreenViewState extends State<InternetChargeScreenView> {
         });
       }
     });
+  }
+
+  String prepareBuyedMobileOperatorIcon(int operatorType) {
+    String result = "";
+
+    switch (operatorType) {
+      case 2:
+        result = "assets/image_icon/hamrah_aval_icon.png";
+        break;
+      case 3:
+        result = "assets/image_icon/irancell_icon.png";
+        break;
+      case 1:
+        result = "assets/image_icon/rightel_icon.png";
+        break;
+    }
+
+    return result;
+  }
+
+  List<Widget> prepareListOfLastTransactions() {
+    List<Widget> totalList = [];
+    if (internetPackageTransactionsList.length == 1) {
+      totalList.add(Expanded(
+          flex: 20,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                operatorSelected =
+                    internetPackageTransactionsList[0].operatorType!;
+                _phoneController.text =
+                    internetPackageTransactionsList[0].phoneNumber!;
+                previousSelectedTransactionBundleId =
+                    internetPackageTransactionsList[0].bundleID!;
+                previousSelectedTransactionBundleName =
+                    internetPackageTransactionsList[0].bundleName!;
+                payTypeSelected =
+                    internetPackageTransactionsList[0].paymentType!;
+                previousSelectedTransactionAmount = (-1);
+              });
+
+              BlocProvider.of<ChargeInternetBloc>(context)
+                  .add(ShowInternetPackagesEvent(ShowInternetPackagesParam(
+                      mobile: _phoneController.text.toString().trim(),
+                      operatorType: (operatorSelected == 1)
+                          ? 2
+                          : (operatorSelected == 2)
+                              ? 1
+                              : 0)));
+            },
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Image.asset(
+                      prepareBuyedMobileOperatorIcon(
+                          internetPackageTransactionsList[0].operatorType!),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(internetPackageTransactionsList[0]
+                        .phoneNumber
+                        .toString()),
+                  ),
+                  Text(internetPackageTransactionsList[0].bundleName!,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.green,fontSize: 10))
+                ],
+              ),
+            ),
+          )));
+      totalList.add(Expanded(flex: 2, child: Container()));
+      totalList.add(Expanded(flex: 20, child: Container()));
+      totalList.add(Expanded(flex: 2, child: Container()));
+      totalList.add(Expanded(flex: 20, child: Container()));
+    }
+
+    if (internetPackageTransactionsList.length == 2) {
+      totalList.add(Expanded(
+          flex: 20,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                operatorSelected =
+                    internetPackageTransactionsList[0].operatorType!;
+                _phoneController.text =
+                    internetPackageTransactionsList[0].phoneNumber!;
+                previousSelectedTransactionBundleId =
+                    internetPackageTransactionsList[0].bundleID!;
+                previousSelectedTransactionBundleName =
+                    internetPackageTransactionsList[0].bundleName!;
+                payTypeSelected =
+                    internetPackageTransactionsList[0].paymentType!;
+                previousSelectedTransactionAmount = (-1);
+              });
+
+              BlocProvider.of<ChargeInternetBloc>(context)
+                  .add(ShowInternetPackagesEvent(ShowInternetPackagesParam(
+                      mobile: _phoneController.text.toString().trim(),
+                      operatorType: (operatorSelected == 1)
+                          ? 2
+                          : (operatorSelected == 2)
+                              ? 1
+                              : 0)));
+            },
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Image.asset(
+                      prepareBuyedMobileOperatorIcon(
+                          internetPackageTransactionsList[0].operatorType!),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(internetPackageTransactionsList[0]
+                        .phoneNumber
+                        .toString()),
+                  ),
+                  Text(internetPackageTransactionsList[0].bundleName!,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.green,fontSize: 10))
+                ],
+              ),
+            ),
+          )));
+      totalList.add(Expanded(flex: 2, child: Container()));
+      totalList.add(Expanded(
+          flex: 20,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                operatorSelected =
+                    internetPackageTransactionsList[1].operatorType!;
+                _phoneController.text =
+                    internetPackageTransactionsList[1].phoneNumber!;
+                previousSelectedTransactionBundleId =
+                    internetPackageTransactionsList[1].bundleID!;
+                previousSelectedTransactionBundleName =
+                    internetPackageTransactionsList[1].bundleName!;
+                payTypeSelected =
+                    internetPackageTransactionsList[1].paymentType!;
+                previousSelectedTransactionAmount = (-1);
+              });
+
+              BlocProvider.of<ChargeInternetBloc>(context)
+                  .add(ShowInternetPackagesEvent(ShowInternetPackagesParam(
+                      mobile: _phoneController.text.toString().trim(),
+                      operatorType: (operatorSelected == 1)
+                          ? 2
+                          : (operatorSelected == 2)
+                              ? 1
+                              : 0)));
+            },
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Image.asset(
+                      prepareBuyedMobileOperatorIcon(
+                          internetPackageTransactionsList[1].operatorType!),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(internetPackageTransactionsList[1]
+                        .phoneNumber
+                        .toString()),
+                  ),
+                  Text(internetPackageTransactionsList[1].bundleName!,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.green,fontSize: 10))
+                ],
+              ),
+            ),
+          )));
+      totalList.add(Expanded(flex: 2, child: Container()));
+      totalList.add(Expanded(flex: 20, child: Container()));
+    }
+
+    if (internetPackageTransactionsList.length == 3) {
+      totalList.add(Expanded(
+          flex: 20,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                operatorSelected =
+                    internetPackageTransactionsList[0].operatorType!;
+                _phoneController.text =
+                    internetPackageTransactionsList[0].phoneNumber!;
+                previousSelectedTransactionBundleId =
+                    internetPackageTransactionsList[0].bundleID!;
+                previousSelectedTransactionBundleName =
+                    internetPackageTransactionsList[0].bundleName!;
+                payTypeSelected =
+                    internetPackageTransactionsList[0].paymentType!;
+                previousSelectedTransactionAmount = (-1);
+              });
+
+              BlocProvider.of<ChargeInternetBloc>(context)
+                  .add(ShowInternetPackagesEvent(ShowInternetPackagesParam(
+                      mobile: _phoneController.text.toString().trim(),
+                      operatorType: (operatorSelected == 1)
+                          ? 2
+                          : (operatorSelected == 2)
+                              ? 1
+                              : 0)));
+            },
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Image.asset(
+                      prepareBuyedMobileOperatorIcon(
+                          internetPackageTransactionsList[0].operatorType!),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(internetPackageTransactionsList[0]
+                        .phoneNumber
+                        .toString()),
+                  ),
+                  Text(internetPackageTransactionsList[0].bundleName!,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.green,fontSize: 10))
+                ],
+              ),
+            ),
+          )));
+      totalList.add(Expanded(flex: 2, child: Container()));
+      totalList.add(Expanded(
+          flex: 20,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                operatorSelected =
+                    internetPackageTransactionsList[1].operatorType!;
+                _phoneController.text =
+                    internetPackageTransactionsList[1].phoneNumber!;
+                previousSelectedTransactionBundleId =
+                    internetPackageTransactionsList[1].bundleID!;
+                previousSelectedTransactionBundleName =
+                    internetPackageTransactionsList[1].bundleName!;
+                payTypeSelected =
+                    internetPackageTransactionsList[1].paymentType!;
+                previousSelectedTransactionAmount = (-1);
+              });
+
+              BlocProvider.of<ChargeInternetBloc>(context)
+                  .add(ShowInternetPackagesEvent(ShowInternetPackagesParam(
+                      mobile: _phoneController.text.toString().trim(),
+                      operatorType: (operatorSelected == 1)
+                          ? 2
+                          : (operatorSelected == 2)
+                              ? 1
+                              : 0)));
+            },
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Image.asset(
+                      prepareBuyedMobileOperatorIcon(
+                          internetPackageTransactionsList[1].operatorType!),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(internetPackageTransactionsList[1]
+                        .phoneNumber
+                        .toString()),
+                  ),
+                  Text(internetPackageTransactionsList[1].bundleName!,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.green,fontSize: 10))
+                ],
+              ),
+            ),
+          )));
+      totalList.add(Expanded(flex: 2, child: Container()));
+      totalList.add(Expanded(
+          flex: 20,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                operatorSelected =
+                    internetPackageTransactionsList[2].operatorType!;
+                _phoneController.text =
+                    internetPackageTransactionsList[2].phoneNumber!;
+                previousSelectedTransactionBundleId =
+                    internetPackageTransactionsList[2].bundleID!;
+                previousSelectedTransactionBundleName =
+                    internetPackageTransactionsList[2].bundleName!;
+                payTypeSelected =
+                    internetPackageTransactionsList[2].paymentType!;
+                previousSelectedTransactionAmount = (-1);
+              });
+
+              BlocProvider.of<ChargeInternetBloc>(context)
+                  .add(ShowInternetPackagesEvent(ShowInternetPackagesParam(
+                      mobile: _phoneController.text.toString().trim(),
+                      operatorType: (operatorSelected == 1)
+                          ? 2
+                          : (operatorSelected == 2)
+                              ? 1
+                              : 0)));
+            },
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Image.asset(
+                      prepareBuyedMobileOperatorIcon(
+                          internetPackageTransactionsList[2].operatorType!),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(internetPackageTransactionsList[2]
+                        .phoneNumber
+                        .toString()),
+                  ),
+                  Text(internetPackageTransactionsList[2].bundleName!,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.green,fontSize: 10))
+                ],
+              ),
+            ),
+          )));
+    }
+
+    return totalList;
   }
 }

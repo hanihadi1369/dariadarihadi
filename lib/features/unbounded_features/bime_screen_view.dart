@@ -1,3 +1,4 @@
+import 'package:atba_application/core/utils/token_keeper.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,15 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../core/utils/colors.dart';
 
 
+import 'dart:convert';
+import 'package:pointycastle/export.dart' as pointy;
+import 'dart:typed_data';
+
+import 'package:convert/convert.dart';
+
+
+
+
 
 class BimeScreenView extends StatefulWidget {
   @override
@@ -21,11 +31,14 @@ class BimeScreenView extends StatefulWidget {
 
 class _BimeScreenViewState extends State<BimeScreenView> {
   int pageIndex = 1;
+  String defaultPhoneNumberFromSharedPref = "";
 
 
   @override
   void initState() {
     super.initState();
+    TokenKeeper.getPhoneNumber()
+        .then((value) => defaultPhoneNumberFromSharedPref = value);
   }
 
   @override
@@ -47,6 +60,57 @@ class _BimeScreenViewState extends State<BimeScreenView> {
       ),
     );
   }
+
+
+
+
+
+  String encrypt(String plaintext, String publicKey) {
+
+
+
+
+
+
+
+    var modulusBytes = base64.decode(publicKey);
+    var modulus = BigInt.parse(hex.encode(modulusBytes), radix: 16);
+    // var exponent = BigInt.from(65537);
+    var exponent = BigInt.parse(hex.encode(base64.decode('AQAB')), radix: 16);
+    var engine = pointy.PKCS1Encoding(pointy.RSAEngine())
+      ..init(
+        true,
+        pointy.PublicKeyParameter<pointy.RSAPublicKey>(pointy.RSAPublicKey(modulus, exponent)),
+      );
+
+    Uint8List output = engine.process(utf8.encode(plaintext) as Uint8List);
+
+
+    String base64EncodedText = base64Encode(output);
+    return base64EncodedText;
+
+
+
+
+    // var pubKey = RSAPublicKey(modulus, exponent);
+    // var cipher = PKCS1Encoding(RSAEngine());
+    // cipher.init(true, PublicKeyParameter<RSAPublicKey>(pubKey));
+    // Uint8List output = cipher.process(utf8.encode(text));
+    // var base64EncodedText = base64Encode(output);
+    // return base64EncodedText;
+    //
+    // return  engine.process(utf8.encode(plaintext) as Uint8List);
+
+
+
+
+  }
+
+
+
+
+
+
 
 
 
@@ -106,7 +170,33 @@ class _BimeScreenViewState extends State<BimeScreenView> {
             InkWell(
               onTap: () async{
                 try {
-                  await launchUrlString("https://atba.bimeh.com/");
+
+
+
+
+                  Map<String, dynamic> jsonObject = {
+                    "UserName": "${defaultPhoneNumberFromSharedPref}",
+                    "IssuedAt": "${DateTime.now().millisecondsSinceEpoch ~/ 1000}"
+
+                  };
+                  String jsonString = json.encode(jsonObject);
+
+
+
+                  String result= encrypt(jsonString,"vQULripV697WSQssjXmFhuhM76fXPzvpnDXQhXG0YFUdw1v9aEfGdmtIoG891elnf7aEjb3vmpmM7rLqyulNum+oT5TkhBgj1gmKhWUfGHj9synQIi3yyKhVLV0SJc77tJtBE0MzIsevGXsB7DMXrkMqTuDeZZpUd6YLZi9GcDcXTfWvL3ih+4JFJIjP0l2r7Dvs2dGmTSgyYru7M1azOTqVXxmphVa1Gj/yB3UAIdbyJssmLFeEoZo55zrMb8vB6kwHco3ZYyLDsUuP5NNrIgseZjcWIFGE7VAvxu0MRWIVMhWsE01NWiWN9VWKD0ohINwckaNm9X+6W9km22bg5Q==");
+
+
+
+
+
+
+
+
+
+
+
+
+                  await launchUrlString("https://atba.bimeh.com/?auth=${result}");
                 } catch (e) {}
               },
               child: Row(
@@ -150,7 +240,31 @@ class _BimeScreenViewState extends State<BimeScreenView> {
                       onPressed:
                       () async {
                         try {
-                          await launchUrlString("https://atba.bimeh.com/");
+
+
+                          Map<String, dynamic> jsonObject = {
+                            "UserName": "${defaultPhoneNumberFromSharedPref}",
+                            "IssuedAt": "${DateTime.now().millisecondsSinceEpoch ~/ 1000}"
+
+                          };
+                          String jsonString = json.encode(jsonObject);
+
+
+
+                          String result= encrypt(jsonString,"vQULripV697WSQssjXmFhuhM76fXPzvpnDXQhXG0YFUdw1v9aEfGdmtIoG891elnf7aEjb3vmpmM7rLqyulNum+oT5TkhBgj1gmKhWUfGHj9synQIi3yyKhVLV0SJc77tJtBE0MzIsevGXsB7DMXrkMqTuDeZZpUd6YLZi9GcDcXTfWvL3ih+4JFJIjP0l2r7Dvs2dGmTSgyYru7M1azOTqVXxmphVa1Gj/yB3UAIdbyJssmLFeEoZo55zrMb8vB6kwHco3ZYyLDsUuP5NNrIgseZjcWIFGE7VAvxu0MRWIVMhWsE01NWiWN9VWKD0ohINwckaNm9X+6W9km22bg5Q==");
+
+
+
+
+
+
+
+
+
+
+
+
+                          await launchUrlString("https://atba.bimeh.com/?auth=${result}");
                         } catch (e) {}
                       },
                       child: Text('رفتن به سایت بیمه دات کام'),

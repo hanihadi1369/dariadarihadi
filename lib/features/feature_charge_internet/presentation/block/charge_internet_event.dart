@@ -15,6 +15,7 @@ class ShowInternetPackagesEvent extends ChargeInternetEvent{
 }
 
 
+
 class BuyInternetPackagesEvent extends ChargeInternetEvent{
  final BuyInternetPackageParam buyInternetPackageParam;
  BuyInternetPackagesEvent(this.buyInternetPackageParam);

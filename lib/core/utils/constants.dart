@@ -4,7 +4,7 @@ class Constants{
   static const baseUrl = "https://core.daricard.ir";
   // static const baseUrl = "https://uat-atba.saminray.com";
 
-  static const versionName = "0.0.3";
-  static const versionCode = 3;
+  static const versionName = "0.0.4";
+  static const versionCode = 4;
 
 }

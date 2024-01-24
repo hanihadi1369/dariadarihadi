@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:atba_application/features/feature_charge_sim/presentation/screens/sim_charge_screen_view.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,17 +44,27 @@ class _SplashScreenViewState extends State<SplashScreenView> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                // return (token.isEmpty) ?
-                return
+                // return   BlocProvider(
+                //                   create: (_)=>  locator<LoginBloc>(),
+                //                   child: LoginScreenView(),
+                //                 );
+
+
+
+                return (token.isEmpty) ?
                 BlocProvider(
                   create: (_)=>  locator<LoginBloc>(),
                   child: LoginScreenView(),
+                )
+                    :
+                BlocProvider(
+                  create: (_)=> locator<MainBloc>(),
+                  child: MainScreenView(),
                 );
-                //     :
-                // BlocProvider(
-                //   create: (_)=> locator<MainBloc>(),
-                //   child: MainScreenView(),
-                // );
+
+
+
+
               },
             ),
           );

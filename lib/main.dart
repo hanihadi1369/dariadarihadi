@@ -10,6 +10,7 @@ import 'package:receive_intent/receive_intent.dart';
 
 import 'config/themes/app_theme.dart';
 import 'core/utils/strings.dart';
+import 'features/feature_charge_internet/data/models/internet_package_transaction.dart';
 import 'features/feature_login/presentation/bloc/login_bloc.dart';
 import 'features/feature_login/presentation/screens/login_screen_view.dart';
 import 'features/feature_splash/presentation/screens/splash_screen_view.dart';
@@ -26,7 +27,9 @@ Future<void> main() async {
   Directory directory = await pathProvider.getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   Hive.registerAdapter(SimChargeTransactionAdapter());
+  Hive.registerAdapter(InternetPackageTransactionAdapter());
   await Hive.openBox<SimChargeTransaction>('sim_charge_transaction');
+  await Hive.openBox<InternetPackageTransaction>('internet_package_transaction');
 
 
 

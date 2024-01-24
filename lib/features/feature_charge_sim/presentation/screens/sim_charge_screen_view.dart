@@ -49,6 +49,8 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
 
   int payTypeSelected = 1; // >>  1 wallet ,  2 kart
 
+  bool shouldShow33 = true;
+
   final _formKey_page1 = GlobalKey<FormState>();
   bool _isButtonNextDisabled_page1 = true;
   TextEditingController _phoneController = TextEditingController();
@@ -65,6 +67,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
   bool shouldShowOperatorSelect = false;
   bool shouldShowTarabordOption = false;
   bool shouldTrabord = false;
+  bool shouldShowChangeChargeAmount = false;
 
   late Box<SimChargeTransaction> simChargeTransactionBox;
   late List<SimChargeTransaction> simTransactionsList;
@@ -110,12 +113,33 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
         }
         if (pageIndex == 2) {
           setState(() {
+            shouldShow33 = true;
+            shouldShowChangeChargeAmount = false;
+            _phoneController.text = "";
+            shouldShowOperatorSelect = false;
+            shouldShowTarabordOption = false;
+            shouldTrabord = false;
+            _isButtonNextDisabled_page1 = true;
+            operatorSelected = 4;
             pageIndex = 1;
           });
         }
         if (pageIndex == 3) {
           setState(() {
             pageIndex = 2;
+          });
+        }
+        if (pageIndex == 33) {
+          setState(() {
+            shouldShow33 = true;
+            shouldShowChangeChargeAmount = false;
+            _phoneController.text = "";
+            shouldShowOperatorSelect = false;
+            shouldShowTarabordOption = false;
+            shouldTrabord = false;
+            _isButtonNextDisabled_page1 = true;
+            operatorSelected = 4;
+            pageIndex = 1;
           });
         }
 
@@ -169,7 +193,11 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                   totalAmountWithkarmozd = getWageApprotionsCompleted
                       .getWageApportionsEntity.data!.totalAmount
                       .toString();
-                  pageIndex = 3;
+                  if (shouldShow33) {
+                    pageIndex = 33;
+                  } else {
+                    pageIndex = 3;
+                  }
                 }
                 state.getWageApprotionsStatus = GetWageApprotionsInit();
               }
@@ -182,14 +210,8 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                       .toInt()!;
                   pageIndex = 4;
 
-
-
-                  List<SimChargeTransaction> tempList = simChargeTransactionBox.values
-                      .toList()
-                      .reversed
-                      .toList();
-
-
+                  List<SimChargeTransaction> tempList =
+                      simChargeTransactionBox.values.toList().reversed.toList();
 
                   final newSimTransaction = SimChargeTransaction(
                       phoneNumber: _phoneController.text.trim(),
@@ -197,30 +219,24 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                       chargeAmountType: chargeAmountSelected,
                       paymentType: payTypeSelected);
 
-
-                  if(tempList.length == 0){
+                  if (tempList.length == 0) {
                     simChargeTransactionBox.add(newSimTransaction);
-                  }else{
+                  } else {
                     bool shouldAdd = true;
                     tempList.forEach((element) {
-                      if(
-                      element.phoneNumber!.trim() == newSimTransaction.phoneNumber!.trim() &&
-                      element.operatorType == newSimTransaction.operatorType &&
-                      element.chargeAmountType == newSimTransaction.chargeAmountType
-                      ){
+                      if (element.phoneNumber!.trim() ==
+                              newSimTransaction.phoneNumber!.trim() &&
+                          element.operatorType ==
+                              newSimTransaction.operatorType &&
+                          element.chargeAmountType ==
+                              newSimTransaction.chargeAmountType) {
                         shouldAdd = false;
                       }
                     });
-                    if(shouldAdd){
+                    if (shouldAdd) {
                       simChargeTransactionBox.add(newSimTransaction);
                     }
-
                   }
-
-
-
-
-
                 }
                 state.chargeSimStatus = ChargeSimInit();
               }
@@ -244,6 +260,7 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
     // index 1 > get operator type and phone number
     // index 2 > get charge amount
     // index 3 > select pay type
+    // index 33 > select pay type with ability to change charge amount
     // index 4 > result
 
     if (pageIndex == 1) {
@@ -465,32 +482,33 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                         ),
                                         InkWell(
                                           onTap: () async {
-                                             PhoneContact contact =
+                                            PhoneContact contact =
                                                 await FlutterContactPicker
                                                     .pickPhoneContact();
 
-
-
-
                                             if (contact != null &&
                                                 (contact.phoneNumber != null)) {
-
                                               String tempNumber = contact
                                                   .phoneNumber!.number!
                                                   .trim();
 
-                                              if(tempNumber.startsWith("+98")){
-                                                tempNumber = tempNumber.replaceFirst("+98", "0");
+                                              tempNumber = tempNumber
+                                                  .replaceAll(" ", "");
+
+                                              if (tempNumber
+                                                  .startsWith("+98")) {
+                                                tempNumber = tempNumber
+                                                    .replaceFirst("+98", "0");
                                               }
-                                              if(tempNumber.startsWith("0098")){
-                                                tempNumber = tempNumber.replaceFirst("0098", "0");
+                                              if (tempNumber
+                                                  .startsWith("0098")) {
+                                                tempNumber = tempNumber
+                                                    .replaceFirst("0098", "0");
                                               }
-
-
-
 
                                               setState(() {
-                                                _phoneController.text = tempNumber;
+                                                _phoneController.text =
+                                                    tempNumber;
 
                                                 _isButtonNextDisabled_page1 =
                                                     !_formKey_page1
@@ -503,7 +521,8 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                                 shouldTrabord = false;
 
                                                 switch (
-                                                    OperatorFinder.findOperator(tempNumber)) {
+                                                    OperatorFinder.findOperator(
+                                                        tempNumber)) {
                                                   case 1:
                                                     operatorSelected = 2;
                                                     break;
@@ -629,29 +648,39 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(5),
-                                              foregroundDecoration: BoxDecoration(
-                                                color: (operatorSelected == 1)
-                                                    ? Colors.transparent
-                                                    : Colors.grey,
-                                                backgroundBlendMode:
-                                                BlendMode.saturation,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10))
-                                              ),
+                                              foregroundDecoration:
+                                                  BoxDecoration(
+                                                      color:
+                                                          (operatorSelected ==
+                                                                  1)
+                                                              ? Colors
+                                                                  .transparent
+                                                              : Colors.grey,
+                                                      backgroundBlendMode:
+                                                          BlendMode.saturation,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10))),
                                               child: Column(
                                                 children: [
                                                   SizedBox(
                                                     width: 60,
                                                     height: 60,
                                                     child: Container(
-
-                                                      padding: EdgeInsets.all(7),
+                                                      padding:
+                                                          EdgeInsets.all(7),
                                                       child: Image.asset(
                                                         'assets/image_icon/rightel_icon.png',
                                                         fit: BoxFit.scaleDown,
                                                       ),
                                                     ),
                                                   ),
-                                                  Text("رایتل",style: TextStyle(fontSize: 10),)
+                                                  Text(
+                                                    "رایتل",
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  )
                                                 ],
                                               ),
                                             ),
@@ -669,29 +698,37 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(5),
-                                              foregroundDecoration: BoxDecoration(
-                                                color: (operatorSelected == 2)
-                                                    ? Colors.transparent
-                                                    : Colors.grey,
-                                                backgroundBlendMode:
-                                                BlendMode.saturation,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10))
-                                              ),
+                                              foregroundDecoration:
+                                                  BoxDecoration(
+                                                      color:
+                                                          (operatorSelected ==
+                                                                  2)
+                                                              ? Colors
+                                                                  .transparent
+                                                              : Colors.grey,
+                                                      backgroundBlendMode:
+                                                          BlendMode.saturation,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10))),
                                               child: Column(
                                                 children: [
                                                   SizedBox(
                                                     width: 60,
                                                     height: 60,
                                                     child: Container(
-
-
                                                       child: Image.asset(
                                                         'assets/image_icon/hamrah_aval_icon.png',
                                                         fit: BoxFit.scaleDown,
                                                       ),
                                                     ),
                                                   ),
-                                                  Text("همراه اول",style: TextStyle(fontSize: 10),)
+                                                  Text(
+                                                    "همراه اول",
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  )
                                                 ],
                                               ),
                                             ),
@@ -709,29 +746,37 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(5),
-                                              foregroundDecoration: BoxDecoration(
-                                                color: (operatorSelected == 3)
-                                                    ? Colors.transparent
-                                                    : Colors.grey,
-                                                backgroundBlendMode:
-                                                BlendMode.saturation,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10))
-                                              ),
+                                              foregroundDecoration:
+                                                  BoxDecoration(
+                                                      color:
+                                                          (operatorSelected ==
+                                                                  3)
+                                                              ? Colors
+                                                                  .transparent
+                                                              : Colors.grey,
+                                                      backgroundBlendMode:
+                                                          BlendMode.saturation,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10))),
                                               child: Column(
                                                 children: [
                                                   SizedBox(
                                                     width: 60,
                                                     height: 60,
                                                     child: Container(
-
-
                                                       child: Image.asset(
                                                         'assets/image_icon/irancell_icon.png',
                                                         fit: BoxFit.scaleDown,
                                                       ),
                                                     ),
                                                   ),
-                                                  Text("ایرانسل",style: TextStyle(fontSize: 10),)
+                                                  Text(
+                                                    "ایرانسل",
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  )
                                                 ],
                                               ),
                                             ),
@@ -960,6 +1005,14 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            shouldShow33 = true;
+                            shouldShowChangeChargeAmount = false;
+                            _phoneController.text = "";
+                            shouldShowOperatorSelect = false;
+                            shouldShowTarabordOption = false;
+                            shouldTrabord = false;
+                            _isButtonNextDisabled_page1 = true;
+                            operatorSelected = 4;
                             pageIndex = 1;
                           });
                         },
@@ -1250,6 +1303,9 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                               BlocProvider.of<ChargeSimBloc>(context).add(
                                   GetWageApprotionsEvent(
                                       getWageApprotionsParam));
+                              setState(() {
+                                shouldShow33 = false;
+                              });
                             },
                       child: Text('ادامه'),
                     ),
@@ -1415,6 +1471,689 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Align(
+                        alignment: Alignment.topRight,
+                        child: Text("پرداخت از")),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          payTypeSelected = 1;
+                        });
+                      },
+                      child: Container(
+                        height: 70,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          border: Border.all(
+                            color: (payTypeSelected == 1)
+                                ? MyColors.otp_underline
+                                : Colors.grey,
+                            width: 2.0,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 5,
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        ("کیف پول"),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        (balance == "نامشخص")
+                                            ? "موجودی کیف پول : نامشخص"
+                                            : "موجودی کیف پول : ${balance.seRagham()} ریال",
+                                      )
+                                    ],
+                                  ),
+                                )),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  foregroundDecoration: BoxDecoration(
+                                    color: (payTypeSelected == 1)
+                                        ? Colors.transparent
+                                        : Colors.grey,
+                                    backgroundBlendMode: BlendMode.saturation,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/image_icon/wallet_icon.png',
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Visibility(
+                      visible: false,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            payTypeSelected = 2;
+                          });
+                        },
+                        child: Container(
+                          height: 70,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: (payTypeSelected == 2)
+                                  ? MyColors.otp_underline
+                                  : Colors.grey,
+                              width: 2.0,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          ("کارت بانکی"),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    foregroundDecoration: BoxDecoration(
+                                      color: (payTypeSelected == 2)
+                                          ? Colors.transparent
+                                          : Colors.grey,
+                                      backgroundBlendMode: BlendMode.saturation,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/image_icon/bank_shahr_icon.png',
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 35, right: 35, top: 0, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (payTypeSelected == 1) {
+                          ChargeSimParam chargeSimParam = ChargeSimParam(
+                              totalAmount: int.parse(prepareFinalChargeCost()),
+                              cellNumber:
+                                  _phoneController.text.toString().trim(),
+                              operatorType: (operatorSelected == 1)
+                                  ? 2
+                                  : (operatorSelected == 2)
+                                      ? 1
+                                      : 0,
+                              simCardType: (simCardType == 1) ? 0 : 1);
+
+                          BlocProvider.of<ChargeSimBloc>(context)
+                              .add(ChargeEvent(chargeSimParam));
+
+                          // setState(() {
+                          //   pageIndex = 4;
+                          // });
+                        }
+                      },
+                      child: Text('پرداخت'),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
+
+    if (pageIndex == 33) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.only(left: 24, right: 24),
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            shouldShow33 = true;
+                            shouldShowChangeChargeAmount = false;
+                            _phoneController.text = "";
+                            shouldShowOperatorSelect = false;
+                            shouldShowTarabordOption = false;
+                            shouldTrabord = false;
+                            _isButtonNextDisabled_page1 = true;
+                            operatorSelected = 4;
+                            pageIndex = 1;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/image_icon/back_icon.png',
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(flex: 5, child: Container()),
+                    Expanded(
+                        flex: 4,
+                        child: Center(
+                            child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("نوع پرداخت")))),
+                    Expanded(flex: 5, child: Container()),
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/image_icon/hint_black_icon.png',
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+              flex: 5,
+              child: Container(
+                padding:
+                    EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
+                color: Colors.transparent,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          flex: 3,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Image.asset(
+                                      (operatorSelected == 1)
+                                          ? 'assets/image_icon/rightel_icon.png'
+                                          : (operatorSelected == 2)
+                                              ? 'assets/image_icon/hamrah_aval_icon.png'
+                                              : 'assets/image_icon/irancell_icon.png',
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                      child: Text(_phoneController.text)))
+                            ],
+                          )),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                            child: Column(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 32, right: 32),
+                                child: Row(
+                                  children: [
+                                    Text((operatorSelected == 1)
+                                        ? 'رایتل'
+                                        : (operatorSelected == 2)
+                                            ? 'همراه اول'
+                                            : 'ایرانسل'),
+                                    Spacer(),
+                                    Text(
+                                      "نوع اپراتور",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 32, right: 32),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      totalAmountWithkarmozd.seRagham() +
+                                          " ریال",
+                                      textDirection: TextDirection.rtl,
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "مبلغ شارژ + کارمزد",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+          Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: DottedLine(
+                        direction: Axis.horizontal,
+                        lineLength: double.infinity,
+                        lineThickness: 1.0,
+                        dashLength: 4.0,
+                        dashColor: MyColors.otp_underline,
+                        dashRadius: 0.0,
+                        dashGapLength: 4.0,
+                        dashGapColor: Colors.transparent,
+                        dashGapRadius: 0.0,
+                      )),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          height: 30,
+                          width: 70,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: CupertinoSwitch(
+                              value: shouldShowChangeChargeAmount,
+                              onChanged: (value) {
+                                setState(() {
+                                  shouldShowChangeChargeAmount = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            "تغییر مبلغ شارژ",
+                            style: TextStyle(color: MyColors.otp_underline),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+          Expanded(
+              flex: 10,
+              child: Container(
+                padding: EdgeInsets.only(left: 32, right: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Visibility(
+                      visible: shouldShowChangeChargeAmount,
+                      child: Container(
+                          child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        chargeAmountSelected = 1;
+                                      });
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetBalanceEvent());
+
+                                      GetWageApprotionsParam
+                                          getWageApprotionsParam =
+                                          GetWageApprotionsParam(
+                                              operationCode:
+                                                  (operatorSelected == 3)
+                                                      ? 9
+                                                      : (operatorSelected == 2)
+                                                          ? 7
+                                                          : 8,
+                                              amount: int.parse(
+                                                  prepareFinalChargeCost()));
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetWageApprotionsEvent(
+                                              getWageApprotionsParam));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (chargeAmountSelected == 1)
+                                            ? MyColors.otp_underline2
+                                            : MyColors.text_field_bg,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        "50.000 ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                            color: (chargeAmountSelected == 1)
+                                                ? Colors.white
+                                                : Colors.black),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        chargeAmountSelected = 2;
+                                      });
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetBalanceEvent());
+
+                                      GetWageApprotionsParam
+                                          getWageApprotionsParam =
+                                          GetWageApprotionsParam(
+                                              operationCode:
+                                                  (operatorSelected == 3)
+                                                      ? 9
+                                                      : (operatorSelected == 2)
+                                                          ? 7
+                                                          : 8,
+                                              amount: int.parse(
+                                                  prepareFinalChargeCost()));
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetWageApprotionsEvent(
+                                              getWageApprotionsParam));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (chargeAmountSelected == 2)
+                                            ? MyColors.otp_underline2
+                                            : MyColors.text_field_bg,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        "100.000 ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                            color: (chargeAmountSelected == 2)
+                                                ? Colors.white
+                                                : Colors.black),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        chargeAmountSelected = 3;
+                                      });
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetBalanceEvent());
+
+                                      GetWageApprotionsParam
+                                          getWageApprotionsParam =
+                                          GetWageApprotionsParam(
+                                              operationCode:
+                                                  (operatorSelected == 3)
+                                                      ? 9
+                                                      : (operatorSelected == 2)
+                                                          ? 7
+                                                          : 8,
+                                              amount: int.parse(
+                                                  prepareFinalChargeCost()));
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetWageApprotionsEvent(
+                                              getWageApprotionsParam));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (chargeAmountSelected == 3)
+                                            ? MyColors.otp_underline2
+                                            : MyColors.text_field_bg,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        "150.000 ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                            color: (chargeAmountSelected == 3)
+                                                ? Colors.white
+                                                : Colors.black),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        chargeAmountSelected = 4;
+                                      });
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetBalanceEvent());
+
+                                      GetWageApprotionsParam
+                                          getWageApprotionsParam =
+                                          GetWageApprotionsParam(
+                                              operationCode:
+                                                  (operatorSelected == 3)
+                                                      ? 9
+                                                      : (operatorSelected == 2)
+                                                          ? 7
+                                                          : 8,
+                                              amount: int.parse(
+                                                  prepareFinalChargeCost()));
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetWageApprotionsEvent(
+                                              getWageApprotionsParam));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (chargeAmountSelected == 4)
+                                            ? MyColors.otp_underline2
+                                            : MyColors.text_field_bg,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        "200.000 ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                            color: (chargeAmountSelected == 4)
+                                                ? Colors.white
+                                                : Colors.black),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        chargeAmountSelected = 5;
+                                      });
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetBalanceEvent());
+
+                                      GetWageApprotionsParam
+                                          getWageApprotionsParam =
+                                          GetWageApprotionsParam(
+                                              operationCode:
+                                                  (operatorSelected == 3)
+                                                      ? 9
+                                                      : (operatorSelected == 2)
+                                                          ? 7
+                                                          : 8,
+                                              amount: int.parse(
+                                                  prepareFinalChargeCost()));
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetWageApprotionsEvent(
+                                              getWageApprotionsParam));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (chargeAmountSelected == 5)
+                                            ? MyColors.otp_underline2
+                                            : MyColors.text_field_bg,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        "300.000 ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                            color: (chargeAmountSelected == 5)
+                                                ? Colors.white
+                                                : Colors.black),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        chargeAmountSelected = 6;
+                                      });
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetBalanceEvent());
+
+                                      GetWageApprotionsParam
+                                          getWageApprotionsParam =
+                                          GetWageApprotionsParam(
+                                              operationCode:
+                                                  (operatorSelected == 3)
+                                                      ? 9
+                                                      : (operatorSelected == 2)
+                                                          ? 7
+                                                          : 8,
+                                              amount: int.parse(
+                                                  prepareFinalChargeCost()));
+
+                                      BlocProvider.of<ChargeSimBloc>(context)
+                                          .add(GetWageApprotionsEvent(
+                                              getWageApprotionsParam));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (chargeAmountSelected == 6)
+                                            ? MyColors.otp_underline2
+                                            : MyColors.text_field_bg,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        "500.000 ریال",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                            color: (chargeAmountSelected == 6)
+                                                ? Colors.white
+                                                : Colors.black),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Align(
                         alignment: Alignment.topRight,
                         child: Text("پرداخت از")),
@@ -1871,6 +2610,11 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
           flex: 20,
           child: InkWell(
             onTap: () {
+              setState(() {
+                shouldShow33 = true;
+                shouldShowChangeChargeAmount = false;
+              });
+
               operatorSelected = simTransactionsList[0].operatorType!;
               _phoneController.text = simTransactionsList[0].phoneNumber!;
               chargeAmountSelected = simTransactionsList[0].chargeAmountType!;
@@ -1935,6 +2679,10 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
           flex: 20,
           child: InkWell(
             onTap: () {
+              setState(() {
+                shouldShow33 = true;
+                shouldShowChangeChargeAmount = false;
+              });
               operatorSelected = simTransactionsList[0].operatorType!;
               _phoneController.text = simTransactionsList[0].phoneNumber!;
               chargeAmountSelected = simTransactionsList[0].chargeAmountType!;
@@ -1993,6 +2741,10 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
           flex: 20,
           child: InkWell(
             onTap: () {
+              setState(() {
+                shouldShow33 = true;
+                shouldShowChangeChargeAmount = false;
+              });
               operatorSelected = simTransactionsList[1].operatorType!;
               _phoneController.text = simTransactionsList[1].phoneNumber!;
               chargeAmountSelected = simTransactionsList[1].chargeAmountType!;
@@ -2055,6 +2807,10 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
           flex: 20,
           child: InkWell(
             onTap: () {
+              setState(() {
+                shouldShow33 = true;
+                shouldShowChangeChargeAmount = false;
+              });
               operatorSelected = simTransactionsList[0].operatorType!;
               _phoneController.text = simTransactionsList[0].phoneNumber!;
               chargeAmountSelected = simTransactionsList[0].chargeAmountType!;
@@ -2113,6 +2869,10 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
           flex: 20,
           child: InkWell(
             onTap: () {
+              setState(() {
+                shouldShow33 = true;
+                shouldShowChangeChargeAmount = false;
+              });
               operatorSelected = simTransactionsList[1].operatorType!;
               _phoneController.text = simTransactionsList[1].phoneNumber!;
               chargeAmountSelected = simTransactionsList[1].chargeAmountType!;
@@ -2171,6 +2931,10 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
           flex: 20,
           child: InkWell(
             onTap: () {
+              setState(() {
+                shouldShow33 = true;
+                shouldShowChangeChargeAmount = false;
+              });
               operatorSelected = simTransactionsList[2].operatorType!;
               _phoneController.text = simTransactionsList[2].phoneNumber!;
               chargeAmountSelected = simTransactionsList[2].chargeAmountType!;
@@ -2335,7 +3099,6 @@ class _SimChargeScreenViewState extends State<SimChargeScreenView> {
 
   _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-
         duration: Duration(seconds: 4),
         content: Align(
             alignment: Alignment.centerRight,
