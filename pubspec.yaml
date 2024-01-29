@@ -1,7 +1,7 @@
 name: atba_application
 description: داریکارت
 publish_to: "none"
-version: 0.0.4+4
+version: 0.0.5+5
 
 environment:
   sdk: ">=2.19.2 <3.0.0"

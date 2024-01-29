@@ -234,8 +234,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                   if (transactionStatusCompleted
                               .transactionsHistoryEntity.data ==
                           null ||
-                      transactionStatusCompleted.transactionsHistoryEntity
-                              .data!.statement!.length ==
+                      transactionStatusCompleted.transactionsHistoryEntity.data!
+                              .statement!.length ==
                           0) {
                     //failed transaction
                     statusChargeWalletFromUrl = "false";
@@ -263,16 +263,13 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     state.transferKifBKifStatus as TransferKifBKifCompleted;
                 if (transferKifBKifCompleted.transferKifBKifEntity.isSuccess ==
                     true) {
-
-                 try{
-                   transferKifBKifRecepit = transferKifBKifCompleted
-                       .transferKifBKifEntity.data!.receiptID!
-                       .toString();
-                 }catch(e){
-                   transferKifBKifRecepit = "***";
-                 }
-
-
+                  try {
+                    transferKifBKifRecepit = transferKifBKifCompleted
+                        .transferKifBKifEntity.data!.receiptID!
+                        .toString();
+                  } catch (e) {
+                    transferKifBKifRecepit = "***";
+                  }
 
                   pageIndex = 51;
                   state.transferKifBKifStatus = TransferKifBKifInit();
@@ -292,38 +289,26 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                     var nowJalai = DateTime.now().toJalali().withDay(1);
                     var now = nowJalai.toDateTime();
 
-
-
                     for (var i = 1; i < 13; i++) {
-                      
-                      
-
-                      
-
-
-
-                      int days = (i-1)*30;
-
-
-
+                      int days = (i - 1) * 30;
 
                       TransactionsByMonth transactionsByMonth =
                           TransactionsByMonth();
                       transactionsByMonth.monthName = Jalali.fromDateTime(
-                          now.subtract( Duration(days: days)))
+                              now.subtract(Duration(days: days)))
                           .formatter
                           .mN;
                       transactionsByMonth.monthName2Digit = Jalali.fromDateTime(
-                          now.subtract( Duration(days: days)))
+                              now.subtract(Duration(days: days)))
                           .formatter
                           .mm;
                       transactionsByMonth.monthId = int.parse(
                           Jalali.fromDateTime(
-                              now.subtract( Duration(days: days)))
+                                  now.subtract(Duration(days: days)))
                               .formatter
                               .m);
                       transactionsByMonth.yearName = Jalali.fromDateTime(
-                          now.subtract( Duration(days: days)))
+                              now.subtract(Duration(days: days)))
                           .formatter
                           .yyyy;
                       transactionsByMonth.idOrder = (i);
@@ -435,7 +420,7 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           if (totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
-                              7 ||
+                                  7 ||
                               totalTransactionsByMonthList[i]
                                       .statement![j]
                                       .operationCode! ==
@@ -1303,7 +1288,6 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                           ),
                         )),
                     Expanded(flex: 2, child: Container()),
-
                     Expanded(
                         flex: 2,
                         child: InkWell(
@@ -1326,13 +1310,12 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                     )),
                                 Expanded(
                                     child: Container(
-                                      child: Text("افزایش"),
-                                    ))
+                                  child: Text("افزایش"),
+                                ))
                               ],
                             ),
                           ),
                         )),
-
                     Expanded(flex: 2, child: Container()),
                     Expanded(
                         flex: 2,
@@ -1358,8 +1341,8 @@ class _WalletScreenViewState extends State<WalletScreenView> {
                                       )),
                                   Expanded(
                                       child: Container(
-                                        child: Text("انتقال"),
-                                      ))
+                                    child: Text("انتقال"),
+                                  ))
                                 ],
                               ),
                             ),

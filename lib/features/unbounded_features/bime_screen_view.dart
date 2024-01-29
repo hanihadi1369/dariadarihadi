@@ -196,7 +196,8 @@ class _BimeScreenViewState extends State<BimeScreenView> {
 
 
 
-                  await launchUrlString("https://atba.bimeh.com/?auth=${result}");
+                  await launchUrlString("https://atba.bimeh.com/?auth=${result}",
+                      mode: LaunchMode.externalApplication);
                 } catch (e) {}
               },
               child: Row(
@@ -264,7 +265,8 @@ class _BimeScreenViewState extends State<BimeScreenView> {
 
 
 
-                          await launchUrlString("https://atba.bimeh.com/?auth=${result}");
+                          await launchUrlString("https://atba.bimeh.com/?auth=${result}",
+                              mode: LaunchMode.externalApplication);
                         } catch (e) {}
                       },
                       child: Text('رفتن به سایت بیمه دات کام'),

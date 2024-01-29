@@ -5198,7 +5198,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 16,
+                                maxLength: 30,
                                 controller: _waterBillController2,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -5912,20 +5912,44 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
+
+
                         if (payTypeSelected == 1) {
-                          Bills bill = Bills();
-                          bill.billID = waterInquiryResult.billID;
-                          // bill.paymentID = waterInquiryResult.paymentID;
-                          // bill.phoneNumber = phoneNumber;
-                          bill.operationCode = 300;
-                          // bill.gatewayID ="";
-                          List<Bills> bills = [];
-                          bills.add(bill);
-                          BillPaymentFromWalletParam param =
-                              BillPaymentFromWalletParam(bills: bills);
-                          BlocProvider.of<BillBloc>(context).add(
-                              PaymentFromWalletBillEvent(
-                                  json.encode(param.toJson())));
+
+                          bool shouldDoPayment = false;
+
+                          if(balance == "***"){
+                            _showSnackBar("موجودی کیف پول مشخص نیست");
+                          }else{
+                            try{
+                              if(int.parse(balance.trim()) > int.parse(totalWithKarmozd)){
+                                shouldDoPayment = true;
+                              }else{
+                                _showSnackBar("موجودی کیف پول شما کافی نیست");
+                              }
+                            }catch(ex){
+                              _showSnackBar("موجودی کیف پول مشخص نیست");
+                            }
+                          }
+
+                          if(shouldDoPayment){
+                            Bills bill = Bills();
+                            bill.billID = waterInquiryResult.billID;
+                            bill.paymentID = waterInquiryResult.paymentID;
+                            bill.operationCode = 300;
+
+                            List<Bills> bills = [];
+                            bills.add(bill);
+                            BillPaymentFromWalletParam param =
+                            BillPaymentFromWalletParam(bills: bills);
+                            BlocProvider.of<BillBloc>(context).add(
+                                PaymentFromWalletBillEvent(
+                                    json.encode(param.toJson())));
+                          }
+
+
+
+
                         } else {
                           setState(() {
                             pageIndex = 31111;
@@ -6821,7 +6845,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 16,
+                                maxLength: 30,
                                 controller: _barghBillController2,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -7542,19 +7566,45 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (payTypeSelected == 1) {
-                          Bills bill = Bills();
-                          bill.billID = barghInquiryResult.billID;
-                          // bill.paymentID = barghInquiryResult.paymentID;
-                          // bill.phoneNumber = phoneNumber;
-                          bill.operationCode = 301;
-                          // bill.gatewayID ="";
-                          List<Bills> bills = [];
-                          bills.add(bill);
-                          BillPaymentFromWalletParam param =
-                              BillPaymentFromWalletParam(bills: bills);
-                          BlocProvider.of<BillBloc>(context).add(
-                              PaymentFromWalletBillEvent(
-                                  json.encode(param.toJson())));
+
+
+                          bool shouldDoPayment = false;
+
+                          if(balance == "***"){
+                            _showSnackBar("موجودی کیف پول مشخص نیست");
+                          }else{
+                            try{
+                              if(int.parse(balance.trim()) > int.parse(totalWithKarmozd)){
+                                shouldDoPayment = true;
+                              }else{
+                                _showSnackBar("موجودی کیف پول شما کافی نیست");
+                              }
+                            }catch(ex){
+                              _showSnackBar("موجودی کیف پول مشخص نیست");
+                            }
+                          }
+
+                          if(shouldDoPayment){
+                            Bills bill = Bills();
+                            bill.billID = barghInquiryResult.billID;
+                            bill.paymentID = barghInquiryResult.paymentID;
+                            bill.operationCode = 301;
+                            List<Bills> bills = [];
+                            bills.add(bill);
+                            BillPaymentFromWalletParam param =
+                            BillPaymentFromWalletParam(bills: bills);
+                            BlocProvider.of<BillBloc>(context).add(
+                                PaymentFromWalletBillEvent(
+                                    json.encode(param.toJson())));
+                          }
+
+
+
+
+
+
+
+
                         } else {
                           setState(() {
                             pageIndex = 32222;
@@ -8454,7 +8504,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 16,
+                                maxLength: 30,
                                 controller: _gazBillController2,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -9170,19 +9220,46 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (payTypeSelected == 1) {
-                          Bills bill = Bills();
-                          bill.billID = gasInquiryResult.billID;
-                          // bill.paymentID = gasInquiryResult.paymentID;
-                          // bill.phoneNumber = phoneNumber;
-                          bill.operationCode = 306;
-                          // bill.gatewayID ="";
-                          List<Bills> bills = [];
-                          bills.add(bill);
-                          BillPaymentFromWalletParam param =
-                              BillPaymentFromWalletParam(bills: bills);
-                          BlocProvider.of<BillBloc>(context).add(
-                              PaymentFromWalletBillEvent(
-                                  json.encode(param.toJson())));
+
+
+
+
+                          bool shouldDoPayment = false;
+
+                          if(balance == "***"){
+                            _showSnackBar("موجودی کیف پول مشخص نیست");
+                          }else{
+                            try{
+                              if(int.parse(balance.trim()) > int.parse(totalWithKarmozd)){
+                                shouldDoPayment = true;
+                              }else{
+                                _showSnackBar("موجودی کیف پول شما کافی نیست");
+                              }
+                            }catch(ex){
+                              _showSnackBar("موجودی کیف پول مشخص نیست");
+                            }
+                          }
+
+                          if(shouldDoPayment){
+                            Bills bill = Bills();
+                            bill.billID = gasInquiryResult.billID;
+                            bill.paymentID = gasInquiryResult.paymentID;
+                            bill.operationCode = 306;
+                            List<Bills> bills = [];
+                            bills.add(bill);
+                            BillPaymentFromWalletParam param =
+                            BillPaymentFromWalletParam(bills: bills);
+                            BlocProvider.of<BillBloc>(context).add(
+                                PaymentFromWalletBillEvent(
+                                    json.encode(param.toJson())));
+                          }
+
+
+
+
+
+
+
                         } else {
                           setState(() {
                             pageIndex = 33333;
@@ -10076,7 +10153,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 16,
+                                maxLength: 30,
                                 controller: _phoneBillController2,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -10902,23 +10979,51 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (payTypeSelected == 1) {
-                          Bills bill = Bills();
-                          // bill.billID = (midTermSelected)
-                          //     ? fixLineInquiryResult.midTerm!.billID
-                          //     : fixLineInquiryResult.finalTerm!.billID;
 
-                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-                          bill.billID = _phoneBillController1.text.trim();
-                          bill.operationCode = 302;
 
-                          List<Bills> bills = [];
-                          bills.add(bill);
-                          BillPaymentFromWalletParam param =
-                              BillPaymentFromWalletParam(bills: bills);
-                          BlocProvider.of<BillBloc>(context).add(
-                              PaymentFromWalletBillEvent(
-                                  json.encode(param.toJson())));
+
+
+                          bool shouldDoPayment = false;
+
+                          if(balance == "***"){
+                            _showSnackBar("موجودی کیف پول مشخص نیست");
+                          }else{
+                            try{
+                              if(int.parse(balance.trim()) > int.parse(totalWithKarmozd)){
+                                shouldDoPayment = true;
+                              }else{
+                                _showSnackBar("موجودی کیف پول شما کافی نیست");
+                              }
+                            }catch(ex){
+                              _showSnackBar("موجودی کیف پول مشخص نیست");
+                            }
+                          }
+
+                          if(shouldDoPayment){
+                            Bills bill = Bills();
+                            bill.billID = (midTermSelected) ?fixLineInquiryResult.midTerm!.billID!.trim():fixLineInquiryResult.finalTerm!.billID!.trim();
+                            bill.paymentID = (midTermSelected) ?fixLineInquiryResult.midTerm!.paymentID!.trim():fixLineInquiryResult.finalTerm!.paymentID!.trim();
+                            bill.operationCode = 302;
+
+                            List<Bills> bills = [];
+                            bills.add(bill);
+                            BillPaymentFromWalletParam param =
+                            BillPaymentFromWalletParam(bills: bills);
+                            BlocProvider.of<BillBloc>(context).add(
+                                PaymentFromWalletBillEvent(
+                                    json.encode(param.toJson())));
+                          }
+
+
+
+
+
+
+
+
+
+
                         } else {
                           setState(() {
                             pageIndex = 34444;
@@ -11854,7 +11959,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 11,
+                                maxLength: 30,
                                 controller: _mciBillController2,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -12665,23 +12770,56 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (payTypeSelected == 1) {
-                          Bills bill = Bills();
-                          // bill.billID = (midTermSelected)
-                          //     ? mciInquiryResult.midTerm!.billID
-                          //     : mciInquiryResult.finalTerm!.billID;
 
-                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-                          bill.billID = _mciBillController1.text.trim();
-                          bill.operationCode = 310;
 
-                          List<Bills> bills = [];
-                          bills.add(bill);
-                          BillPaymentFromWalletParam param =
-                              BillPaymentFromWalletParam(bills: bills);
-                          BlocProvider.of<BillBloc>(context).add(
-                              PaymentFromWalletBillEvent(
-                                  json.encode(param.toJson())));
+
+
+
+                          bool shouldDoPayment = false;
+
+                          if(balance == "***"){
+                            _showSnackBar("موجودی کیف پول مشخص نیست");
+                          }else{
+                            try{
+                              if(int.parse(balance.trim()) > int.parse(totalWithKarmozd)){
+                                shouldDoPayment = true;
+                              }else{
+                                _showSnackBar("موجودی کیف پول شما کافی نیست");
+                              }
+                            }catch(ex){
+                              _showSnackBar("موجودی کیف پول مشخص نیست");
+                            }
+                          }
+
+                          if(shouldDoPayment){
+                            Bills bill = Bills();
+                            bill.billID = (midTermSelected) ?mciInquiryResult.midTerm!.billID!.trim():mciInquiryResult.finalTerm!.billID!.trim();
+                            bill.paymentID = (midTermSelected) ?mciInquiryResult.midTerm!.paymentID!.trim():mciInquiryResult.finalTerm!.paymentID!.trim();
+                            bill.operationCode = 310;
+                            List<Bills> bills = [];
+                            bills.add(bill);
+                            BillPaymentFromWalletParam param =
+                            BillPaymentFromWalletParam(bills: bills);
+                            BlocProvider.of<BillBloc>(context).add(
+                                PaymentFromWalletBillEvent(
+                                    json.encode(param.toJson())));
+                          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         } else {
                           setState(() {
                             pageIndex = 35555;
@@ -13614,7 +13752,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 11,
+                                maxLength: 30,
                                 controller: _mtnBillController2,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -14425,23 +14563,46 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (payTypeSelected == 1) {
-                          Bills bill = Bills();
-                          // bill.billID = (midTermSelected)
-                          //     ? mtnInquiryResult.midTerm!.billID
-                          //     : mtnInquiryResult.finalTerm!.billID;
 
-                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-                          bill.billID = _mtnBillController1.text.trim();
-                          bill.operationCode = 311;
 
-                          List<Bills> bills = [];
-                          bills.add(bill);
-                          BillPaymentFromWalletParam param =
-                              BillPaymentFromWalletParam(bills: bills);
-                          BlocProvider.of<BillBloc>(context).add(
-                              PaymentFromWalletBillEvent(
-                                  json.encode(param.toJson())));
+                          bool shouldDoPayment = false;
+
+                          if(balance == "***"){
+                            _showSnackBar("موجودی کیف پول مشخص نیست");
+                          }else{
+                            try{
+                              if(int.parse(balance.trim()) > int.parse(totalWithKarmozd)){
+                                shouldDoPayment = true;
+                              }else{
+                                _showSnackBar("موجودی کیف پول شما کافی نیست");
+                              }
+                            }catch(ex){
+                              _showSnackBar("موجودی کیف پول مشخص نیست");
+                            }
+                          }
+
+                          if(shouldDoPayment){
+
+                            Bills bill = Bills();
+                            bill.billID = (midTermSelected) ?mtnInquiryResult.midTerm!.billID!.trim():mtnInquiryResult.finalTerm!.billID!.trim();
+                            bill.paymentID = (midTermSelected) ?mtnInquiryResult.midTerm!.paymentID!.trim():mtnInquiryResult.finalTerm!.paymentID!.trim();
+                            bill.operationCode = 311;
+                            List<Bills> bills = [];
+                            bills.add(bill);
+                            BillPaymentFromWalletParam param =
+                            BillPaymentFromWalletParam(bills: bills);
+                            BlocProvider.of<BillBloc>(context).add(
+                                PaymentFromWalletBillEvent(
+                                    json.encode(param.toJson())));
+                          }
+
+
+
+
+
+
+
                         } else {
                           setState(() {
                             pageIndex = 36666;
@@ -15374,7 +15535,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 11,
+                                maxLength: 30,
                                 controller: _rightelBillController2,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -16192,23 +16353,49 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (payTypeSelected == 1) {
-                          Bills bill = Bills();
-                          // bill.billID = (midTermSelected)
-                          //     ? rightelInquiryResult.midTerm!.billID
-                          //     : rightelInquiryResult.finalTerm!.billID;
 
-                          bill.isMidTerm = (midTermSelected) ? true : false;
 
-                          bill.billID = _rightelBillController1.text.trim();
-                          bill.operationCode = 312;
 
-                          List<Bills> bills = [];
-                          bills.add(bill);
-                          BillPaymentFromWalletParam param =
-                              BillPaymentFromWalletParam(bills: bills);
-                          BlocProvider.of<BillBloc>(context).add(
-                              PaymentFromWalletBillEvent(
-                                  json.encode(param.toJson())));
+
+
+                          bool shouldDoPayment = false;
+
+                          if(balance == "***"){
+                            _showSnackBar("موجودی کیف پول مشخص نیست");
+                          }else{
+                            try{
+                              if(int.parse(balance.trim()) > int.parse(totalWithKarmozd)){
+                                shouldDoPayment = true;
+                              }else{
+                                _showSnackBar("موجودی کیف پول شما کافی نیست");
+                              }
+                            }catch(ex){
+                              _showSnackBar("موجودی کیف پول مشخص نیست");
+                            }
+                          }
+
+                          if(shouldDoPayment){
+                            Bills bill = Bills();
+                            bill.billID = (midTermSelected) ?rightelInquiryResult.midTerm!.billID!.trim():rightelInquiryResult.finalTerm!.billID!.trim();
+                            bill.paymentID = (midTermSelected) ?rightelInquiryResult.midTerm!.paymentID!.trim():rightelInquiryResult.finalTerm!.paymentID!.trim();
+                            bill.operationCode = 312;
+                            List<Bills> bills = [];
+                            bills.add(bill);
+                            BillPaymentFromWalletParam param =
+                            BillPaymentFromWalletParam(bills: bills);
+                            BlocProvider.of<BillBloc>(context).add(
+                                PaymentFromWalletBillEvent(
+                                    json.encode(param.toJson())));
+                          }
+
+
+
+
+
+
+
+
+
                         } else {
                           setState(() {
                             pageIndex = 37777;
@@ -17033,7 +17220,7 @@ class _BillsScreenViewState extends State<BillsScreenView> {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: TextFormField(
-                                maxLength: 16,
+                                maxLength: 30,
                                 controller: _editBillController,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
